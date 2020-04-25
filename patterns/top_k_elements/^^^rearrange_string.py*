@@ -1,0 +1,46 @@
+"""
+Given a string, find if its letters can be rearranged in such a way that no
+two same characters come next to each other.
+
+Example 1:
+
+Input: "aappp"
+Output: "papap"
+Explanation: In "papap", none of the repeating characters come next to each
+other.
+Example 2:
+
+Input: "Programming"
+Output: "rgmrgmPiano" or "gmringmrPoa" or "gmrPagimnor", etc.
+Explanation: None of the repeating characters come next to each other.
+Example 3:
+
+Input: "aapa"
+Output: ""
+Explanation: In all arrangements of "aapa", atleast two 'a' will come
+together e.g., "apaa", "paaa".
+"""
+# pylint: skip-file
+import heapq
+from collections import defaultdict
+
+
+def rearrange_string(s):
+    max_heap = []
+    freq_map = defaultdict(int)
+    for char in s:
+        freq_map[char] += 1
+
+    for char, freq in freq_map.items():
+        heapq.heappush(max_heap, (-freq, char))
+
+    output_string = ''
+
+
+def main():
+    print("Rearranged string:  " + rearrange_string("abaab"))
+    print("Rearranged string:  " + rearrange_string("Programming"))
+    print("Rearranged string:  " + rearrange_string("ppaa"))
+
+
+main()
