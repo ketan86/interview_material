@@ -66,23 +66,27 @@ can be made the root if we were to make it a binary tree.
 from graph import Graph
 
 
-def is_tree(g):
+def is_tree(g): # <-- undirected graph
+    # define all nodes to not visited
     visited = [False] * g.vertices
+    # if there are cycles, it is not a tree.
     if _has_cycle(g, 0, visited, -1):
         return False
+    # if all nodes are not visited, it's not a tree.
     return all(visited)
 
 
 def _has_cycle(g, node, visited, parent):
+    # mark node visited
     visited[node] = True
-    print('visited node {}'.format(node))
+    # get head and traverse.
     adjacent = g.array[node].get_head()
     while adjacent:
+        # if not visited, check for cycle
         if not visited[adjacent.data]:
-            print('visting node {}'.format(adjacent.data))
             if _has_cycle(g, adjacent.data, visited, node):
                 return True
-        # if not is visited and not the parent, If not is parent, we can't
+        # if visited and not the parent, If node is parent, we can't
         # consider it a loop.
         elif adjacent.data != parent:
             return True

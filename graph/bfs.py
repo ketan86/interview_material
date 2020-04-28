@@ -15,24 +15,36 @@ from graph import MyQueue
 
 
 def bfs_traversal(g, source):
+    # result array
     result = ''
+    # use queue to store the nodes
     queue = MyQueue()
+    # add source to queue
     queue.enqueue(source)
-
+    # mark all verticies non visited to start with.
     visited = [False] * g.vertices
+    # mark source node visited.
     visited[source] = True
 
+    # until queue is empty, iterate
     while not queue.is_empty():
-
+        # get the vertex from the queue
         vertex = queue.dequeue()
+        # add it to result
         result += str(vertex)
+        # get the linked list head
         node = g.array[vertex].get_head()
+
+        # visit each linked list node
         while node:
+            # if not visited, visit and add edges to queue and mark is visited.
             if not visited[node.data]:
                 queue.enqueue(node.data)
                 visited[node.data] = True
+            # go to next ll node
             node = node.next_element
 
+    # return result
     return result
 
 

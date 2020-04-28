@@ -15,14 +15,16 @@ Sample Output #
 Queue = [5,4,3,2,1,6,7,8,9,10]
 
 """
+from .queue import Queue
+from .stack import Stack
 
 
 def reverseK(queue, k):
     if queue.isEmpty() or queue.size() < k or k < 0:
         return None
 
-    result_queue = myQueue()
-    temp_stack = myStack()
+    result_queue = Queue()
+    temp_stack = Stack()
 
     while not queue.isEmpty():
         if temp_stack.size() == k:
@@ -44,7 +46,7 @@ def reverseK(queue, k):
     if queue.isEmpty() or queue.size() < k or k < 0:
         return None
 
-    temp_stack = myStack()
+    temp_stack = Stack()
 
     for i in range(k):
         temp_stack.push(queue.dequeue())

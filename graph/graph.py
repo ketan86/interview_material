@@ -203,6 +203,10 @@ class Graph:
         self.vertices = vertices
         # definining a list which can hold multiple LinkedLists
         # equal to the number of vertices in the graph
+
+        # ::NOTE:: Here self.array = [LinkedList()] * vertices does not work
+        # because  [LinkedList()] gives same instance.
+
         self.array = []
         # Creating a new Linked List for each vertex/index of the list
         for _ in range(vertices):

@@ -76,10 +76,11 @@ def find_min(g, source, destination):
             if not visited[adjacent.data]:
                 queue.enqueue(adjacent.data)
                 visited[adjacent.data] = True
-                # calculate the distance for all childs the parent
+                # calculate the distance for all child from parent
                 distances[adjacent.data] = distances[vertex] + 1
             adjacent = adjacent.next_element
     return result
+
 
 
 g = Graph(7)
@@ -91,5 +92,8 @@ g.add_edge(5, 6)
 g.add_edge(3, 6)
 g.print_graph()
 print(find_min(g, 1, 6))
+print(find_min_dist(g, 1, 6))
 print(find_min(g, 2, 6))
+print(find_min_dist(g, 2, 6))
 print(find_min(g, 2, 5))
+print(find_min_dist(g, 2, 5))

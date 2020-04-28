@@ -15,20 +15,30 @@ from graph import MyStack
 
 def dfs_traversal(g, source):
     result = ''
+    # use stack for dfs
     stack = MyStack()
+    # add source to stack
     stack.push(source)
+    # mark all nodes non visited to start with
     visited = [False] * g.vertices
+    # mark source visited
     visited[source] = True
 
     while not stack.is_empty():
+        # pop vertex
         vertex = stack.pop()
-        node = g.array[vertex].get_head()
+        # add it to result
         result += str(vertex)
+        # find the head of the vertext
+        node = g.array[vertex].get_head()
         while node:
+            # if current node is not visited, push it to stack and mark visited.
             if not visited[node.data]:
                 stack.push(node.data)
                 visited[node.data] = True
+            # go to next ll node
             node = node.next_element
+    # return result
     return result
 
 

@@ -34,6 +34,7 @@ Sample Output #
 3
 """
 # pylint: skip-file
+from .stack import Stack
 
 
 def evaluatePostFix(exp):
@@ -43,7 +44,7 @@ def evaluatePostFix(exp):
         '-': 'sub',
         '/': 'div'
     }
-    stack = myStack()
+    stack = Stack()
 
     for i in exp:
         if i in operators:
@@ -66,7 +67,7 @@ def evaluatePostFix(exp):
 # other option using "eval"
 
 def evaluatePostFix(exp):
-    stack = myStack()
+    stack = Stack()
     for char in exp:
         if char.isdigit():
             stack.push(char)

@@ -44,8 +44,11 @@ from graph import MyStack
 
 def num_edges_undirected(g):
     edges = 0
+    # go over all the vertices
     for i in range(g.vertices):
+        # get the head of the node
         node = g.array[i].get_head()
+        # until the end of the link list, count all edges
         while node:
             edges += 1
             node = node.next_element

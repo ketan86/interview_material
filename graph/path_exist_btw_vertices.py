@@ -45,17 +45,24 @@ from graph import Graph, MyQueue, MyStack
 
 
 def check_path(g, source, destination):
+    # mark all node not visited
     visited = [False] * g.vertices
+    # queue for dfs
     queue = MyQueue()
+    # enqueue item. NOTE:: start with source directly
     queue.enqueue(source)
+    # while queue is not empty
     while not queue.is_empty():
         vertex = queue.dequeue()
         node = g.array[vertex].get_head()
         while node:
+            # if node is destination, return true 
             if node.data == destination:
                 return True
+            # if not visited, enqueue data
             if not visited[node.data]:
                 queue.enqueue(node.data)
+                # mark node visited
                 visited[node.data] = True
             node = node.next_element
     return False

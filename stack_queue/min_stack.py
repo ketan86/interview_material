@@ -11,18 +11,20 @@ Sample Output #
 # minStack.min()
 1
 """
+# pylint:skip-file
 
 # Create Stack => stack = myStack(5); where 5 is size of stack
 # Create Queue => queue = myQueue(5); where 5 is size of queue
 # Stack Functions => isEmpty(), isFull(), top()
 # Queue Functions => enqueue(int),dequeue(),isEmpty(),getSize()
+from .stack import Stack
 
 
 class minStack:
     # Constructor
     def __init__(self):
-        self.tempStack = myStack()
-        self.myStack = myStack()
+        self.tempStack = Stack()
+        self.myStack = Stack()
 
     # Removes and return value from newStack
     def pop(self):
@@ -44,7 +46,7 @@ class minStack:
         self.myStack.push(value)
         return True
 
-# Returns minimum value from newStack in O(1) Time
+    # Returns minimum value from newStack in O(1) Time
     def min(self):
         return self.tempStack.top()
 
