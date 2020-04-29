@@ -74,7 +74,7 @@ class Solution:
 
         # the lowest left and highest right will give the max profit.
         # only move left when you find the lower left otherwise keep
-	# calculating max against last lowest.
+	    # calculating max against last lowest.
 
         prev_lowest = prices[0]
         for i in range(len(prices)):

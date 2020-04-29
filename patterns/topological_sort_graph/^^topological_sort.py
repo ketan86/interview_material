@@ -37,9 +37,20 @@ from collections import deque
 
 
 def topological_sort(vertices, edges):
-    sorted_order = []
+    """
+    STEPS:
+        1. initialize the graph {source:[destinations]} and in_degree
+           {source: incoming_edges_count} map to hold the data. 
+        2. iterate over the edges and build the graph and in_degree maps.
+        3. use queue and add all sources where in_degree is 0. 
+        4. process queue and keep adding vertex to result. when in_degree
+           of the vertext becomes 0, add that to a source. 
+        5. if result array matches the size of the vertices (no cycle), 
+           we have iterated all the vertices or else return []
+    """
+    result = []
     if vertices < 0:
-        return sorted_order
+        return result
 
     # initialize the graph
     in_degree = {i: 0 for i in range(vertices)}
@@ -57,12 +68,12 @@ def topological_sort(vertices, edges):
         if in_degree[key] == 0:
             sources.append(key)
 
-    # for each source, add it to sorted_order, traverse through all the
+    # for each source, add it to result, traverse through all the
     # child nodes and reduce the in-degree count, when in degree count becomes
     # 0, add it to sources for traversal.
     while sources:
         vertex = sources.popleft()
-        sorted_order.append(vertex)
+        result.append(vertex)
         for child in graph[vertex]:
             in_degree[child] -= 1
             # if there is a cycle, in_degree of child will not set to 0,
@@ -71,10 +82,10 @@ def topological_sort(vertices, edges):
                 sources.append(child)
 
     # check for cycle
-    if len(sorted_order) != vertices:
+    if len(result) != vertices:
         return []
 
-    return sorted_order
+    return result
 
 
 def main():
