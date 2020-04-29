@@ -70,6 +70,12 @@ class Solution:
 
         # move lowest_prev only when new lowest is found. otherwise
         # keep calculating the max profit against the prev lowest
+
+
+        # the lowest left and highest right will give the max profit.
+        # only move left when you find the lower left otherwise keep
+	# calculating max against last lowest.
+
         prev_lowest = prices[0]
         for i in range(len(prices)):
             max_profit = max(max_profit, prices[i] - prev_lowest)
