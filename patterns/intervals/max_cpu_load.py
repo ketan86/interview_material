@@ -1,5 +1,7 @@
 """
-We are given a list of Jobs. Each Job has a Start time, an End time, and a CPU load when it is running. Our goal is to find the maximum CPU load at any time if all the jobs are running on the same machine.
+We are given a list of Jobs. Each Job has a Start time, an End time, and a CPU
+load when it is running. Our goal is to find the maximum CPU load at any time
+if all the jobs are running on the same machine.
 
 Example 1:
 
@@ -22,6 +24,7 @@ Explanation: Maximum CPU load will be 8 as all jobs overlap during the time inte
 # pylint: skip-file
 from heapq import heappop, heappush
 from functools import total_ordering
+import time
 
 
 @total_ordering
@@ -32,28 +35,73 @@ class Job:
         self.cpu_load = cpu_load
 
     def __lt__(self, other):
-        return self.start < other.start
+        return self.end < other.end
+
+    def __repr__(self):
+        return 'start: {}, end: {}'.format(self.start, self.end)
+
+    __str__ = __repr__
 
 
 def max_cpu_load(jobs):
-    # sort by start time
-    jobs.sort()
+    # sort by start time. here we explicitely mention the key because, __lt__
+    # func of the Job class uses end time to store jobs in min_heap.
+    jobs.sort(key=lambda x: x.start)
     max_cpu_load = 0
     min_heap = []
-    current_cpu_load = 0
     for job in jobs:
         #  remove all jobs ended so far.
-        while (len(min_heap) > 0 and job.start >= min_heap[0].end):
-            current_cpu_load -= min_heap[0].cpu_load
+        while min_heap and job.start >= min_heap[0].end:
             heappop(min_heap)
-        # insert current job
-        current_cpu_load += job.cpu_load
+        # push elements
         heappush(min_heap, job)
-        # calculate max cpu load using running avg
-        max_cpu_load = max(max_cpu_load, current_cpu_load)
+        # calculate max cpu load by summing the cpu load of all the jobs
+        # that are running.
+        max_cpu_load = max(max_cpu_load, sum(
+            [job.cpu_load for job in min_heap]))
     return max_cpu_load
 
 
-print(max_cpu_load([Job(1, 4, 3), Job(2, 5, 4), Job(7, 9, 6)]))
-print(max_cpu_load([Job(6, 7, 10), Job(2, 4, 11), Job(8, 12, 15)]))
-print(max_cpu_load([Job(1, 4, 2), Job(2, 4, 1), Job(3, 6, 5)]))
+def WILL_NOT_WORK_max_cpu_load_no_heap(jobs):
+    # merged based approach does not work since it does not consider the
+    # start and end time of the job.
+    # [Job(1, 8, 2), Job(6, 20, 1), Job(9, 16, 5), Job(13,17,3)]
+
+    # sort by start time.
+    jobs.sort()
+    # instead of saving all merged items, we can only save the last item to
+    # find out the max cpu load.
+    # since max_cpu_load is calculated after every job, we can reset the
+    # merged_job to current job if it is not mergable.
+    merged_job = None
+    max_cpu_load = 0
+    # s_time = time.time()
+    for job in jobs:
+        # if merged job end time is greater than current job start time,
+        # we can merge.
+        if merged_job and merged_job.end > job.start:
+            # merge job and add the current job cpu load
+            merged_job = Job(
+                max(merged_job.start, job.start),
+                min(merged_job.end, job.end),
+                merged_job.cpu_load + job.cpu_load
+            )
+        else:
+            merged_job = job
+        # calculate the max cpu load so far.
+        max_cpu_load = max(max_cpu_load, merged_job.cpu_load)
+
+    # print('total time without heap: {}'.format(time.time() - s_time))
+    return max_cpu_load
+
+
+# print(max_cpu_load([Job(1, 4, 3), Job(2, 5, 4), Job(7, 9, 6)]))
+# print(max_cpu_load([Job(6, 7, 10), Job(2, 4, 11), Job(8, 12, 15)]))
+# print(max_cpu_load([Job(1, 4, 2), Job(2, 4, 1), Job(3, 6, 5)]))
+print(max_cpu_load(
+    [Job(1, 8, 2), Job(6, 20, 1), Job(9, 12, 5), Job(13, 17, 3)]))
+
+# print(WILL_NOT_WORK_max_cpu_load_no_heap([Job(1, 4, 3), Job(2, 5, 4), Job(7, 9, 6)]))
+# print(WILL_NOT_WORK_max_cpu_load_no_heap([Job(6, 7, 10), Job(2, 4, 11), Job(8, 12, 15)]))
+# print(WILL_NOT_WORK_max_cpu_load_no_heap([Job(1, 4, 2), Job(2, 4, 1), Job(3, 6, 5)]))
+# print(WILL_NOT_WORK_max_cpu_load_no_heap([Job(1, 8, 2), Job(6, 20, 1), Job(9, 16, 5), Job(13,17,3)]))

@@ -47,8 +47,8 @@ def _binary_search(arr, start_index, end_index, key):
 
 def _find_peak_index(arr, start_index, end_index):
     # since there is a tick (6 7 10 1 2 3 5) ( 7 -> hight -> low)
-    # we can not compare with immediate memeber, instead when we
-    # find mid elemenet, if that element is less than end element, we go
+    # we can not compare with immediate member, instead when we
+    # find mid element, if that element is less than end element, we go
     # right else we go left. at some point, end will settle on highest peak.
     # we return end index.
     # for ex,
@@ -62,7 +62,7 @@ def _find_peak_index(arr, start_index, end_index):
         if arr[mid] < end_index:
             end_index = mid - 1
         else:
-            start_index = start_index + 1
+            start_index = mid + 1
     return end_index
 
 

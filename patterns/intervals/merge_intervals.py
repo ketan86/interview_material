@@ -25,7 +25,8 @@ Explanation: Since all the given intervals overlap, we merged them into one.
 """
 # pylint: skip-file
 
-
+## NOTE:: Here heap data structure could be used but to add n elements into
+# heap will have nlogn time complexity which is similar to sorting.
 def merge_intervals(arr):
     # sort the array so only adjacent intervals need merging.
     arr.sort()
