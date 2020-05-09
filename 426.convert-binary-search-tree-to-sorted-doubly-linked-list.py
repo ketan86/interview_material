@@ -233,11 +233,11 @@ class Solution:
         # return the head
         return self.head
 
-t = Node(2)
-t.left = Node(1)
-t.right = Node(3)
-s = SolutionGen()
-head = s.treeToDoublyListGenerator(t)
-import pdb;pdb.set_trace()
+# t = Node(2)
+# t.left = Node(1)
+# t.right = Node(3)
+# s = SolutionGen()
+# head = s.treeToDoublyListGenerator(t)
+# import pdb;pdb.set_trace()
 # @lc code=end
 
