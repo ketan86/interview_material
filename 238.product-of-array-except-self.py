@@ -73,6 +73,8 @@ class Solution:
             new_nums[i] = new_nums[i] * product
         return new_nums
 
+    def productExceptSelf(self, nums):
+        pass
 
 # print(Solution().productExceptSelf([1,2,4,5,6,7]))
 # @lc code=end

@@ -15,6 +15,7 @@ Usages:
 
 #  pylint: skip-file
 
+
 class BloomFilter:
     def __init__(self, size=64):
         # size the bloom filter in bits
@@ -25,11 +26,11 @@ class BloomFilter:
     def _get_index(self, key):
         """
         Note: Using more hash functions reduces the change of false positive
-        because there will be more than one bit in the decision of the serach.
+        because there will be more than one bit in the decision of the search.
         """
         # return the index of the key within the bloom filter size bits.
         return hash(key) % self._size
-    
+
     def insert(self, key):
         # find the index of the key.
         index = self._get_index(key)
@@ -41,14 +42,15 @@ class BloomFilter:
         index = self._get_index(key)
         # check if bit at the index is set to 1 or not. if it is set to 1,
         # we are not 100 % sure if key is present so check in the storage
-        # must be performed. 
+        # must be performed.
         if self._storage & (1 << index):
-            # NOTE: check if key is really present in the storage before 
+            # NOTE: check if key is really present in the storage before
             # returning the true.
             return True
         else:
             # we are 100 % sure that the key is not present.
             return False
+
 
 bf = BloomFilter()
 bf.insert('ketan')
