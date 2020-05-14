@@ -94,39 +94,35 @@ class Solution:
         # return True of all above conditions are met.
         return True
 
+    prev = None
     def isValidBST(self, root):
         """
-        In this approach, we do in order traversal and during the traversal,
+        In this approach, we do inorder traversal and during the traversal,
         if we find a node that is <= prev node, return False.
         """
-        _, flag = self.in_order(root)
-        return flag
+        return self._is_bst(root)
 
-    def in_order(self, node, prev=None):
+    def _is_bst(self, node, prev=None):
         # if node is None, return True
         if node is None:
-            return prev, True
+            return True
 
         # left traversal
-        prev, flag = self.in_order(node.left, prev)
-        # if flag is False, return False
-        if not flag:
-            return prev, False
+        if not self._is_bst(node.left):
+            return False
 
         # if prev node is set and prev node value >= current node, return False
-        if prev is not None:
-            if prev.val >= node.val:
-                return prev, False
+        if not self.prev:
+            if self.prev.val >= node.val:
+                return False
 
         # set the prev node to current node
-        prev = node
+        self.prev = node
+        
         # right traversal
-        prev, flag = self.in_order(node.right, prev)
-        # if flag is False, return False
-        if not flag:
-            return prev, False
+        if not self._is_bst(node.right):
+            return False
 
         # if left and right is done and there is no invalid node, return True
-        return prev, True
-
+        return True
 # @lc code=end

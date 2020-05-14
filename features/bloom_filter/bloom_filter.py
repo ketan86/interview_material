@@ -1,7 +1,7 @@
 """
 Bloom filter is a probabilistic data structure used for searching. It
 guaranties that the answer is true if key is not present but does not
-guaranty that the answer is true only when key is present. In the later
+guaranty that the answer is true when key is present. In the later
 case, it could be or it could not be and requires a check on the storage.
 """
 

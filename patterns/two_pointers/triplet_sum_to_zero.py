@@ -38,7 +38,6 @@ def search_triplet(arr):
     results = []
     n = len(arr)
     arr.sort()
-    print(arr)
     for i in range(n - 2):
         left = i + 1
         right = len(arr) - 1
@@ -60,3 +59,4 @@ def search_triplet(arr):
 
 
 print(search_triplet([-5, 2, -1, -1, -1, -1, -1, -2, 3]))
+print(search_triplet([-2, 0, 0, 2, 2]))

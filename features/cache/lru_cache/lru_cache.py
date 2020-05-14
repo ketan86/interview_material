@@ -94,7 +94,7 @@ class LRUCache:
             # if current node is tail node, set tail node to prev node.
             self.tail = node.prev
 
-        # delete the node
+        # save prev and next nodes for deletion
         prev_node = node.prev
         next_node = node.next
 
@@ -118,7 +118,7 @@ class LRUCache:
         if self.size == self.capacity:
             del self.hash_map[self.tail.data]
             prev = self.tail.prev
-            self.tail.prev.next = None
+            prev.next = None
             self.tail = prev
             self.size -= 1
 
@@ -138,6 +138,7 @@ class LRUCache:
             self.head = new_node
         self.size += 1
 
+        # IMP: since we are inserting node at head, we return the head node.
         return self.head
 
     def print(self):
@@ -146,6 +147,47 @@ class LRUCache:
         while head:
             print(head.data, end='->')
             head = head.next
+
+
+from collections import OrderedDict
+
+
+class LRUCache:
+    """
+    OrderDict is internally uses doubly linked list to maintain the order
+    of the items.
+    """
+    # initialising capacity
+
+    def __init__(self, capacity):
+        self.cache = OrderedDict()
+        self.capacity = capacity
+
+    # we return the value of the key
+    # that is queried in O(1) and return -1 if we
+    # don't find the key in out dict / cache.
+    # And also move the key to front on access.
+    def get(self, key):
+        if key not in self.cache:
+            return -1
+        else:
+            self.cache.move_to_end(key, last=False)
+            return self.cache[key]
+
+    # first, we add / update the key by conventional methods.
+    # And also move the key to the front since it was recently used.
+    # But here we will also check whether the length of our
+    # ordered dictionary has exceeded our capacity,
+    # If so we remove the last key (least recently used)
+    def put(self, key, value):
+        self.cache[key] = value
+        self.cache.move_to_end(key, last=False)
+        if len(self.cache) > self.capacity:
+            self.cache.popitem()
+
+    def print(self):
+        # print nodes
+        print(self.cache)
 
 
 lru = LRUCache(capacity=5)
@@ -157,9 +199,10 @@ print(lru.get(0))
 print(lru.print())
 lru.put(1, 1)
 print(lru.get(1))
-print(lru.get(2))
+# print(lru.get(2))
 print(lru.print())
 lru.put(2, 2)
+print(lru.print())
 lru.put(3, 3)
 lru.put(4, 4)
 lru.put(5, 5)
