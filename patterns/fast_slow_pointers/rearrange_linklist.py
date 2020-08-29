@@ -14,7 +14,79 @@ class Node:
         self.next = next
 
 
+"""
+NOTE: Key here is to make sure both lists are merged correctly and it depends
+on the nodes count. make sure right linkedlist is smaller then left or
+wiseversa.
+    # odd elements -> slow is set to mid (1 2 3 4 5 6 7) -> 4
+        - left -> 1 2 3 4 , right -> 5 6 7
+        - 1 -> 5 -> 2 -> 6 -> 3 -> 7 -> 4
+        when merged, use right node to stop merging when right node is none.
+        remaining node (4) in left will get attached to 7 when loop
+        breaks.
+    # even elements -> slow is set to mid + 1 (1 2 3 4) -> 3
+        - left -> 1 2 3 , right -> 4
+        - 1 -> 4 -> 2 -> 3
+        when merged, use right node to stop merging when right node is none.
+        node 4 next attaches to 2 when loop breaks and 2 is already attached
+        to node 3.
+"""
+
+
 def rearrange(head):
+    # find the middle node.
+    mid = find_mid(head)
+    # reverse the linklist from mid.next node
+    right = reverse(mid.next)
+    # detach the left and right node by setting the mid.next to None.
+    mid.next = None
+    # merge left(head) and right linked list.
+    head = merge(head, right)
+
+    _print(head)
+
+
+def find_mid(head):
+    # find middle of the linked list using slow and fast pointer approach.
+    # odd elements -> slow is set to mid (1 2 3 4 5 6 7) -> 4
+    # even elements -> slow is set to mid + 1 (1 2 3 4) -> 3
+    fast, slow = head, head
+    while fast and fast.next:
+        fast = fast.next.next
+        slow = slow.next
+    return slow
+
+
+def reverse(head):
+    # reverse the linked list
+    curr = head
+    nxt = curr.next
+    curr.next = None
+    while nxt:
+        temp = nxt.next
+        nxt.next = curr
+        curr = nxt
+        nxt = temp
+    return curr
+
+
+def merge(left, right):
+    # save head
+    head = left
+    # use right linkedlist (smaller than left) to merge.
+    while right:
+        next_left = left.next
+        next_right = right.next
+        left.next = right
+        right.next = next_left
+        left = next_left
+        right = next_right
+    # when right linkedlist is iterated, nodes left in the left linkedlist
+    # is already in order.
+    return head
+
+
+def rearrange_2(head):
     # find the middle and divide in half, reverse the second half and
     # swap data.
     slow, fast = head, head
@@ -22,7 +94,7 @@ def rearrange(head):
         fast = fast.next.next
         slow = slow.next
 
-    slow = _reverse(slow)
+    slow = _reverse_2(slow)
     fast = head
 
     # 1->2->3->4->5->6
@@ -52,7 +124,7 @@ def _print(node):
         node = node.next
 
 
-def _reverse(node):
+def _reverse_2(node):
     prev = None
     while node:
         nxt = node.next
@@ -67,6 +139,7 @@ def main():
     head.next = Node(2)
     head.next.next = Node(3)
     head.next.next.next = Node(4)
+    print("LinkedList rearrange: " + str(rearrange(head)))
     head.next.next.next.next = Node(5)
     # print("LinkedList rearrange: " + str(rearrange(head)))
     head.next.next.next.next.next = Node(6)

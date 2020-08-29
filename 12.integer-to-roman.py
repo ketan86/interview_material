@@ -168,29 +168,48 @@
 58 -> 50 + 5 +  1 +  1 + 1 (LVIII)
 4 -> V - I (IV)
 1994 -> 1000(M) + 900 + 90 (XC) + 4 (IV)
-    90 -> 100 - 10 (XC)
+90 -> 100 - 10 (XC)
 999 -> 900 (CM) + 90 (XC) + 9 (IX)
-
 56 -> 50 (L) + 6 (VI)
 134 -> 100 (C) + 30 (XXX) + 4 (IV) 
-
-1994/ 1000 
-
 """
-import sys
+# pylint:skip-file
 
 
 class Solution:
-    def intToRoman(self, num: int) -> str:
+    def intToRoman(self, num):
+        """
+        num = 1320
+
+        for 1000 .. 1:
+
+            at 1000
+                1320//1000 = 1 -> 1 time M
+                1320-(1000*1) = 320
+            900..500..400
+            at 100
+                320//100 = 3 -> 3 times C
+                320-(100*3) = 20
+
+            90..50..40
+            at 10
+                20//10 = 2 -> 2 times X
+                20-(10*2) = 0
+
+        Answer: MCCCXX
+        """
         result = []
         ints = (1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
         nums = ('M', 'CM', 'D', 'CD', 'C', 'XC',
                 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I')
+
+        # divide the number from 1000 to 1 and keep adding relevent roman
+        # characters counts time.
         for i in range(len(ints)):
-            count = num // ints[i]
-            result.append(nums[i] * count)
-            num -= count * ints[i]
+            remainder = num // ints[i]
+            result.append(nums[i] * remainder)
+            num -= remainder * ints[i]
         return ''.join(result)
 
 
-Solution().intToRoman(1320)
+print(Solution().intToRoman(1320))

@@ -33,7 +33,7 @@
 #
 
 # @lc code=start
-
+# pylint:skip-file
 
 # class Solution:
 #     def productExceptSelf(self, nums):
@@ -53,28 +53,30 @@
 #                 continue
 #             s = s * nums[i]
 #         return s
+
+
 class Solution:
     def productExceptSelf(self, nums):
         new_nums = []
+
         n = len(nums)
         if n < 2:
             return nums
-        product = 1
 
+        # calculate left products
+        product = 1
         new_nums.append(1)
         for i in range(1, n):
             product = product * nums[i - 1]
             new_nums.append(product)
 
+        # caculate right products
         product = 1
         for i in range(1, n):
             i = n - 1 - i
             product = product * nums[i + 1]
             new_nums[i] = new_nums[i] * product
         return new_nums
-
-    def productExceptSelf(self, nums):
-        pass
 
 # print(Solution().productExceptSelf([1,2,4,5,6,7]))
 # @lc code=end

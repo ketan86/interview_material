@@ -42,35 +42,45 @@
 #
 
 # @lc code=start
+# pylint: skip-file
 
 
 class Solution:
     def sortColors(self, nums):
         """
         Do not return anything, modify nums in-place instead.
+
+        KEY: m pointer advances and swaps numbers with i and j pointers
+        based on the fact that the all 0's must be on left and all 2's
+        must be on right.
         """
+        # here i represent the far left (0) and j far right(2)
+        # m moves ahead and if it is 0, swap with i and if 2,
+        # swap with j.
         i = 0
         j = len(nums) - 1
         m = 0
+        # move m till it crosses j. m and j must meet :)
+        # NOTE: usecase fails if m < j ([2,0,1])
         while m <= j:
+            # if m is 0, swap with i and increment i and m
             if nums[m] == 0:
-                temp = nums[m]
-                nums[m] = nums[i]
-                nums[i] = temp
+                nums[m], nums[i] = nums[i], nums[m]
                 i += 1
                 m += 1
+
+            # if m is 1, move m
             elif nums[m] == 1:
                 m += 1
+            # if m is 2, swap with j and decrement j
             elif nums[m] == 2:
-                temp = nums[m]
-                nums[m] = nums[j]
-                nums[j] = temp
+                nums[m], nums[j] = nums[j], nums[m]
                 j -= 1
 
         return nums
 
 
-# print(Solution().sortColors([2, 0, 1]))
+print(Solution().sortColors([2, 0, 1]))
 
 
 # @lc code=end

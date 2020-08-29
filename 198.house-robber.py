@@ -55,7 +55,7 @@ class Solution:
 
         if n < 1:
             return 0
-        
+
         # find the maximum of all the paths starting from each index.
         # for ex. [1,2,3,1]
         # starting of 0 money, robber can rob 1,2,3 or 4th house.
@@ -70,7 +70,7 @@ class Solution:
         return max_money
 
     def _dfs(self, nums, index, money_robbed, max_money_robbed, memo):
-        
+
         if index in memo:
             return memo[index] + money_robbed
 
@@ -87,10 +87,10 @@ class Solution:
         for i in range(index, len(nums)):
             max_money_robbed = max(
                 max_money_robbed, self._dfs(
-                    nums, i+2, money_robbed, max_money_robbed, memo))
+                    nums, i + 2, money_robbed, max_money_robbed, memo))
 
         memo[index] = max_money_robbed - money_robbed
-        
+
         # return the max of all the path.
         return max_money_robbed
 
@@ -120,12 +120,11 @@ class Solution:
             #   max(dp[2]=2+4, dp[3]=3)=6
             # ]
 
-            dp[i] = max(dp[i-2] + nums[i-1], dp[i-1])
-        print(dp)
+            dp[i] = max(dp[i - 2] + nums[i], dp[i - 1])
         return dp[len(nums)]
 
 
-print(Solution().rob([4,1,2,7,5,3,1]))
-print(Solution().rob([1,1,3,6,7,10,7,1,8,5,9,1,4,4,3]))
-print(Solution().rob([1,2,3,4]))
+print(Solution().rob([4, 1, 2, 7, 5, 3, 1]))
+print(Solution().rob([1, 1, 3, 6, 7, 10, 7, 1, 8, 5, 9, 1, 4, 4, 3]))
+print(Solution().rob([1, 2, 3, 4]))
 # @lc code=end

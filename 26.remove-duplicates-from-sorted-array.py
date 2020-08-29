@@ -62,23 +62,28 @@
 #
 
 # @lc code=start
+# pylint: skip-file
 
 
 class Solution:
     def removeDuplicates(self, nums):
-        n = len(nums)
-        if n < 1:
+        if not nums:
             return 0
 
+        i = 1
         prev = 0
-        length = 1
 
-        for i in range(1, n):
+        # use two pointers and if forward pointers find a number that is not
+        # equal to current pointer value, swap with next element of prev
+        # and increment the i.
+        while i < len(nums):
             if nums[i] != nums[prev]:
-                length += 1
+                # NOTE: swap with next element of prev is the key.
                 nums[prev + 1], nums[i] = nums[i], nums[prev + 1]
                 prev += 1
-        return length
+            i += 1
+        return prev
 
-# print(Solution().removeDuplicates([1, 1, 1, 2, 2,3,3,4,5,6]))
+
+print(Solution().removeDuplicates([1, 1, 2]))
 # @lc code=end

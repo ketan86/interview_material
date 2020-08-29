@@ -19,6 +19,11 @@ Output: 4
 # pylint: skip-file
 
 
+# NOTE: The idea here is to arrage all positive numbers starting from
+# index 0. for ex,
+#      [-3, 1, 5, 4, 2]    -> [1, 2, -3, 4, 5]
+# iterate over the results and find the first positive number that is
+# not at the right position.
 def find_smallest_missing_positive_number(arr):
     i = 0
     n = len(arr)
@@ -31,7 +36,7 @@ def find_smallest_missing_positive_number(arr):
             arr[i], arr[index] = arr[index], arr[i]
         else:
             i += 1
-
+    print(arr)
     for i in range(n):
         if i != arr[i] - 1:
             return i + 1

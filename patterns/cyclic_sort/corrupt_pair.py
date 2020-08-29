@@ -22,11 +22,11 @@ def find_corrupt_pair(arr):
     n = len(arr)
     while i < n:
         index = arr[i] - 1
-        if i != index and arr[i] != arr[index]:
+        if arr[i] != arr[index]:
             arr[i], arr[index] = arr[index], arr[i]
         else:
             i += 1
-
+    print(arr)
     for i in range(n):
         if i != arr[i] - 1:
             return [arr[i], i + 1]

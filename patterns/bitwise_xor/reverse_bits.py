@@ -1,15 +1,16 @@
 # pylint: skip-file
 def reverse_bit(num):
+    # right shift num, AND with 1 and OR with the left shifted result.
     result = 0
     while num:
-        result = (result << 1) + (num & 1)
+        result = (result << 1) | (num & 1)
         num >>= 1
     return result
 
 
 """
 Steps :
-    strip off the last bit, and with 1 and add it to results.
+    strip off the last bit, & with 1 and add it to results.
     0b010,     0 & 1 = 0 <- result 0b0
     0b01       1 & 1 = 1, left shift result 0b0 and add 1 to it. 0b01
     ...
@@ -34,7 +35,7 @@ while:
 """
 
 # We don't really need to convert the integer into binary, since integers
-# are actually binary in Python.
+# are actually represented binary in Python.
 # The reversing idea is like doing the in-space reversing of integers.
 
 

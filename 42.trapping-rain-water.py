@@ -30,25 +30,31 @@
 #
 
 # @lc code=start
+# pylint:skip-file
 
 
 class Solution:
-    def trap(self, elevation_map) -> int:
+    def trap(self, elevation_map):
+        """
+        The idea here is to find the total water we could trap over the
+        current bar. It will be min of two highest bar - current height.
+        """
         unit_of_water = 0
-        for index, i in enumerate(elevation_map):
-            left_highest = max(elevation_map[:index], default=0)
-            right_highest = max(elevation_map[index + 1:], default=0)
-            current_hight = elevation_map[index]
-            # print(left_highest, current_hight, right_highest)
-            if left_highest > current_hight and right_highest > current_hight:
+        # iterate over the elevation map
+        for i in range(len(elevation_map)):
+            # find the highest on left side of the current element
+            left_highest = max(elevation_map[:i], default=0)
+            # find the highest on the right side of the current element
+            right_highest = max(elevation_map[i + 1:], default=0)
+            # if both left and right highest are found, the amount of water
+            # we can trap over the current bat will be min of highest - current.
+            if left_highest > elevation_map[i] and \
+                    right_highest > elevation_map[i]:
                 unit_of_water += min(
-                    left_highest, right_highest) - current_hight
-            # print(unit_of_water)
+                    left_highest, right_highest) - elevation_map[i]
         return unit_of_water
 
 
-# if __name__ == '__main__':
-#     s = Solution().trap([0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1])
-#     print(s)
+# print(Solution().trap([0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]))
 
 # @lc code=end

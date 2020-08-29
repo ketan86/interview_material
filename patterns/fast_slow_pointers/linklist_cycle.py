@@ -6,12 +6,19 @@ class Node:
 
 
 def find_cycle(head):
+    # defind a slow and fast pointer
     slow, fast = head, head
-    while fast is not None and fast.next is not None:
+
+    # if fast and fast.next pointers are not None.
+    while fast and fast.next:
+        # take two steps
         fast = fast.next.next
+        # take one step
         slow = slow.next
+        # when slow and fast pointers meet, cycle is found. else continue.
         if slow == fast:
             return True
+
     return False
 
 

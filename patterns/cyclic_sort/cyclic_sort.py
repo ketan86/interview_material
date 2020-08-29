@@ -67,13 +67,12 @@ right number.
 
 
 def cyclic_sort(arr):
-    i = 0
-    while i < len(arr):
+    for i in range(len(arr)):
         while arr[i] - 1 != i:
+            # one liner swap would not
             temp = arr[arr[i] - 1]
             arr[arr[i] - 1] = arr[i]
             arr[i] = temp
-        i += 1
     return arr
 
 

@@ -6,10 +6,14 @@ class Node:
 
 
 def find_middle(head):
+    # define a slow and fast pointer
     slow, fast = head, head
-    while fast is not None and fast.next is not None:
+    # check the fast pointer and fast's next pointer is not None.
+    while fast and fast.next:
         fast = fast.next.next
         slow = slow.next
+    # when fast pointer reaches the end of the linklist. slow pointer is at the
+    # middle of the linklist.
     return slow.data
 
 

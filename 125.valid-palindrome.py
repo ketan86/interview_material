@@ -36,10 +36,30 @@
 #
 
 # @lc code=start
+# pylint: skip-file
+
+from string import ascii_lowercase, digits
+from collections import deque
 
 
 class Solution:
     def isPalindrome(self, s):
-        pass
+        output = ''
+        for char in s:
+            if char.lower() in ascii_lowercase + digits:
+                output += char.lower()
 
+        i = 0
+        j = len(output) - 1
+
+        while i <= j:
+            if output[i] != output[j]:
+                return False
+            i += 1
+            j -= 1
+
+        return True
+
+
+print(Solution().isPalindrome(";  "))
 # @lc code=end

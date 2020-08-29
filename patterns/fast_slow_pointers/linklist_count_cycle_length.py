@@ -6,16 +6,22 @@ class Node:
 
 
 def find_cycle_length(head):
+    # define slow and fast pointers
     slow, fast = head, head
-    while fast is not None and fast.next is not None:
+    # if fast and fast.next is not None.
+    while fast and fast.next:
         fast = fast.next.next
         slow = slow.next
+        # when both pointers meet, it's a start of the cycle.
         if slow == fast:
             return _find_length(slow)
     return 0
 
 
 def _find_length(slow):
+    # copy the slow pointer location and move the pointer until the slow
+    # pointer again meets the copied slow pointer. keep counting the node
+    # along the way.
     curr = slow
     length = 1
     while curr.next != slow:

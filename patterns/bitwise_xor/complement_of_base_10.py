@@ -26,9 +26,16 @@ which is 5 in base-10.
 # pylint: skip-file
 
 
+# The goal here is find the same length number with all bits set that can be
+# XORed with the current number to flip the bits.
+
+# 1 << (no of bits) - 1 -> gives all bits set
+# for ex, 8 = 1 << 4 (16) - 1 = 15 -> all bits are set
+#         25 = 1 << 5 (32) - 1 = 31 -> all bits are set
+
 def calculate_bitwise_complement(n):
-    # count number of bits. 
-    # right bitwise shift until reaches 0. 
+    # count number of bits.
+    # right bitwise shift until reaches 0.
     # for ex, 8, 8 >> 1 = 4, 4 >>1 = 2, 2 >>1 = 1,  1 >>1 = 0
     # (total 4 operations)
     bits = 0
@@ -41,7 +48,7 @@ def calculate_bitwise_complement(n):
     # if you XOR number with all 1's, you get the complement.
     # for ex, 8 contains 4 bits, 2 ^ 4 = 16 (10000)
     # to reduce to 4 digits all set to 1, 16 -1 = 15 (1111)
-    all_bits_set = pow(2, bits) - 1
+    all_bits_set = (1 << bits) - 1
 
     return n ^ all_bits_set
 

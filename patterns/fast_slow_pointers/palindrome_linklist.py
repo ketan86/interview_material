@@ -11,7 +11,8 @@ def is_palindrome(head):
     while fast and fast.next:
         fast = fast.next.next
         slow = slow.next
-
+    import pdb
+    pdb.set_trace()
     # reverse the right half
     slow = reverse(slow)  # pointer to the start of the reversed half
     # copy the node to reset back
@@ -20,6 +21,7 @@ def is_palindrome(head):
     # and return false
     # else, reset and return true
     fast = head
+
     while slow:
         if slow.data != fast.data:
             break
@@ -38,12 +40,18 @@ def reverse(node):
     while node:
         # save next
         nxt = node.next
-        # link to prev
+        # link to prev (NOTE: this makes the head detach from head)
         node.next = prev
         # move prev and node one step ahead
         prev = node
         node = nxt
     return prev
+
+
+def _print(node):
+    while node:
+        print(str(node.data) + '->')
+        node = node.next
 
 
 def main():
@@ -52,9 +60,9 @@ def main():
     head.next.next = Node('c')
     head.next.next.next = Node('d')
     head.next.next.next.next = Node('e')
-    # print("LinkedList is_palindrome: " + str(is_palindrome(head)))
+    print("LinkedList is_palindrome: " + str(is_palindrome(head)))
     head.next.next.next.next.next = Node('d')
-    # print("LinkedList is_palindrome: " + str(is_palindrome(head)))
+    print("LinkedList is_palindrome: " + str(is_palindrome(head)))
     head.next.next.next.next.next.next = Node('c')
     print("LinkedList is_palindrome: " + str(is_palindrome(head)))
     head.next.next.next.next.next.next.next = Node('b')

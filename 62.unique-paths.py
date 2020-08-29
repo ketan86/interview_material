@@ -53,6 +53,26 @@
 
 class Solution:
     def uniquePaths(self, m: int, n: int) -> int:
+        """
+        for 3x3 grid,
+
+                     1step     2..n step
+        [x 0 0]    [x 1 1]     [x 1 1]    [x 1 1]          [x 1 1]
+        [0 0 0] -> [1 0 0]  -> [1 2 0] -> [1 2 3] -> .. -> [1 2 3]
+        [0 0 0]    [1 0 0]     [1 0 0]    [1 0 0]          [1 3 6]
+
+        1 step:
+            we fill first row's columns and first column's rows with 1
+            because we can only reach at those cells from one direction.
+            because we can't come from bottom or right.
+
+        2 step:
+            starting from [1][1] .. [n][n], we keep summing ways from top
+            and left to find the total paths to reach that cell.
+
+            for ex, [1][1] -> [0][1](1) + [1][0](1) = 2 paths
+                    [2][2] -> [1][2](3) + [2][1](3) = 6 paths
+        """
         # no unique distance if m or n is 0.
         if m == 0 or n == 0:
             return 0

@@ -75,6 +75,9 @@ class Solution:
             return islands
 
         def dfs(i, j):
+            # NOTE: grid[i] would fail if i is less than 0 or greater than grid
+            # length so the order is important.
+
             # if we are out of bound, return 0
             if i < 0 or j < 0 or i >= len(grid) or j >= len(grid[i]):
                 return 0

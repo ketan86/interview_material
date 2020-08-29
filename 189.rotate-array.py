@@ -73,7 +73,7 @@ class Solution:
         """
         Do not return anything, modify nums in-place instead.
 
-        Let n=7n=7 and k=3k=3.
+        Let n=7 and k=3.
 
         Original List                   : 1 2 3 4 5 6 7
         After reversing all numbers     : 7 6 5 4 3 2 1
@@ -83,6 +83,10 @@ class Solution:
         n = len(nums)
         if n < 1:
             return nums
+
+        # if k is greater than n, we do not have to k times. we only
+        # rotate the diff.
+        # for ex, 12 % 10 = 2 so only rotate two times instead of 12 times.
         k = k % n
         # reverse the array
         self.reverse(nums, 0, n - 1)

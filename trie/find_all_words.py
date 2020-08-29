@@ -2,11 +2,8 @@
 # TrieNode => {children, is_end_word, char, mark_as_leaf(), unmark_as_leaf()}
 from trie import Trie
 
-# NOTE: words searched in trie would always be sorted due to pre-order
-# traversal and sorted letters in alphabetical order.
 
-
-def sort_list(node, word):
+def find_words(node, word):
     # define result
     result = []
 
@@ -19,7 +16,7 @@ def sort_list(node, word):
         # if child is not none, find words in all other child.
         if child:
             # Recursively return the word count
-            result += sort_list(child, word + child.char)
+            result += find_words(child, word + child.char)
 
     return result
 
@@ -30,4 +27,4 @@ trie = Trie()
 for key in keys:
     trie.insert(key)
 
-print(sort_list(trie.root, ''))
+print(find_words(trie.root, ''))

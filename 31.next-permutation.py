@@ -45,7 +45,8 @@ class Solution:
         1. go from right to left and stop at the element where
         current element is less than the next element
         2. sort all element next to the right of the current element
-        3. swap current and next element
+        3. swap current element with first bigger element in the sorted
+        array.
         """
         if len(nums) == 1:
             return nums

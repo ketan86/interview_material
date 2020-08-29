@@ -68,43 +68,55 @@ class Solution:
 class Solution:
     def maxSubArray(self, nums):
         """
+        At each index, either the current element is max sum or prev sum +
+        current element is max.
+
+        Based on this max, we calculate the overall max.
+
         [-5, -1, -4, -3]
-         -5  -1  -4  -3
 
-        max_sum | i | nums[i-1] | nums[i]
-        -5        0
-        -5        1        -5        -1 = -5 < 0 = max(-5, -1) = -1
-                  2        -1        -4 = -1 < 0 = max(-1, -4) = -1
-                  3        -4        -3 = -4 < 0 = max(-1, -3) = -1
-                  ...
+        i
 
-        [-2, 1, 4, -3, 2]
-         -2  1  5  2   4
+        0 -> curr_sum, max_sum = -5
+        1 -> curr_sum = max(-1, -5-1) = -1
+             curr_sum > max_sum so max_sum = -1
+        2 -> curr_sum = max(-4, -4-1) = -4
+             curr_sum < max_sum so max_sum = -1
+        3 -> curr_sum = max(-3, -4-3) = -7
+             curr_sum < max_sum so max_sum = -1
 
-        max_sum | i | nums[i-1] | nums[i]
-        -2        0
-                  1      -2          1 = -2 < 0 = max(-2, 1) = 1
-                  2       1          4 = 1 < 0 = max(1, 5) = 4
-                  ...
+        max_sum = -1
+
+        [-2,1,-3,4,-1]
+
+        i
+
+        0 -> curr_sum, max_sum = -2
+        1 -> curr_sum = max(1, -2+1) = 1
+             curr_sum > max_sum so max_sum = 1
+        -3 -> curr_sum = max(-3, -3+1) = -2
+             curr_sum < max_sum so max_sum = 1
+        4 -> curr_sum = max(4, -2+4) = 4
+             curr_sum > max_sum so max_sum = 4
+        -1 -> curr_sum = max(-1, -1+4) = 3
+             curr_sum < max_sum so max_sum = 4
         """
+        # curr_sum = max(curr_sum + nums[i], curr_sum)
+        # max_sum = max(curr_sum, max_sum)
 
         n = len(nums)
         if n < 1:
             return 0
-        # initialize max sum to first element.
-        max_sum = nums[0]
-        # loop over the elements and if previous element is non-negative,
-        # add previous number to current and keep calculating the sum.
 
-        # if previous number is negative, current number is considered the
-        # subarray.
+        curr_sum = nums[0]
+        max_sum = nums[0]
+
         for i in range(1, n):
-            if nums[i - 1] > 0:
-                nums[i] += nums[i - 1]
-            # keep calculating the max_sum between previous sum and current
-            # number.
-            max_sum = max(nums[i], max_sum)
+            curr_sum = max(curr_sum + nums[i], nums[i])
+            max_sum = max(max_sum, curr_sum)
+
         return max_sum
 
 
 # @lc code=end
+print(Solution().maxSubArray([1, -2, 4, 6, -7, -3]))

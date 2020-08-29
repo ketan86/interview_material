@@ -15,7 +15,17 @@ Input: [
   [1,1,1],
   [0,1,1]
 ]
-Output: [
+Output:
+
+reverse:
+[
+  [1,0,1],
+  [1,1,1],
+  [1,1,0]
+
+]
+invert:
+[
   [0,1,0],
   [0,0,0],
   [0,0,1]
@@ -42,22 +52,25 @@ Then invert the image: [[1,1,0,0],[0,1,1,0],[0,0,0,1],[1,0,1,0]]
 """
 # pylint: skip-file
 
+# Using the XOR property, we can XOR the bits with 1 and swap.
+
+
 def flip_and_invert_image(matrix):
-    m = len(matrix)
-    for row in range(m):
-        n = len(matrix[row])
+    for row in matrix:
         i = 0
-        j = n - 1
+        j = len(row) - 1
         while i <= j:
-            # XOR 0 ^ 1 = 1, 1 ^ 1 = 0
-            matrix[row][i], matrix[row][j] = \
-                matrix[row][j] ^ 1, matrix[row][i] ^ 1
+            # XOR(0 ^ 1 = 1, 1 ^ 1 = 0) and Swap
+            row[i], row[j] = row[j] ^ 1, row[i] ^ 1
             i += 1
             j -= 1
     return matrix
 
+
 def main():
-    print(flip_and_invert_image([[1,0,1], [1,1,1], [0,1,1]]))
-    print(flip_and_invert_image([[1,1,0,0],[1,0,0,1],[0,1,1,1],[1,0,1,0]]))
+    print(flip_and_invert_image([[1, 0, 1], [1, 1, 1], [0, 1, 1]]))
+    print(flip_and_invert_image(
+        [[1, 1, 0, 0], [1, 0, 0, 1], [0, 1, 1, 1], [1, 0, 1, 0]]))
+
 
 main()

@@ -27,11 +27,23 @@ def find_missing_number(arr):
             i += 1
     for i in range(n):
         if i != arr[i]:
-            print(arr[i])
-            return
+            return i
     return n
+
+
+def find_missing_number_2(arr):
+    n = len(arr)
+    total_sum = 0
+    for i in arr:
+        total_sum += i
+
+    return ((n * (n + 1)) // 2) - total_sum
 
 
 print(find_missing_number([4, 0, 3, 1]))
 print(find_missing_number([8, 3, 5, 2, 4, 6, 0, 1]))
 print(find_missing_number([8, 3, 5, 1, 2, 4, 6, 0, 1]))
+
+print(find_missing_number_2([4, 0, 3, 1]))
+print(find_missing_number_2([8, 3, 5, 2, 4, 6, 0, 1]))
+print(find_missing_number_2([8, 3, 5, 1, 2, 4, 6, 0]))

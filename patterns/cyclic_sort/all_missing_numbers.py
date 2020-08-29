@@ -23,16 +23,22 @@ Output: 4
 
 def find_all_missing_numbers(arr):
     n = len(arr)
-    i = 0
+    # i = 0
 
     # cyclic sort
-    while i < n:
-        j = arr[i] - 1
-        if arr[j] != arr[i] and j != i:
-            arr[j], arr[i] = arr[i], arr[j]
-        else:
-            i += 1
+    # while i < n:
+    #     j = arr[i] - 1
+    #     if arr[j] != arr[i] and j != i:
+    #         arr[j], arr[i] = arr[i], arr[j]
+    #     else:
+    #         i += 1
 
+    for i in range(len(arr)):
+        while arr[i] - 1 != i and arr[i] != arr[arr[i] - 1]:
+            # one liner swap would not work
+            temp = arr[arr[i] - 1]
+            arr[arr[i] - 1] = arr[i]
+            arr[i] = temp
     # capture where indexes do not match the value - 1
     missing = []
     for i in range(n):

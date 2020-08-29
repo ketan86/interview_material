@@ -87,46 +87,69 @@ class Solution:
 
     #     return matrix
 
-    def setZeroes(self, matrix):
-        import pdb
-        pdb.set_trace()
+    def setZeroesSlightlyEfficient(self, matrix):
+        """
+        Do not return anything, modify matrix in-place instead.
+        """
         rows = len(matrix)
         cols = len(matrix[0])
 
-        first_col_zero = False
-        first_row_zero = False
+        # store all rows and cols where value is 0
+        row_set = set()
+        col_set = set()
 
         for i in range(rows):
-            if matrix[i][0] == 0:
-                first_col_zero = True
-
-        for j in range(cols):
-            if matrix[0][j] == 0:
-                first_row_zero = True
-
-        for i in range(1, rows):
-            for j in range(1, cols):
+            for j in range(cols):
                 if matrix[i][j] == 0:
-                    matrix[0][j] = 0
-                    matrix[i][0] = 0
+                    row_set.add(i)
+                    col_set.add(j)
 
-        for i in range(1, rows):
-            for j in range(1, cols):
-                if matrix[0][j] == 0 or matrix[i][0] == 0:
+        # loop over the matrix
+        for i in range(rows):
+            for j in range(cols):
+                # if both i and j are 0
+                if i in row_set or j in col_set:
                     matrix[i][j] = 0
-
-        if first_col_zero:
-            for i in range(rows):
-                matrix[i][0] = 0
-
-        if first_row_zero:
-            for i in range(cols):
-                matrix[0][i] = 0
 
         return matrix
 
+    # def setZeroes(self, matrix):
+    #     rows = len(matrix)
+    #     cols = len(matrix[0])
 
-print(Solution().setZeroes([
+    #     first_col_zero = False
+    #     first_row_zero = False
+
+    #     for i in range(rows):
+    #         if matrix[i][0] == 0:
+    #             first_col_zero = True
+
+    #     for j in range(cols):
+    #         if matrix[0][j] == 0:
+    #             first_row_zero = True
+
+    #     for i in range(1, rows):
+    #         for j in range(1, cols):
+    #             if matrix[i][j] == 0:
+    #                 matrix[0][j] = 0
+    #                 matrix[i][0] = 0
+    #     for i in range(1, rows):
+    #         for j in range(1, cols):
+    #             if matrix[0][j] == 0 or matrix[i][0] == 0:
+    #                 matrix[i][j] = 0
+
+    #     if first_col_zero:
+    #         for i in range(rows):
+    #             matrix[i][0] = 0
+
+    #     if first_row_zero:
+    #         for i in range(cols):
+    #             matrix[0][i] = 0
+
+    #     return matrix
+
+
+print(Solution().setZeroesSlightlyEfficient([
     [0, 1, 2, 0],
     [3, 4, 5, 2],
     [1, 3, 1, 5]
