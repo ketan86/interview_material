@@ -36,11 +36,11 @@ into one [1,4].
 """
 
 
-def insert_interval(arr, new_interval):
+def insert_interval(intervals, new_interval):
     results = []
     inserted = False
     # merge intervals.
-    for interval in arr:
+    for interval in intervals:
 
         # insert new interval at appropriate position only once.
         if not inserted:

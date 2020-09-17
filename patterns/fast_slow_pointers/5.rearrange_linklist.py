@@ -17,7 +17,7 @@ class Node:
 """
 NOTE: Key here is to make sure both lists are merged correctly and it depends
 on the nodes count. make sure right linkedlist is smaller then left or
-wiseversa.
+viceversa.
     # odd elements -> slow is set to mid (1 2 3 4 5 6 7) -> 4
         - left -> 1 2 3 4 , right -> 5 6 7
         - 1 -> 5 -> 2 -> 6 -> 3 -> 7 -> 4

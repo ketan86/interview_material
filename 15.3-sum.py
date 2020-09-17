@@ -1,3 +1,5 @@
+# @lc app=leetcode id=23 lang=python3
+
 # Given an array nums of n integers, are there elements a, b, c in nums such that a + b + c = 0? Find all unique triplets in the array which gives the sum of zero.
 
 # Note:
@@ -13,6 +15,7 @@
 #     [-1, 0, 1],
 #     [-1, -1, 2]
 # ]
+# @lc code=start
 
 # pylint:skip-file
 
@@ -26,44 +29,51 @@ class Solution:
         if not nums:
             return results
         nums.sort()
-        n = len(nums) - 2
+
         # go till 3rd last element
-        for i in range(n):
+        for i in range(len(nums) - 2):
+            # if i value is greater than 0, sum will never be 0.
+            if nums[i] > 0:
+                break
+
             # if we find the current element same as prev, skip it to eliminate
             # duplicates.
             if i > 0 and nums[i] == nums[i - 1]:
                 continue
 
             # two pointers to find the diff
-            m = i + 1
-            n = len(nums) - 1
-            # find the target sum in array from i+1, n
-            target = 0 - nums[i]
+            x = j = i + 1
+            y = k = len(nums) - 1
 
-            # only till m < n and NOT m <=n beacuse we need two elements
-            while m < n:
-                # sum of the two elements
-                sum_ = nums[m] + nums[n]
-                # if sum is less than target or m value is same as prev,
-                # increment m
-                if sum_ < target or (m > i + 1 and nums[m] == nums[m - 1]):
-                    m += 1
-                # if sum is greater than target or m value is same as prev,
-                # decrement n
-                elif sum_ > target or (
-                        n < len(nums) - 1 and nums[n] == nums[n + 1]):
-                    n -= 1
-                # if sum is euqal to target, record the results and increament
-                # m and decrement n.
+            # only till j < k and NOT j <=k beacuse we need two elements
+            while j < k:
+                # if prev value of the j or k is same, skip j or k
+                if j > x and nums[j] == nums[j - 1]:
+                    j += 1
+                    continue
+
+                if y > k and nums[k] == nums[k + 1]:
+                    k -= 1
+                    continue
+
+                # sum of all the elements
+                sum_ = nums[i] + nums[j] + nums[k]
+                # if sum is 0, record the results and increament j and k
+                if sum_ == 0:
+                    results.append([nums[i], nums[j], nums[k]])
+                    j += 1
+                    k -= 1
+                # if sum is less than the target(0), increment j to reach
+                # close to target. else decrement k
+                elif sum_ < 0:
+                    j += 1
                 else:
-                    results.append([nums[i], nums[m], nums[n]])
-                    m += 1
-                    n -= 1
+                    k -= 1
 
-        # return results.
         return results
 
 
 print(Solution().threeSum([-1, 0, 1, 2, -1, -4]))
 print(Solution().threeSum([-2, 0, 0, 2, 2]))
 print(Solution().threeSum([0, 0, 0]))
+# @lc code=end

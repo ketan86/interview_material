@@ -25,8 +25,10 @@ Explanation: Since all the given intervals overlap, we merged them into one.
 """
 # pylint: skip-file
 
-## NOTE:: Here heap data structure could be used but to add n elements into
+# NOTE:: Here heap data structure could be used but to add n elements into
 # heap will have nlogn time complexity which is similar to sorting.
+
+
 def merge_intervals(arr):
     # sort the array so only adjacent intervals need merging.
     arr.sort()
@@ -40,8 +42,13 @@ def merge_intervals(arr):
         # and merge with current one. push merged interval to results array.
         else:
             if results[-1][1] > interval[0]:
-                last_interval = results.pop()
-                results.append(_merge_intervals(last_interval, interval))
+
+                # update result last inteval with merged results.
+                results[-1] = [
+                    min(results[-1][0], interval[0]),
+                    max(results[-1][1], interval[1])
+                ]
+
             else:
                 # if current interval is not overlapping, put that in results
                 # array
@@ -50,7 +57,7 @@ def merge_intervals(arr):
 
 
 def _merge_intervals(i, j):
-    return [min(i[0], j[0]), max(i[1], j[1])]
+    return
 
 
 print(merge_intervals([[1, 4], [2, 5], [7, 9]]))
