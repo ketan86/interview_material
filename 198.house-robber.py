@@ -104,7 +104,7 @@ class Solution:
         # from house 2 to n+1 (since we have 0th house)
         for i in range(2, len(nums) + 1):
             # at i'th house, the maximum money robbed is equal to
-            # max of third last house + current house or second last house.
+            # max of (third last house + current house) or (second last house).
             # in other words: at any house, robber would have come with
             # the all money collected from a house 1 house away + money from
             # the current house. if this is less than the money collected

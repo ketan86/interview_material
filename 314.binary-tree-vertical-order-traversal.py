@@ -15,48 +15,48 @@
 #
 # Given a binary tree, return the vertical order traversal of its nodes'
 # values. (ie, from top to bottom, column by column).
-# 
+#
 # If two nodes are in the same row and column, the order should be from left to
 # right.
-# 
+#
 # Examples 1:
-# 
-# 
+#
+#
 # Input: [3,9,20,null,null,15,7]
-# 
+#
 # ⁠  3
 # ⁠ /\
 # ⁠/  \
 # ⁠9  20
 # ⁠   /\
 # ⁠  /  \
-# ⁠ 15   7 
-# 
+# ⁠ 15   7
+#
 # Output:
-# 
+#
 # [
 # ⁠ [9],
 # ⁠ [3,15],
 # ⁠ [20],
 # ⁠ [7]
 # ]
-# 
-# 
+#
+#
 # Examples 2:
-# 
-# 
+#
+#
 # Input: [3,9,8,4,0,1,7]
-# 
+#
 # ⁠    3
 # ⁠   /\
 # ⁠  /  \
 # ⁠  9   8
 # ⁠ /\  /\
 # ⁠/  \/  \
-# ⁠4  01   7 
-# 
+# ⁠4  01   7
+#
 # Output:
-# 
+#
 # [
 # ⁠ [4],
 # ⁠ [9],
@@ -64,14 +64,14 @@
 # ⁠ [8],
 # ⁠ [7]
 # ]
-# 
-# 
+#
+#
 # Examples 3:
-# 
-# 
+#
+#
 # Input: [3,9,8,4,0,1,7,null,null,null,2,5] (0's right child is 2 and 1's left
 # child is 5)
-# 
+#
 # ⁠    3
 # ⁠   /\
 # ⁠  /  \
@@ -82,9 +82,9 @@
 # ⁠   /\
 # ⁠  /  \
 # ⁠  5   2
-# 
+#
 # Output:
-# 
+#
 # [
 # ⁠ [4],
 # ⁠ [9,5],
@@ -92,7 +92,7 @@
 # ⁠ [8,2],
 # ⁠ [7]
 # ]
-# 
+#
 #
 
 # @lc code=start
@@ -104,7 +104,9 @@ class TreeNode:
         self.left = left
         self.right = right
 
+
 from collections import deque, defaultdict
+
 
 class Solution:
     def verticalOrder(self, root):
@@ -120,11 +122,17 @@ class Solution:
                         /         \
             2           15        7
 
-        
+
         using the above grid, we can start with storing the root node with
         column value as 0, then for each left and right node of the root,
         we can decrement of increment the column value. we are also storing
         the node in the map based on the column value.
+
+        when we are done iterating, we can return the sorted map values.
+
+        NOTE: Since we want to nodes to return sorted from top to bottom,
+        we are using bfs. If it asked to return from bottom to top, dfs
+        may help or values can be inserted in reverse order.
         """
         if not root:
             return []
@@ -133,7 +141,7 @@ class Solution:
         # map to store the list of node by column
         d = defaultdict(list)
         # append root node and mark the column as 0
-        queue.append((root,0))
+        queue.append((root, 0))
         # append the root node on column 0 key
         d[0].append(root.val)
         while queue:
@@ -144,13 +152,13 @@ class Solution:
                 if node.left:
                     # append left node to the list of nodes where column value
                     # is equal to root node column value - 1
-                    d[column-1].append(node.left.val)
-                    queue.append((node.left, column-1))
+                    d[column - 1].append(node.left.val)
+                    queue.append((node.left, column - 1))
                 if node.right:
                     # append right node to the list of nodes where column value
                     # is equal to root node column value + 1
-                    d[column+1].append(node.right.val)
-                    queue.append((node.right, column+1))
+                    d[column + 1].append(node.right.val)
+                    queue.append((node.right, column + 1))
 
         # sort the dict by key and return the results.
         result = []
@@ -158,7 +166,7 @@ class Solution:
             result.append(v)
 
         return result
-        
+
 
 # t = TreeNode(3)
 # t.left = TreeNode(9)
@@ -167,4 +175,3 @@ class Solution:
 # t.right.right = TreeNode(7)
 # print(Solution().verticalOrder(t))
 # @lc code=end
-

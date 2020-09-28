@@ -73,6 +73,9 @@ class Solution:
             freq_map[word] += 1
 
         # add all words into heap based on the freq in max_heap
+
+        # NOTE: when freq is same, we need to use lexicographical order of the
+        # same words so we need to store all the elements.
         for word, freq in freq_map.items():
             heapq.heappush(max_heap, (-freq, word))
 

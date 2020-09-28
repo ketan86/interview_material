@@ -65,7 +65,35 @@
 
 class Solution:
     def nextGreaterElement(self, nums1, nums2):
+        """
+        The idea here is to use stack to find the next greatest element.
+        for ex, nums2 -> [1,3,4,2,8]
+           [1]      1 goes to stack
+                    3 > 1
+                        if 1 in nums1, we found 3 as the greatest element of 1
+                        stack.top()
+           [3]      3 goes to stack
+                    4 > 3
+                        if 3 in nums1, we found 4 as the greatest element of 3
+                        stack.top()
+           [4]      4 goes to stack
+                    2 > 4 -> no
 
+           [4,2]    2 goes to stack
+                    8 > 2
+                        if 2 in nums1, we found 8 as the greatest element of 2
+                        stack.top()
+
+                    8 > 4
+                        if 4 in nums1, we found 8 as the greatest element of 4
+                        stack.top()
+
+                    above two loops require the while loop on the stack and
+                    keep processing the top item until current item is less
+                    than the top item.
+
+            exit
+        """
         # store all nums1 to dict with value -1
         d = {}
         for num in nums1:
@@ -92,7 +120,7 @@ class Solution:
                 # else pop all values until current number is less than the
                 # top element of the stack.
 
-                # all poped values will have current element the next greater
+                # all popped values will have current element the next greater
                 # element.
                 while stack:
                     if num > stack[-1]:
@@ -108,9 +136,14 @@ class Solution:
                 # add current element to stack
                 stack.append(num)
 
-        return list(d.values())
+        # to maintain the order, we have to iterate over the num1 and
+        # use values stored in the dict. We replace the nums1 with the results.
+        for index, i in enumerate(nums1):
+            nums1[index] = d[i]
+
+        return nums1
 
 
-# print(Solution().nextGreaterElement([4, 1, 2], [1, 3, 4, 2]))
-# print(Solution().nextGreaterElement([2, 4], [1, 2, 3, 4]))
+print(Solution().nextGreaterElement([4, 1, 2], [1, 3, 4, 2]))
+print(Solution().nextGreaterElement([2, 4], [1, 2, 3, 4]))
 # @lc code=end

@@ -17,28 +17,30 @@
 # amount. Write a function to compute the fewest number of coins that you need
 # to make up that amount. If that amount of money cannot be made up by any
 # combination of the coins, return -1.
-# 
+#
 # Example 1:
-# 
-# 
+#
+#
 # Input: coins = [1, 2, 5], amount = 11
-# Output: 3 
+# Output: 3
 # Explanation: 11 = 5 + 5 + 1
-# 
+#
 # Example 2:
-# 
-# 
+#
+#
 # Input: coins = [2], amount = 3
 # Output: -1
-# 
-# 
+#
+#
 # Note:
 # You may assume that you have an infinite number of each kind of coin.
-# 
+#
 #
 # pylint: skip-file
 from collections import deque
 # @lc code=start
+
+
 class Solution:
     def failedSolutionCoinChange(self, coins, amount):
         """
@@ -96,7 +98,6 @@ class Solution:
                 return num_of_coins
         return -1
 
-
     def bfsCoinChange(self, coins, amount):
         """
         Breath first search using queue. At any level, amount becomes 0,
@@ -114,7 +115,7 @@ class Solution:
                     new_amount = current_amount - coin
                     if new_amount == 0:
                         return current_num_of_coins + 1
-                    queue.append((new_amount, current_num_of_coins+1))
+                    queue.append((new_amount, current_num_of_coins + 1))
         return -1
 
     def coinChange(self, coins, amount):
@@ -135,7 +136,7 @@ class Solution:
         change(2) = 2 - coins[0] = (1) = 1
                         we need change(1) + 1 = 2 coins to find the total
                             coins for change(2)
-                        
+
                   = 2 - coins[1] = (2) = 0
                         we need change(0) + 1 = 1 coins to find the total
                             coins for change(2)
@@ -169,10 +170,10 @@ class Solution:
                     # required for the change.
                     dp[i] = min(dp[i], 1 + dp[i - coins[j]])
 
-
         # return -1 if min coins are still inf else return the min coins
         # for the amount given.
         return -1 if dp[amount] == float('inf') else dp[amount]
+
 
 print(Solution().coinChange([1, 7, 9], 1000))
 # print(Solution().coinChange([2], 3))

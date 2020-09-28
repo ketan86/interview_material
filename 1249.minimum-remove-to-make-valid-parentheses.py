@@ -80,7 +80,7 @@ class Solution:
         if not s:
             return output
 
-        # stack to store the parentheses and index where it occured
+        # stack to store the parentheses and index where it occurred
         stack = []
 
         # loop over the input string
@@ -111,5 +111,5 @@ class Solution:
         return output
 
 
-# print(Solution().minRemoveToMakeValid('(a(b(c)d)'))
+print(Solution().minRemoveToMakeValid('(a(b(c)d)'))
 # @lc code=end

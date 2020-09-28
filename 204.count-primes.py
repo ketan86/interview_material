@@ -32,9 +32,26 @@ import math
 
 
 class Solution:
+    """
+    What are Prime Numbers?
+
+    In math, prime numbers are whole numbers greater than 1, that have only two
+    factors – 1 and the number itself. Prime numbers are divisible only by the
+    number 1 or itself.
+
+    For example, 2, 3, 5, 7 and 11 are the first few prime numbers.
+
+    0 is not prime, because you can not create any new number by having it as a
+    factor. 1 was considered prime at some time, but was dropped because many
+    rules for primes would need to make a special case exemption for 1 - which
+    was impractical.
+
+
+    """
+
     def countPrimes(self, n):
         count = 0
-
+        # 0 and 1 are not prime so start with 2.
         for i in range(2, n):
             if self.is_prime(i):
                 count += 1
@@ -42,6 +59,11 @@ class Solution:
         return count
 
     def is_prime(self, n):
+        # to ensure the number is prime or not, divide the number from 2..n-1
+        # and if divisible, return False.
+
+        # optimized version is that if number is not divisible by sqrt(n) + 1,
+        # it's not a prime number.
         for i in range(2, int(math.sqrt(n)) + 1):
             if n % i == 0:
                 return False
@@ -68,6 +90,8 @@ class Solution:
             # multiple numbers a non-prime.
             if primes[i] == 1:
                 count += 1
+                # mark all numbers from i to n in the ith increment
+                # to non prime.
                 for j in range(i, n, i):
                     primes[j] = 0
         # return the count

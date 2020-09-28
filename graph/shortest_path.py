@@ -20,7 +20,7 @@ graph = {
     2 - 4
 }
  
-Vertex A = 0 
+Vertex A = 0
 Vertex B = 4
  
 Sample Output #
@@ -80,7 +80,6 @@ def find_min(g, source, destination):
                 distances[adjacent.data] = distances[vertex] + 1
             adjacent = adjacent.next_element
     return result
-
 
 
 g = Graph(7)

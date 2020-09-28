@@ -19,30 +19,30 @@
 # one. Meanwhile, adjacent houses have security system connected and it will
 # automatically contact the police if two adjacent houses were broken into on
 # the same night.
-# 
+#
 # Given a list of non-negative integers representing the amount of money of
 # each house, determine the maximum amount of money you can rob tonight without
 # alerting the police.
-# 
+#
 # Example 1:
-# 
-# 
+#
+#
 # Input: [2,3,2]
 # Output: 3
 # Explanation: You cannot rob house 1 (money = 2) and then rob house 3 (money =
 # 2),
 # because they are adjacent houses.
-# 
-# 
+#
+#
 # Example 2:
-# 
-# 
+#
+#
 # Input: [1,2,3,1]
 # Output: 4
 # Explanation: Rob house 1 (money = 1) and then rob house 3 (money =
 # 3).
 # Total amount you can rob = 1 + 3 = 4.
-# 
+#
 #
 
 # @lc code=start
@@ -84,16 +84,32 @@ class Solution:
         return max_money_robbed
 
     def rob(self, nums):
+        if not nums:
+            return 0
+        # dp to store money collected at house index.
         dp = [0] * (len(nums) + 1)
+
         dp[0] = 0
         dp[1] = nums[0]
-        for i in range(1, len(nums) + 1):
-            print(dp)
-            if i == len(nums) and i % 2 == 1:
-                dp[i] = max(dp[i-2] + nums[i-1] - dp[1], dp[i-1])
-            else:
-                dp[i] = max(dp[i-2] + nums[i-1], dp[i-1])
-        return dp[len(nums)]
-print(Solution().rob([2,7,3,6,9]))
-# # @lc code=end
 
+        # start from the 3rd house to end
+        for i in range(2, len(nums) + 1):
+            # if last house or odd number of houses, remove the first house
+            # profit.
+
+            # for ex, [1,2,3,4], when we are at the 4th house, we would have
+            # not included first house anyway.
+            # 2 -> 4
+            # for ex, [1,2,3,4,5], when we are at the 5th house, profit of
+            # the first house is included if current house profit is
+            # included in the total profit.
+            if i == len(nums) and i % 2 == 1:
+                dp[i] = max(dp[i - 2] + nums[i - 1] - dp[1], dp[i - 1])
+            else:
+                dp[i] = max(dp[i - 2] + nums[i - 1], dp[i - 1])
+        return dp[len(nums)]
+
+
+# print(Solution().rob([2, 7, 3, 6, 9]))
+print(Solution().rob([1, 2, 3, 4]))
+# # @lc code=end

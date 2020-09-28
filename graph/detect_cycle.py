@@ -25,7 +25,7 @@ directed graph:
 
 def detect_cycle_undirected(g):
     """
-    undirected graph : 
+    undirected graph :
         - self loop is considered cycle
         - backedge to parent from the node is not considered cycle
 

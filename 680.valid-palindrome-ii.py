@@ -46,6 +46,29 @@
 
 class Solution:
     def validPalindrome(self, s):
+        """
+        We could use recursion to find if by removing one character or more
+        we can still have the valid palindrome or not ?
+
+        We only remove char when we find left and right char is not same.
+
+        We is two pointer approach.
+        1. if both char are same at start and end index, keep reducing the
+           string by moving start and index by 1.
+        2. if both char are not same, you could either remove left char or
+           right char and make sure the remaining string is valid palindrome.
+           - if either side of the string is valid palindrome, return True
+        3. else return False
+
+        Here the base condition is, if the length of the substring is 1 or 0,
+        it's valid palindrome so return True.
+
+        Since we can remove 1 char only, we have to maitain the flag that
+        ensures that only one char can be removed.
+
+        If more than one char can be remove, we can use the deleted count
+        and reduce everytime we remove either left or right char.
+        """
         return self.dfs(s, 0, len(s) - 1)
 
     def dfs(self, s, start, end, deleted=False):

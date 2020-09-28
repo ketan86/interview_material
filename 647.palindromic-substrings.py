@@ -67,18 +67,19 @@ class Solution:
 
             # for every match, increment the total_palindrome_substrings count.
             # because, every smallest substring can be a palindrome.
-            # for ex, "aba" -> 1. "a" total_palindrome_substrings = 1
+            while left >= 0 and right < len(s) and s[left] == s[right]:
+                total_palindrome_substrings += 1
+                left -= 1
+                right += 1
+
+        # expand from the middle and keep counting the palindrome string.
+        # for ex, "aba" -> 1. "a" total_palindrome_substrings = 1
             #                  2. "ab" total_palindrome_substrings = 1
             #               -> 1. "b" total_palindrome_substrings = 2
             #                     "aba" total_palindrome_substrings = 3
             #                  2."ba" total_palindrome_substrings = 3
             #               -> 1."a" total_palindrome_substrings = 4
             #                  2. "a " total_palindrome_substrings = 4
-            while left >= 0 and right < len(s) and s[left] == s[right]:
-                total_palindrome_substrings += 1
-                left -= 1
-                right += 1
-
         for i in range(len(s)):
             expand_from_middle(s, i, i)
             expand_from_middle(s, i, i + 1)

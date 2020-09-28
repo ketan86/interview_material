@@ -110,8 +110,8 @@ class MedianFinder:
         self.max_heap = []
 
     def addNum(self, num: int) -> None:
-        # push element to max heap. NOTE: insert negative values to maintain
-        # the heap property.
+        # push element to max heap.
+        # NOTE: insert negative values to maintain the heap property.
         heapq.heappush(self.max_heap, -num)
         # move top element of the max heap to the min heap.
         heapq.heappush(self.min_heap, -heapq.heappop(self.max_heap))

@@ -15,16 +15,16 @@
 #
 # Given two non-negative integers num1 and num2 represented as string, return
 # the sum of num1 and num2.
-# 
+#
 # Note:
-# 
+#
 # The length of both num1 and num2 is < 5100.
 # Both num1 and num2 contains only digits 0-9.
 # Both num1 and num2 does not contain any leading zero.
 # You must not use any built-in BigInteger library or convert the inputs to
 # integer directly.
-# 
-# 
+#
+#
 #
 
 # @lc code=start
@@ -47,26 +47,56 @@ class Solution:
         """
         num1_length = len(num1)
         num2_length = len(num2)
+
+        # find the max length of the both integer strings
         max_length = max(num1_length, num2_length)
+
+        # prepend '0' to both strings to make them same length
         num1 = '0' * (max_length - num1_length) + num1
         num2 = '0' * (max_length - num2_length) + num2
+
         index = max_length - 1
+
+        # define carry to 0
         carry = 0
         result = ''
+
+        # reverse loop
         while index >= 0:
+            # find the sum of the right most digit of both numbers with carry.
             sum_ = (ord(num1[index]) - ord('0')) \
-                        + (ord(num2[index]) - ord('0')) + carry
+                + (ord(num2[index]) - ord('0')) + carry
+
+            # if sum is greater than 9, we have to add the number in the
+            # result and generate the carry
+            # for ex,
+            #     129
+            #   + 003
+            #     ---
+            #       12 <-   2 go to result and 1 to carry
+            #       12 // 10 -> 1
+            #       12 % 10  -> 2
             if sum_ > 9:
                 carry = sum_ // 10
                 result = str(sum_ % 10) + result
             else:
+                # if sum is not greater than 9, add sum to result and
+                # reset carry to 0.
                 result = str(sum_) + result
                 carry = 0
+            # go to left digit
             index -= 1
+
+        # if carry is left at the end, prepend that to result.
         if carry:
             result = str(carry) + result
 
         return result
 
+
+# print(Solution().addStrings('999', '1231'))
 # @lc code=end
 
+1231
+0999
+0

@@ -14,7 +14,7 @@ def find_fib(n, d):
 print(find_fib(200, {}))
 
 
-# tabulation
+# tabulation(bottom up)
 def find_fib(n):
     results = [0, 1]
     for i in range(2, n + 1):

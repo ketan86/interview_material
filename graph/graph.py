@@ -220,7 +220,7 @@ class Graph:
 
         # If we were to implement an Undirected Graph i.e (1,0) == (0,1)
         # We would create an edge from destination towards source as well
-        # i.e self.list[destination].insertAtHead(source)
+        # i.e self.array[destination].insert_at_head(source)
 
     def print_graph(self):
         print(">>Adjacency List of Graph<<")

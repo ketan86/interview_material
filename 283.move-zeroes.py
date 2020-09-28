@@ -48,16 +48,22 @@ class Solution:
 
         # return nums
 
-        # n = len(nums)
-        # l = 0
-        # for i in range(n):
-        #     if(nums[i] != 0):
-        #         k = nums[i]
-        #         nums[i] = nums[l]
-        #         nums[l] = k
-        #         l += 1
-        # return nums
+        # two pointers where one pointer stays at 0 and other moves
+        # j pointers moves ahead and swaps non zero value with zero
+        # value at ith pointer.
+
+        n = len(nums)
+        i = 0
+        for j in range(n):
+            # if current value is not zero, swap with ith value that is at
+            # zero. move i and j
+            # if current value is not zero, move j
+            if(nums[j] != 0):
+                nums[i], nums[j] = nums[j], nums[i]
+                i += 1
+        return nums
 
 
 print(Solution().moveZeroes([1, 0, 0, 1, 0, 2, 1]))
+
 # @lc code=end
