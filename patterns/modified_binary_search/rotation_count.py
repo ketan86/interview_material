@@ -36,7 +36,6 @@ def count_rotations(arr):
 
 def _find_peak_index(arr, start_index, end_index):
     while start_index <= end_index:
-        print(start_index, end_index)
         mid = start_index + (end_index - start_index) // 2
         if arr[mid] < end_index:
             end_index = mid - 1

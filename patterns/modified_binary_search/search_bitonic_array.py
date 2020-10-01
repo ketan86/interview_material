@@ -45,20 +45,18 @@ def _binary_search(arr, start_index, end_index, key, asscending=True):
 
     while start_index <= end_index:
         mid = start_index + (end_index - start_index) // 2
-        if asscending:
-            if key < arr[mid]:
+        if key < arr[mid]:
+            if asscending:
                 end_index = mid - 1
-            elif key > arr[mid]:
+            else:
+                start_index = mid + 1
+        elif key > arr[mid]:
+            if asscending:
                 start_index = mid + 1
             else:
-                return mid
+                end_index = mid - 1
         else:
-            if key < arr[mid]:
-                start_index = mid + 1
-            elif key > arr[mid]:
-                end_index = mid - 1
-            else:
-                return mid
+            return mid
     return -1
 
 
