@@ -1,5 +1,5 @@
 """
-Conditional assigment using XOR
+Conditional assignment using XOR
 """
 
 

@@ -32,7 +32,6 @@ class MaxHeap:
     def percolate_up(self, index):
         if index > 0:
             # find the parent of the last item that was inserted.
-
             parent = (index - 1) // 2
             if self.heap[parent] < self.heap[index]:
                 self.heap[index], self.heap[parent] = self.heap[parent], self.heap[index]
