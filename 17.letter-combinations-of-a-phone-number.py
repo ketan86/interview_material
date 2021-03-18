@@ -45,8 +45,9 @@ class Solution:
             return input_string
 
         # create a map to store the digit and respective letters
-        digit_map = {'2': 'abc', '3': 'def', '4': 'ghi',
-                     '5': 'jkl', '6': 'mno', '7': 'pqrs', '8': 'tuv', '9': 'wxyz'}
+        digit_map = {
+            '2': 'abc', '3': 'def', '4': 'ghi',
+            '5': 'jkl', '6': 'mno', '7': 'pqrs', '8': 'tuv', '9': 'wxyz'}
 
         # create a list of letters
         for digit in digits:
@@ -71,6 +72,7 @@ class Solution:
         #                    ["abc", "def"]
         #              /                      \ same for "b" + ["def"]
         #           /                           and "c" + ["def"]
+        #
         #         "a"   +    ["def"]  <- ["d", "e", "f"] = ["ad", "ae", "af"]
         #             / d    | e     \ f    <- return
         #      d + [''] e + [''] f + ['']
@@ -78,13 +80,16 @@ class Solution:
         #
         #
         for char in input_string[start]:
-            for s in self.dfs(input_string, start + 1, end, memo):
-                result.append(char + s)
+            # find all the combination from start+1 to end and
+            # create new combination with a char.
+            for c in self.dfs(input_string, start + 1, end, memo):
+                result.append(char + c)
 
         memo[input_string[start]] = result
 
         return result
 
-# print(Solution().letterCombinations('4987458772'))
+
+print(Solution().letterCombinations('49'))
 
 # @lc code=end

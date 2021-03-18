@@ -1,0 +1,2132 @@
+create database bank; 
+
+use bank;
+
+/* begin table creation */
+
+create table department
+ (dept_id smallint unsigned not null auto_increment,
+  name varchar(20) not null,
+  constraint pk_department primary key (dept_id)
+ );
+
+create table branch
+ (branch_id smallint unsigned not null auto_increment,
+  name varchar(20) not null,
+  address varchar(30),
+  city varchar(20),
+  state varchar(2),
+  zip varchar(12),
+  constraint pk_branch primary key (branch_id)
+ );
+
+create table employee
+ (emp_id smallint unsigned not null auto_increment,
+  fname varchar(20) not null,
+  lname varchar(20) not null,
+  start_date date not null,
+  end_date date,
+  superior_emp_id smallint unsigned,
+  dept_id smallint unsigned,
+  title varchar(20),
+  assigned_branch_id smallint unsigned,
+  constraint fk_e_emp_id 
+    foreign key (superior_emp_id) references employee (emp_id),
+  constraint fk_dept_id
+    foreign key (dept_id) references department (dept_id),
+  constraint fk_e_branch_id
+    foreign key (assigned_branch_id) references branch (branch_id),
+  constraint pk_employee primary key (emp_id)
+ );
+
+create table product_type
+ (product_type_cd varchar(10) not null,
+  name varchar(50) not null,
+  constraint pk_product_type primary key (product_type_cd)
+ );
+
+create table product
+ (product_cd varchar(10) not null,
+  name varchar(50) not null,
+  product_type_cd varchar(10) not null,
+  date_offered date,
+  date_retired date,
+  constraint fk_product_type_cd foreign key (product_type_cd) 
+    references product_type (product_type_cd),
+  constraint pk_product primary key (product_cd)
+ );
+
+create table customer
+ (cust_id integer unsigned not null auto_increment,
+  fed_id varchar(12) not null,
+  cust_type_cd enum('I','B') not null,
+  address varchar(30),
+  city varchar(20),
+  state varchar(20),
+  postal_code varchar(10),
+  constraint pk_customer primary key (cust_id)
+ );
+
+create table individual
+ (cust_id integer unsigned not null,
+  fname varchar(30) not null,
+  lname varchar(30) not null,
+  birth_date date,
+  constraint fk_i_cust_id foreign key (cust_id)
+    references customer (cust_id),
+  constraint pk_individual primary key (cust_id)
+ );
+
+create table business
+ (cust_id integer unsigned not null,
+  name varchar(40) not null,
+  state_id varchar(10) not null,
+  incorp_date date,
+  constraint fk_b_cust_id foreign key (cust_id)
+    references customer (cust_id),
+  constraint pk_business primary key (cust_id)
+ );
+
+create table officer
+ (officer_id smallint unsigned not null auto_increment,
+  cust_id integer unsigned not null,
+  fname varchar(30) not null,
+  lname varchar(30) not null,
+  title varchar(20),
+  start_date date not null,
+  end_date date,
+  constraint fk_o_cust_id foreign key (cust_id)
+    references business (cust_id),
+  constraint pk_officer primary key (officer_id)
+ );
+
+create table account
+ (account_id integer unsigned not null auto_increment,
+  product_cd varchar(10) not null,
+  cust_id integer unsigned not null,
+  open_date date not null,
+  close_date date,
+  last_activity_date date,
+  status enum('ACTIVE','CLOSED','FROZEN'),
+  open_branch_id smallint unsigned,
+  open_emp_id smallint unsigned,
+  avail_balance float(10,2),
+  pending_balance float(10,2),
+  constraint fk_product_cd foreign key (product_cd)
+    references product (product_cd),
+  constraint fk_a_cust_id foreign key (cust_id)
+    references customer (cust_id),
+  constraint fk_a_branch_id foreign key (open_branch_id)
+    references branch (branch_id),
+  constraint fk_a_emp_id foreign key (open_emp_id)
+    references employee (emp_id),
+  constraint pk_account primary key (account_id)
+ );
+
+create table transaction
+ (txn_id integer unsigned not null auto_increment,
+  txn_date datetime not null,
+  account_id integer unsigned not null,
+  txn_type_cd enum('DBT','CDT'),
+  amount double(10,2) not null,
+  teller_emp_id smallint unsigned,
+  execution_branch_id smallint unsigned,
+  funds_avail_date datetime,
+  constraint fk_t_account_id foreign key (account_id)
+    references account (account_id),
+  constraint fk_teller_emp_id foreign key (teller_emp_id)
+    references employee (emp_id),
+  constraint fk_exec_branch_id foreign key (execution_branch_id)
+    references branch (branch_id),
+  constraint pk_transaction primary key (txn_id)
+ );
+
+/* end table creation */
+
+/* begin data population */
+
+/* department data */
+insert into department (dept_id, name)
+values (null, 'Operations');
+insert into department (dept_id, name)
+values (null, 'Loans');
+insert into department (dept_id, name)
+values (null, 'Administration');
+
+/* branch data */
+insert into branch (branch_id, name, address, city, state, zip)
+values (null, 'Headquarters', '3882 Main St.', 'Waltham', 'MA', '02451');
+insert into branch (branch_id, name, address, city, state, zip)
+values (null, 'Woburn Branch', '422 Maple St.', 'Woburn', 'MA', '01801');
+insert into branch (branch_id, name, address, city, state, zip)
+values (null, 'Quincy Branch', '125 Presidential Way', 'Quincy', 'MA', '02169');
+insert into branch (branch_id, name, address, city, state, zip)
+values (null, 'So. NH Branch', '378 Maynard Ln.', 'Salem', 'NH', '03079');
+
+/* employee data */
+insert into employee (emp_id, fname, lname, start_date, 
+  dept_id, title, assigned_branch_id)
+values (null, 'Michael', 'Smith', '2001-06-22', 
+  (select dept_id from department where name = 'Administration'), 
+  'President', 
+  (select branch_id from branch where name = 'Headquarters'));
+insert into employee (emp_id, fname, lname, start_date, 
+  dept_id, title, assigned_branch_id)
+values (null, 'Susan', 'Barker', '2002-09-12', 
+  (select dept_id from department where name = 'Administration'), 
+  'Vice President', 
+  (select branch_id from branch where name = 'Headquarters'));
+insert into employee (emp_id, fname, lname, start_date, 
+  dept_id, title, assigned_branch_id)
+values (null, 'Robert', 'Tyler', '2000-02-09',
+  (select dept_id from department where name = 'Administration'), 
+  'Treasurer', 
+  (select branch_id from branch where name = 'Headquarters'));
+insert into employee (emp_id, fname, lname, start_date, 
+  dept_id, title, assigned_branch_id)
+values (null, 'Susan', 'Hawthorne', '2002-04-24', 
+  (select dept_id from department where name = 'Operations'), 
+  'Operations Manager', 
+  (select branch_id from branch where name = 'Headquarters'));
+insert into employee (emp_id, fname, lname, start_date, 
+  dept_id, title, assigned_branch_id)
+values (null, 'John', 'Gooding', '2003-11-14', 
+  (select dept_id from department where name = 'Loans'), 
+  'Loan Manager', 
+  (select branch_id from branch where name = 'Headquarters'));
+insert into employee (emp_id, fname, lname, start_date, 
+  dept_id, title, assigned_branch_id)
+values (null, 'Helen', 'Fleming', '2004-03-17', 
+  (select dept_id from department where name = 'Operations'), 
+  'Head Teller', 
+  (select branch_id from branch where name = 'Headquarters'));
+insert into employee (emp_id, fname, lname, start_date, 
+  dept_id, title, assigned_branch_id)
+values (null, 'Chris', 'Tucker', '2004-09-15', 
+  (select dept_id from department where name = 'Operations'), 
+  'Teller', 
+  (select branch_id from branch where name = 'Headquarters'));
+insert into employee (emp_id, fname, lname, start_date, 
+  dept_id, title, assigned_branch_id)
+values (null, 'Sarah', 'Parker', '2002-12-02', 
+  (select dept_id from department where name = 'Operations'), 
+  'Teller', 
+  (select branch_id from branch where name = 'Headquarters'));
+insert into employee (emp_id, fname, lname, start_date, 
+  dept_id, title, assigned_branch_id)
+values (null, 'Jane', 'Grossman', '2002-05-03', 
+  (select dept_id from department where name = 'Operations'), 
+  'Teller', 
+  (select branch_id from branch where name = 'Headquarters'));
+insert into employee (emp_id, fname, lname, start_date, 
+  dept_id, title, assigned_branch_id)
+values (null, 'Paula', 'Roberts', '2002-07-27', 
+  (select dept_id from department where name = 'Operations'), 
+  'Head Teller', 
+  (select branch_id from branch where name = 'Woburn Branch'));
+insert into employee (emp_id, fname, lname, start_date, 
+  dept_id, title, assigned_branch_id)
+values (null, 'Thomas', 'Ziegler', '2000-10-23', 
+  (select dept_id from department where name = 'Operations'), 
+  'Teller', 
+  (select branch_id from branch where name = 'Woburn Branch'));
+insert into employee (emp_id, fname, lname, start_date, 
+  dept_id, title, assigned_branch_id)
+values (null, 'Samantha', 'Jameson', '2003-01-08', 
+  (select dept_id from department where name = 'Operations'), 
+  'Teller', 
+  (select branch_id from branch where name = 'Woburn Branch'));
+insert into employee (emp_id, fname, lname, start_date, 
+  dept_id, title, assigned_branch_id)
+values (null, 'John', 'Blake', '2000-05-11', 
+  (select dept_id from department where name = 'Operations'), 
+  'Head Teller', 
+  (select branch_id from branch where name = 'Quincy Branch'));
+insert into employee (emp_id, fname, lname, start_date, 
+  dept_id, title, assigned_branch_id)
+values (null, 'Cindy', 'Mason', '2002-08-09', 
+  (select dept_id from department where name = 'Operations'), 
+  'Teller', 
+  (select branch_id from branch where name = 'Quincy Branch'));
+insert into employee (emp_id, fname, lname, start_date, 
+  dept_id, title, assigned_branch_id)
+values (null, 'Frank', 'Portman', '2003-04-01', 
+  (select dept_id from department where name = 'Operations'), 
+  'Teller', 
+  (select branch_id from branch where name = 'Quincy Branch'));
+insert into employee (emp_id, fname, lname, start_date, 
+  dept_id, title, assigned_branch_id)
+values (null, 'Theresa', 'Markham', '2001-03-15', 
+  (select dept_id from department where name = 'Operations'), 
+  'Head Teller', 
+  (select branch_id from branch where name = 'So. NH Branch'));
+insert into employee (emp_id, fname, lname, start_date, 
+  dept_id, title, assigned_branch_id)
+values (null, 'Beth', 'Fowler', '2002-06-29', 
+  (select dept_id from department where name = 'Operations'), 
+  'Teller', 
+  (select branch_id from branch where name = 'So. NH Branch'));
+insert into employee (emp_id, fname, lname, start_date, 
+  dept_id, title, assigned_branch_id)
+values (null, 'Rick', 'Tulman', '2002-12-12', 
+  (select dept_id from department where name = 'Operations'), 
+  'Teller', 
+  (select branch_id from branch where name = 'So. NH Branch'));
+
+/* create data for self-referencing foreign key 'superior_emp_id' */
+create temporary table emp_tmp as
+select emp_id, fname, lname from employee;
+
+update employee set superior_emp_id =
+ (select emp_id from emp_tmp where lname = 'Smith' and fname = 'Michael')
+where ((lname = 'Barker' and fname = 'Susan')
+  or (lname = 'Tyler' and fname = 'Robert'));
+update employee set superior_emp_id =
+ (select emp_id from emp_tmp where lname = 'Tyler' and fname = 'Robert')
+where lname = 'Hawthorne' and fname = 'Susan';
+update employee set superior_emp_id =
+ (select emp_id from emp_tmp where lname = 'Hawthorne' and fname = 'Susan')
+where ((lname = 'Gooding' and fname = 'John')
+  or (lname = 'Fleming' and fname = 'Helen')
+  or (lname = 'Roberts' and fname = 'Paula') 
+  or (lname = 'Blake' and fname = 'John') 
+  or (lname = 'Markham' and fname = 'Theresa')); 
+update employee set superior_emp_id =
+ (select emp_id from emp_tmp where lname = 'Fleming' and fname = 'Helen')
+where ((lname = 'Tucker' and fname = 'Chris') 
+  or (lname = 'Parker' and fname = 'Sarah') 
+  or (lname = 'Grossman' and fname = 'Jane'));  
+update employee set superior_emp_id =
+ (select emp_id from emp_tmp where lname = 'Roberts' and fname = 'Paula')
+where ((lname = 'Ziegler' and fname = 'Thomas')  
+  or (lname = 'Jameson' and fname = 'Samantha'));   
+update employee set superior_emp_id =
+ (select emp_id from emp_tmp where lname = 'Blake' and fname = 'John')
+where ((lname = 'Mason' and fname = 'Cindy')   
+  or (lname = 'Portman' and fname = 'Frank'));    
+update employee set superior_emp_id =
+ (select emp_id from emp_tmp where lname = 'Markham' and fname = 'Theresa')
+where ((lname = 'Fowler' and fname = 'Beth')   
+  or (lname = 'Tulman' and fname = 'Rick'));    
+
+drop table emp_tmp;
+
+/* product type data */
+insert into product_type (product_type_cd, name)
+values ('ACCOUNT','Customer Accounts');
+insert into product_type (product_type_cd, name)
+values ('LOAN','Individual and Business Loans');
+insert into product_type (product_type_cd, name)
+values ('INSURANCE','Insurance Offerings');
+
+/* product data */
+insert into product (product_cd, name, product_type_cd, date_offered)
+values ('CHK','checking account','ACCOUNT','2000-01-01');
+insert into product (product_cd, name, product_type_cd, date_offered)
+values ('SAV','savings account','ACCOUNT','2000-01-01');
+insert into product (product_cd, name, product_type_cd, date_offered)
+values ('MM','money market account','ACCOUNT','2000-01-01');
+insert into product (product_cd, name, product_type_cd, date_offered)
+values ('CD','certificate of deposit','ACCOUNT','2000-01-01');
+insert into product (product_cd, name, product_type_cd, date_offered)
+values ('MRT','home mortgage','LOAN','2000-01-01');
+insert into product (product_cd, name, product_type_cd, date_offered)
+values ('AUT','auto loan','LOAN','2000-01-01');
+insert into product (product_cd, name, product_type_cd, date_offered)
+values ('BUS','business line of credit','LOAN','2000-01-01');
+insert into product (product_cd, name, product_type_cd, date_offered)
+values ('SBL','small business loan','LOAN','2000-01-01');
+
+/* residential customer data */
+insert into customer (cust_id, fed_id, cust_type_cd,
+  address, city, state, postal_code)
+values (null, '111-11-1111', 'I', '47 Mockingbird Ln', 'Lynnfield', 'MA', '01940');
+insert into individual (cust_id, fname, lname, birth_date)
+select cust_id, 'James', 'Hadley', '1972-04-22' from customer
+where fed_id = '111-11-1111';
+insert into customer (cust_id, fed_id, cust_type_cd,
+  address, city, state, postal_code)
+values (null, '222-22-2222', 'I', '372 Clearwater Blvd', 'Woburn', 'MA', '01801');
+insert into individual (cust_id, fname, lname, birth_date)
+select cust_id, 'Susan', 'Tingley', '1968-08-15' from customer
+where fed_id = '222-22-2222';
+insert into customer (cust_id, fed_id, cust_type_cd,
+  address, city, state, postal_code)
+values (null, '333-33-3333', 'I', '18 Jessup Rd', 'Quincy', 'MA', '02169');
+insert into individual (cust_id, fname, lname, birth_date)
+select cust_id, 'Frank', 'Tucker', '1958-02-06' from customer
+where fed_id = '333-33-3333';
+insert into customer (cust_id, fed_id, cust_type_cd,
+  address, city, state, postal_code)
+values (null, '444-44-4444', 'I', '12 Buchanan Ln', 'Waltham', 'MA', '02451');
+insert into individual (cust_id, fname, lname, birth_date)
+select cust_id, 'John', 'Hayward', '1966-12-22' from customer
+where fed_id = '444-44-4444';
+insert into customer (cust_id, fed_id, cust_type_cd,
+  address, city, state, postal_code)
+values (null, '555-55-5555', 'I', '2341 Main St', 'Salem', 'NH', '03079');
+insert into individual (cust_id, fname, lname, birth_date)
+select cust_id, 'Charles', 'Frasier', '1971-08-25' from customer
+where fed_id = '555-55-5555';
+insert into customer (cust_id, fed_id, cust_type_cd,
+  address, city, state, postal_code)
+values (null, '666-66-6666', 'I', '12 Blaylock Ln', 'Waltham', 'MA', '02451');
+insert into individual (cust_id, fname, lname, birth_date)
+select cust_id, 'John', 'Spencer', '1962-09-14' from customer
+where fed_id = '666-66-6666';
+insert into customer (cust_id, fed_id, cust_type_cd,
+  address, city, state, postal_code)
+values (null, '777-77-7777', 'I', '29 Admiral Ln', 'Wilmington', 'MA', '01887');
+insert into individual (cust_id, fname, lname, birth_date)
+select cust_id, 'Margaret', 'Young', '1947-03-19' from customer
+where fed_id = '777-77-7777';
+insert into customer (cust_id, fed_id, cust_type_cd,
+  address, city, state, postal_code)
+values (null, '888-88-8888', 'I', '472 Freedom Rd', 'Salem', 'NH', '03079');
+insert into individual (cust_id, fname, lname, birth_date)
+select cust_id, 'Louis', 'Blake', '1977-07-01' from customer
+where fed_id = '888-88-8888';
+insert into customer (cust_id, fed_id, cust_type_cd,
+  address, city, state, postal_code)
+values (null, '999-99-9999', 'I', '29 Maple St', 'Newton', 'MA', '02458');
+insert into individual (cust_id, fname, lname, birth_date)
+select cust_id, 'Richard', 'Farley', '1968-06-16' from customer
+where fed_id = '999-99-9999';
+
+/* corporate customer data */
+insert into customer (cust_id, fed_id, cust_type_cd,
+  address, city, state, postal_code)
+values (null, '04-1111111', 'B', '7 Industrial Way', 'Salem', 'NH', '03079');
+insert into business (cust_id, name, state_id, incorp_date)
+select cust_id, 'Chilton Engineering', '12-345-678', '1995-05-01' from customer
+where fed_id = '04-1111111';
+insert into officer (officer_id, cust_id, fname, lname,
+  title, start_date)
+select null, cust_id, 'John', 'Chilton', 'President', '1995-05-01'
+from customer
+where fed_id = '04-1111111';
+insert into customer (cust_id, fed_id, cust_type_cd,
+  address, city, state, postal_code)
+values (null, '04-2222222', 'B', '287A Corporate Ave', 'Wilmington', 'MA', '01887');
+insert into business (cust_id, name, state_id, incorp_date)
+select cust_id, 'Northeast Cooling Inc.', '23-456-789', '2001-01-01' from customer
+where fed_id = '04-2222222';
+insert into officer (officer_id, cust_id, fname, lname,
+  title, start_date)
+select null, cust_id, 'Paul', 'Hardy', 'President', '2001-01-01'
+from customer
+where fed_id = '04-2222222';
+insert into customer (cust_id, fed_id, cust_type_cd,
+  address, city, state, postal_code)
+values (null, '04-3333333', 'B', '789 Main St', 'Salem', 'NH', '03079');
+insert into business (cust_id, name, state_id, incorp_date)
+select cust_id, 'Superior Auto Body', '34-567-890', '2002-06-30' from customer
+where fed_id = '04-3333333';
+insert into officer (officer_id, cust_id, fname, lname,
+  title, start_date)
+select null, cust_id, 'Carl', 'Lutz', 'President', '2002-06-30'
+from customer
+where fed_id = '04-3333333';
+insert into customer (cust_id, fed_id, cust_type_cd,
+  address, city, state, postal_code)
+values (null, '04-4444444', 'B', '4772 Presidential Way', 'Quincy', 'MA', '02169');
+insert into business (cust_id, name, state_id, incorp_date)
+select cust_id, 'AAA Insurance Inc.', '45-678-901', '1999-05-01' from customer
+where fed_id = '04-4444444';
+insert into officer (officer_id, cust_id, fname, lname,
+  title, start_date)
+select null, cust_id, 'Stanley', 'Cheswick', 'President', '1999-05-01'
+from customer
+where fed_id = '04-4444444';
+
+/* residential account data */
+insert into account (account_id, product_cd, cust_id, open_date,
+  last_activity_date, status, open_branch_id,
+  open_emp_id, avail_balance, pending_balance)
+select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE',
+  e.branch_id, e.emp_id, a.avail, a.pend
+from customer c cross join 
+ (select b.branch_id, e.emp_id 
+  from branch b inner join employee e on e.assigned_branch_id = b.branch_id
+  where b.city = 'Woburn' limit 1) e
+  cross join
+ (select 'CHK' prod_cd, '2000-01-15' open_date, '2005-01-04' last_date,
+    1057.75 avail, 1057.75 pend union all
+  select 'SAV' prod_cd, '2000-01-15' open_date, '2004-12-19' last_date,
+    500.00 avail, 500.00 pend union all
+  select 'CD' prod_cd, '2004-06-30' open_date, '2004-06-30' last_date,
+    3000.00 avail, 3000.00 pend) a
+where c.fed_id = '111-11-1111';
+insert into account (account_id, product_cd, cust_id, open_date,
+  last_activity_date, status, open_branch_id,
+  open_emp_id, avail_balance, pending_balance)
+select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE',
+  e.branch_id, e.emp_id, a.avail, a.pend
+from customer c cross join 
+ (select b.branch_id, e.emp_id 
+  from branch b inner join employee e on e.assigned_branch_id = b.branch_id
+  where b.city = 'Woburn' limit 1) e
+  cross join
+ (select 'CHK' prod_cd, '2001-03-12' open_date, '2004-12-27' last_date,
+    2258.02 avail, 2258.02 pend union all
+  select 'SAV' prod_cd, '2001-03-12' open_date, '2004-12-11' last_date,
+    200.00 avail, 200.00 pend) a
+where c.fed_id = '222-22-2222';
+insert into account (account_id, product_cd, cust_id, open_date,
+  last_activity_date, status, open_branch_id,
+  open_emp_id, avail_balance, pending_balance)
+select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE',
+  e.branch_id, e.emp_id, a.avail, a.pend
+from customer c cross join 
+ (select b.branch_id, e.emp_id 
+  from branch b inner join employee e on e.assigned_branch_id = b.branch_id
+  where b.city = 'Quincy' limit 1) e
+  cross join
+ (select 'CHK' prod_cd, '2002-11-23' open_date, '2004-11-30' last_date,
+    1057.75 avail, 1057.75 pend union all
+  select 'MM' prod_cd, '2002-12-15' open_date, '2004-12-05' last_date,
+    2212.50 avail, 2212.50 pend) a
+where c.fed_id = '333-33-3333';
+insert into account (account_id, product_cd, cust_id, open_date,
+  last_activity_date, status, open_branch_id,
+  open_emp_id, avail_balance, pending_balance)
+select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE',
+  e.branch_id, e.emp_id, a.avail, a.pend
+from customer c cross join 
+ (select b.branch_id, e.emp_id 
+  from branch b inner join employee e on e.assigned_branch_id = b.branch_id
+  where b.city = 'Waltham' limit 1) e
+  cross join
+ (select 'CHK' prod_cd, '2003-09-12' open_date, '2005-01-03' last_date,
+    534.12 avail, 534.12 pend union all
+  select 'SAV' prod_cd, '2000-01-15' open_date, '2004-10-24' last_date,
+    767.77 avail, 767.77 pend union all
+  select 'MM' prod_cd, '2004-09-30' open_date, '2004-11-11' last_date,
+    5487.09 avail, 5487.09 pend) a
+where c.fed_id = '444-44-4444';
+insert into account (account_id, product_cd, cust_id, open_date,
+  last_activity_date, status, open_branch_id,
+  open_emp_id, avail_balance, pending_balance)
+select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE',
+  e.branch_id, e.emp_id, a.avail, a.pend
+from customer c cross join 
+ (select b.branch_id, e.emp_id 
+  from branch b inner join employee e on e.assigned_branch_id = b.branch_id
+  where b.city = 'Salem' limit 1) e
+  cross join
+ (select 'CHK' prod_cd, '2004-01-27' open_date, '2005-01-05' last_date,
+    2237.97 avail, 2897.97 pend) a
+where c.fed_id = '555-55-5555';
+insert into account (account_id, product_cd, cust_id, open_date,
+  last_activity_date, status, open_branch_id,
+  open_emp_id, avail_balance, pending_balance)
+select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE',
+  e.branch_id, e.emp_id, a.avail, a.pend
+from customer c cross join 
+ (select b.branch_id, e.emp_id 
+  from branch b inner join employee e on e.assigned_branch_id = b.branch_id
+  where b.city = 'Waltham' limit 1) e
+  cross join
+ (select 'CHK' prod_cd, '2002-08-24' open_date, '2004-11-29' last_date,
+    122.37 avail, 122.37 pend union all
+  select 'CD' prod_cd, '2004-12-28' open_date, '2004-12-28' last_date,
+    10000.00 avail, 10000.00 pend) a
+where c.fed_id = '666-66-6666';
+insert into account (account_id, product_cd, cust_id, open_date,
+  last_activity_date, status, open_branch_id,
+  open_emp_id, avail_balance, pending_balance)
+select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE',
+  e.branch_id, e.emp_id, a.avail, a.pend
+from customer c cross join 
+ (select b.branch_id, e.emp_id 
+  from branch b inner join employee e on e.assigned_branch_id = b.branch_id
+  where b.city = 'Woburn' limit 1) e
+  cross join
+ (select 'CD' prod_cd, '2004-01-12' open_date, '2004-01-12' last_date,
+    5000.00 avail, 5000.00 pend) a
+where c.fed_id = '777-77-7777';
+insert into account (account_id, product_cd, cust_id, open_date,
+  last_activity_date, status, open_branch_id,
+  open_emp_id, avail_balance, pending_balance)
+select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE',
+  e.branch_id, e.emp_id, a.avail, a.pend
+from customer c cross join 
+ (select b.branch_id, e.emp_id 
+  from branch b inner join employee e on e.assigned_branch_id = b.branch_id
+  where b.city = 'Salem' limit 1) e
+  cross join
+ (select 'CHK' prod_cd, '2001-05-23' open_date, '2005-01-03' last_date,
+    3487.19 avail, 3487.19 pend union all
+  select 'SAV' prod_cd, '2001-05-23' open_date, '2004-10-12' last_date,
+    387.99 avail, 387.99 pend) a
+where c.fed_id = '888-88-8888';
+insert into account (account_id, product_cd, cust_id, open_date,
+  last_activity_date, status, open_branch_id,
+  open_emp_id, avail_balance, pending_balance)
+select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE',
+  e.branch_id, e.emp_id, a.avail, a.pend
+from customer c cross join 
+ (select b.branch_id, e.emp_id 
+  from branch b inner join employee e on e.assigned_branch_id = b.branch_id
+  where b.city = 'Waltham' limit 1) e
+  cross join
+ (select 'CHK' prod_cd, '2003-07-30' open_date, '2004-12-15' last_date,
+    125.67 avail, 125.67 pend union all
+  select 'MM' prod_cd, '2004-10-28' open_date, '2004-10-28' last_date,
+    9345.55 avail, 9845.55 pend union all
+  select 'CD' prod_cd, '2004-06-30' open_date, '2004-06-30' last_date,
+    1500.00 avail, 1500.00 pend) a
+where c.fed_id = '999-99-9999';
+
+/* corporate account data */
+insert into account (account_id, product_cd, cust_id, open_date,
+  last_activity_date, status, open_branch_id,
+  open_emp_id, avail_balance, pending_balance)
+select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE',
+  e.branch_id, e.emp_id, a.avail, a.pend
+from customer c cross join 
+ (select b.branch_id, e.emp_id 
+  from branch b inner join employee e on e.assigned_branch_id = b.branch_id
+  where b.city = 'Salem' limit 1) e
+  cross join
+ (select 'CHK' prod_cd, '2002-09-30' open_date, '2004-12-15' last_date,
+    23575.12 avail, 23575.12 pend union all
+  select 'BUS' prod_cd, '2002-10-01' open_date, '2004-08-28' last_date,
+    0 avail, 0 pend) a
+where c.fed_id = '04-1111111';
+insert into account (account_id, product_cd, cust_id, open_date,
+  last_activity_date, status, open_branch_id,
+  open_emp_id, avail_balance, pending_balance)
+select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE',
+  e.branch_id, e.emp_id, a.avail, a.pend
+from customer c cross join 
+ (select b.branch_id, e.emp_id 
+  from branch b inner join employee e on e.assigned_branch_id = b.branch_id
+  where b.city = 'Woburn' limit 1) e
+  cross join
+ (select 'BUS' prod_cd, '2004-03-22' open_date, '2004-11-14' last_date,
+    9345.55 avail, 9345.55 pend) a
+where c.fed_id = '04-2222222';
+insert into account (account_id, product_cd, cust_id, open_date,
+  last_activity_date, status, open_branch_id,
+  open_emp_id, avail_balance, pending_balance)
+select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE',
+  e.branch_id, e.emp_id, a.avail, a.pend
+from customer c cross join 
+ (select b.branch_id, e.emp_id 
+  from branch b inner join employee e on e.assigned_branch_id = b.branch_id
+  where b.city = 'Salem' limit 1) e
+  cross join
+ (select 'CHK' prod_cd, '2003-07-30' open_date, '2004-12-15' last_date,
+    38552.05 avail, 38552.05 pend) a
+where c.fed_id = '04-3333333';
+insert into account (account_id, product_cd, cust_id, open_date,
+  last_activity_date, status, open_branch_id,
+  open_emp_id, avail_balance, pending_balance)
+select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE',
+  e.branch_id, e.emp_id, a.avail, a.pend
+from customer c cross join 
+ (select b.branch_id, e.emp_id 
+  from branch b inner join employee e on e.assigned_branch_id = b.branch_id
+  where b.city = 'Quincy' limit 1) e
+  cross join
+ (select 'SBL' prod_cd, '2004-02-22' open_date, '2004-12-17' last_date,
+    50000.00 avail, 50000.00 pend) a
+where c.fed_id = '04-4444444';
+
+/* put $100 in all checking/savings accounts on date account opened */
+insert into transaction (txn_id, txn_date, account_id, txn_type_cd,
+  amount, funds_avail_date)
+select null, a.open_date, a.account_id, 'CDT', 100, a.open_date
+from account a
+where a.product_cd IN ('CHK','SAV','CD','MM');
+
+/* end data population */
+
+
+/* start learning */
+
+SHOW TABLES;
+
+DESC customer;
+
+SELECT emp_id, fname, lname FROM employee WHERE lname = 'Tucker';
+SELECT emp_id, 'ACTIVE', emp_id * 3.14159, UPPER(lname) FROM employee;
+
+SELECT VERSION(), USER(), DATABASE();
+
+SELECT emp_id, 'ACTIVE' status, emp_id * 3.14159 empid_x_pi, UPPER(lname) last_name_upper FROM employee;
+
+SELECT emp_id, 'ACTIVE' as status, emp_id * 3.14159 as empid_x_pi, UPPER(lname) as last_name_upper FROM employee;
+
+SELECT distinct cust_id from account;
+
+SELECT * from employee;
+
+SELECT e.emp_id, e.fname, e.lname FROM (SELECT emp_id, fname, lname, start_date, title FROM employee) as e;
+
+CREATE VIEW employee_vw AS SELECT emp_id, fname, lname, YEAR(start_date) start_year FROM employee;
+
+SELECT emp_id, start_year FROM employee_vw;
+
+select * from department;
+
+-- This query joins two tables by taking first row from the employee table and all other rows (one by one)
+-- from the department table. total 18 * 3 rows. duplicate employess here.
+SELECT e.emp_id, e.fname, e.lname, d.name as dept_name 
+FROM employee as e INNER JOIN department as d;
+
+-- This query joins two tables but also specifiy on which column, it is joined on so employee department id
+-- is compared against department's departmen id and they are join on matching id. so total 18 rows. 
+SELECT e.emp_id, e.fname, e.lname, d.name as dept_name 
+FROM employee as e INNER JOIN department as d ON e.dept_id = d.dept_id;
+
+SELECT e.emp_id, e.fname, e.lname, d.name as dept_name 
+FROM employee as e INNER JOIN department as d ON e.dept_id = d.dept_id 
+WHERE e.lname='Parker' AND start_date > '1987-01-01';
+
+SELECT e.emp_id, e.fname, e.lname, d.name as dept_name 
+FROM employee as e INNER JOIN department as d ON e.dept_id = d.dept_id 
+WHERE e.lname='Parker' OR start_date > '1987-01-01';
+
+SELECT e.emp_id, e.fname, e.lname, d.name as dept_name 
+FROM employee as e INNER JOIN department as d ON e.dept_id = d.dept_id 
+WHERE (e.lname='Parker' AND start_date > '2020-01-01') OR (e.lname='Parker' AND start_date > '1990-01-01');
+
+SELECT d.name as dept_name, e.*
+FROM department as d INNER JOIN employee as e ON d.dept_id = e.dept_id
+GROUP BY d.name
+HAVING count(e.emp_id) > 2;
+
+SELECT superior_emp_id, count(emp_id)  from employee GROUP BY superior_emp_id;
+
+# emp name and superior name including employee without any superior (LEFT OUTER JOIN)
+SELECT concat(e.fname, ' ' ,e.lname) as employee_name, concat(se.fname, ' ', se.lname) as superior_name FROM employee as e LEFT OUTER JOIN employee as se ON e.superior_emp_id = se.emp_id;
+
+
+SELECT open_emp_id, product_cd FROM account ORDER BY open_emp_id;
+SELECT open_emp_id, product_cd FROM account ORDER BY open_emp_id, product_cd;
+
+
+SELECT account_id, product_cd, open_date, avail_balance FROM account ORDER BY avail_balance DESC;
+
+-- Sorting via Expressions
+-- Sorting your results using column data is all well and good, but sometimes you might
+-- need to sort by something that is not stored in the database, and possibly doesn’t appear
+-- anywhere in your query. You can add an expression to your order by clause to handle
+-- such situations. For example, perhaps you would like to sort your customer data by
+-- the last three digits of the customer’s federal ID number (which is either a Social Security
+-- number for individuals or a corporate ID for businesses):
+SELECT cust_id, cust_type_cd, city, state, fed_id FROM customer ORDER BY RIGHT(fed_id, 3);
+SELECT cust_id, cust_type_cd, city, state, fed_id FROM customer ORDER BY LEFT(fed_id, 3);
+
+-- Sorting via Numeric Placeholders
+-- If you are sorting using the columns in your select clause, you can opt to reference the
+-- columns by their position in the select clause rather than by name. For example, if you
+-- want to sort using the second and fifth columns returned by a query, you could do the
+-- following:
+SELECT emp_id, title, start_date, fname, lname FROM employee ORDER BY 2,5;
+
+
+-- Exercise 3-1
+-- Retrieve the employee ID, first name, and last name for all bank employees. Sort by last
+-- name and then by first name.
+SELECT e.emp_id, e.fname, e.lname FROM employee as e ORDER BY 3,2;
+
+-- Exercise 3-2
+-- Retrieve the account ID, customer ID, and available balance for all accounts whose
+-- status equals 'ACTIVE' and whose available balance is greater than $2,500.
+SELECT account_id, cust_id, avail_balance FROM account WHERE status='ACTIVE' AND avail_balance > 2500;
+
+-- Exercise 3-3
+-- Write a query against the account table that returns the IDs of the employees who
+-- opened the accounts (use the account.open_emp_id column). Include a single row for
+-- each distinct employee.
+-- select * from account;
+select DISTINCT open_emp_id FROM account;
+
+-- # NOTE: distinct on multiple columns yields combination distinct
+
+-- Exercise 3-4
+-- Fill in the blanks (denoted by <#>) for this multi-data-set query to achieve the results
+-- shown here:
+-- mysql> SELECT p.product_cd, a.cust_id, a.avail_balance
+--  -> FROM product p INNER JOIN account <1>
+--  -> ON p.product_cd = <2>
+--  -> WHERE p.<3> = 'ACCOUNT'
+--  -> ORDER BY <4>, <5>;
+select * from product;
+select * from account;
+SELECT p.product_cd, a.cust_id, a.avail_balance
+FROM product as p INNER JOIN account as a ON p.product_cd = a.product_cd 
+WHERE p.product_type_cd='ACCOUNT' ORDER BY 1,2;
+
+
+-- CHAPTER 4
+-- Filtering
+
+select * from product_type;
+SELECT pt.name as product_type, p.name as product
+FROM product as p INNER JOIN product_type as pt ON p.product_type_cd = pt.product_type_cd
+WHERE pt.name = 'Customer Accounts';
+
+
+-- # WITHOUT INNER JON IN
+select * from product_type;
+SELECT pt.name as product_type, p.name as product
+FROM product as p,  product_type as pt WHERE p.product_type_cd = pt.product_type_cd AND
+pt.name = 'Customer Accounts';
+
+
+SELECT pt.name as product_type, p.name as product
+FROM product as p INNER JOIN product_type as pt ON p.product_type_cd = pt.product_type_cd
+WHERE pt.name != 'Customer Accounts';
+-- or WHERE pt.name <> 'Customer Accounts'; <-- != and <> both checks Inequality.
+
+-- SELECT emp_id, fname, lname, start_date FROM employee WHERE start_date < '2007-01-01';
+-- The between operator
+-- When you have both an upper and lower limit for your range, you may choose to use
+-- a single condition that utilizes the between operator rather than using two separate
+-- conditions, as in:
+select start_date from employee;
+SELECT emp_id, fname, lname, start_date FROM employee
+WHERE start_date BETWEEN '2001-01-01' AND '2003-01-01';
+ 
+
+SELECT account_id, product_cd, cust_id, avail_balance FROM account
+WHERE avail_balance BETWEEN 3000 AND 5000;
+
+-- String ranges
+-- While ranges of dates and numbers are easy to understand, you can also build conditions that search for ranges of strings, 
+-- which are a bit harder to visualize. Say, for example, you are searching for customers having a Social Security number that falls within
+-- a certain range. The format for a Social Security number is “XXX-XX-XXXX,” where X
+-- is a number from 0 to 9, and you want to find every customer whose Social Security
+-- number lies between “500-00-0000” and “999-99-9999.” Here’s what the statement
+-- would look like:
+SELECT cust_id, fed_id FROM customer
+WHERE cust_type_cd = 'I' AND fed_id BETWEEN '500-00-0000' AND '999-99-9999';
+
+-- Membership Conditions
+-- In some cases, you will not be restricting an expression to a single value or range of
+-- values, but rather to a finite set of values. For example, you might want to locate all
+-- accounts whose product code is either 'CHK', 'SAV', 'CD', or 'MM':
+SELECT account_id, product_cd, cust_id, avail_balance FROM account
+WHERE product_cd = 'CHK' OR product_cd = 'SAV'
+OR product_cd = 'CD' OR product_cd = 'MM';
+
+
+SELECT account_id, product_cd, cust_id, avail_balance
+FROM account
+WHERE product_cd IN ('CHK','SAV','CD','MM');
+
+
+-- Using subqueries
+-- Along with writing your own set of expressions, such as ('CHK','SAV','CD','MM'), you
+-- can use a subquery to generate a set for you on the fly. For example, all four product
+-- types used in the previous query have a product_type_cd of 'ACCOUNT', so why not use
+-- a subquery against the product table to retrieve the four product codes instead of explicitly naming them:
+SELECT account_id, product_cd, cust_id, avail_balance FROM account
+WHERE product_cd IN (SELECT product_cd FROM product WHERE product_type_cd = 'ACCOUNT');
+
+-- using inner join 
+SELECT a.account_id, a.product_cd, a.cust_id, a.avail_balance, p.product_type_cd FROM account as a INNER JOIN product as p ON p.product_cd = a.product_cd WHERE p.product_type_cd='ACCOUNT';
+
+-- Using not in
+-- Sometimes you want to see whether a particular expression exists within a set of expressions, and sometimes you want to see whether the expression does not exist. For
+-- these situations, you can use the not in operator:
+SELECT account_id, product_cd, cust_id, avail_balance FROM account
+WHERE product_cd NOT IN ('CHK','SAV','CD','MM');
+
+
+-- Matching Conditions
+-- So far, you have been introduced to conditions that identify an exact string, a range of
+-- strings, or a set of strings; the final condition type deals with partial string matches.
+-- You may, for example, want to find all employees whose last name begins with T. You
+-- could use a built-in function to strip off the first letter of the lname column, as in:
+SELECT emp_id, fname, lname FROM employee WHERE LEFT(lname, 1) = 'T';
+
+
+-- Using wildcards
+-- When searching for partial string matches, you might be interested in:
+-- • Strings beginning/ending with a certain character
+-- • Strings beginning/ending with a substring
+-- • Strings containing a certain character anywhere within the string
+-- • Strings containing a substring anywhere within the string
+-- • Strings with a specific format, regardless of individual characters
+-- You can build search expressions to identify these and many other partial string
+-- matches by using the wildcard characters shown in Table 4-4.
+-- -- Table 4-4. Wildcard characters
+-- -- Wildcard character Matches
+-- -- _ Exactly one character
+-- -- % Any number of characters (including 0)
+-- The underscore character takes the place of a single character, while the percent sign
+-- can take the place of a variable number of characters. When building conditions that
+-- utilize search expressions, you use the like operator, as in:
+SELECT * from employee WHERE lname LIKE '_a%e%';
+SELECT cust_id, fed_id FROM customer WHERE fed_id LIKE '___-__-____';
+SELECT emp_id, fname, lname FROM employee WHERE lname LIKE 'F%' OR lname LIKE 'G%';
+
+-- Using regular expressions
+-- If you find that the wildcard characters don’t provide enough flexibility, you can use
+-- regular expressions to build search expressions. A regular expression is, in essence, a
+-- search expression on steroids. If you are new to SQL but have coded using programming
+-- languages such as Perl, then you might already be intimately familiar with regular expressions. If you have never used regular expressions, then you may want to consult
+-- Jeffrey E.F. Friedl’s Mastering Regular Expressions (http://oreilly.com/catalog/
+-- 9780596528126/) (O’Reilly), since it is far too large a topic to try to cover in this book.
+-- Here’s what the previous query (find all employees whose last name starts with F or
+-- G) would look like using the MySQL implementation of regular expressions:
+ SELECT emp_id, fname, lname FROM employee WHERE lname REGEXP '^[FG]';
+ 
+ 
+ 
+-- Null: That Four-Letter Word
+-- I put it off as long as I could, but it’s time to broach a topic that tends to be met with
+-- fear, uncertainty, and dread: the null value. Null is the absence of a value; before an
+-- employee is terminated, for example, her end_date column in the employee table should
+-- be null. There is no value that can be assigned to the end_date column that would make
+-- sense in this situation. Null is a bit slippery, however, as there are various flavors of null:
+-- Not applicable
+-- Such as the employee ID column for a transaction that took place at an ATM
+-- machine
+-- Value not yet known
+-- Such as when the federal ID is not known at the time a customer row is created
+-- Value undefined
+-- Such as when an account is created for a product that has not yet been added to
+-- the database
+
+-- When working with null, you should remember:
+-- • An expression can be null, but it can never equal null.
+-- • Two nulls are never equal to each other.
+-- To test whether an expression is null, you need to use the is null operator, as demonstrated by the following:
+SELECT emp_id, fname, lname, superior_emp_id FROM employee WHERE superior_emp_id IS NULL;
+
+-- value as null returns 0 rows 
+SELECT emp_id, fname, lname, superior_emp_id FROM employee WHERE superior_emp_id = NULL;
+
+SELECT emp_id, fname, lname, superior_emp_id FROM employee WHERE superior_emp_id IS NOT NULL;
+
+SELECT emp_id, fname, lname, superior_emp_id FROM employee WHERE superior_emp_id != 6;
+
+-- superior is not id 6 means employee without any superior also. 
+SELECT emp_id, fname, lname, superior_emp_id FROM employee WHERE superior_emp_id != 6 OR superior_emp_id IS NULL;
+
+-- Querying Multiple Tables
+
+-- Cartesian Product
+-- The easiest way to start is to put the employee and department tables into the from clause
+-- of a query and see what happens. Here’s a query that retrieves the employee’s first and
+-- last names along with the department name, with a from clause naming both tables
+-- separated by the join keyword:
+SELECT e.fname, e.lname, d.name FROM employee e JOIN department d;
+
+-- Hmmm… there are only 18 employees and 3 different departments, so how did the result
+-- set end up with 54 rows? Looking more closely, you can see that the set of 18 employees
+-- is repeated three times, with all the data identical except for the department name.
+-- Because the query didn’t specify how the two tables should be joined, the database
+-- server generated the Cartesian product, which is every permutation of the two tables
+-- (18 employees × 3 departments = 54 permutations). This type of join is known as a
+-- cross join, and it is rarely used (on purpose, at least). Cross joins are one of the join
+-- types that we study in Chapter 10.
+
+
+-- Inner Joins
+-- To modify the previous query so that only 18 rows are included in the result set (one
+-- for each employee), you need to describe how the two tables are related. Earlier, I
+-- showed that the employee.dept_id column serves as the link between the two tables,
+-- so this information needs to be added to the on subclause of the from clause:
+SELECT e.fname, e.lname, d.name 
+FROM employee e JOIN department d ON e.dept_id = d.dept_id;
+
+
+SELECT e.fname, e.lname, d.name 
+FROM department d JOIN employee e ON e.dept_id = d.dept_id;
+
+
+-- If the names of the columns used to join the two tables are identical, which is true in
+-- the previous query, you can use the using subclause instead of the on subclause, as in:
+SELECT e.fname, e.lname, d.name
+FROM employee e INNER JOIN department d
+USING (dept_id);
+
+SELECT e.fname, e.lname, d.name
+FROM employee e, department d
+WHERE e.dept_id = d.dept_id;
+
+-- The benefits of the SQL92 join syntax are easier to identify for complex queries that
+-- include both join and filter conditions. Consider the following query, which returns all
+-- accounts opened by experienced tellers (hired prior to 2007) currently assigned to the
+-- Woburn branch:
+SELECT a.account_id, a.cust_id, a.open_date, a.product_cd
+FROM account as a, branch as b, employee as e
+WHERE a.open_emp_id = e.emp_id
+	AND e.start_date < '2007-01-01'
+    AND e.assigned_branch_id = b.branch_id
+    AND (e.title = 'Teller' OR e.title = 'Head Teller')
+    AND b.name = 'Woburn branch';
+    
+
+-- With this query, it is not so easy to determine which conditions in the where clause are
+-- join conditions and which are filter conditions. It is also not readily apparent which
+-- type of join is being employed (to identify the type of join, you would need to look
+-- closely at the join conditions in the where clause to see whether any special characters
+-- are employed), nor is it easy to determine whether any join conditions have been mistakenly left out. Here’s the same query using the SQL92 join syntax:
+
+SELECT a.account_id, a.cust_id, a.open_date, a.product_cd 
+FROM account as a INNER JOIN employee as e ON e.emp_id = a.open_emp_id
+			      INNER JOIN branch as b ON b.branch_id = e.assigned_branch_id
+WHERE e.start_date < '2007-01-01' 
+	AND (e.title = 'Teller' OR e.title = 'Head Teller') 
+	AND b.name = 'Woburn Branch';
+
+SELECT a.account_id, a.cust_id, a.open_date, a.product_cd 
+FROM employee as e INNER JOIN account as a ON e.emp_id = a.open_emp_id
+			      INNER JOIN branch as b ON b.branch_id = e.assigned_branch_id
+WHERE e.start_date < '2007-01-01' 
+	AND (e.title = 'Teller' OR e.title = 'Head Teller') 
+	AND b.name = 'Woburn Branch';
+
+
+
+-- Joining Three or More Tables
+-- Joining three tables is similar to joining two tables, but with one slight wrinkle. With
+-- a two-table join, there are two tables and one join type in the from clause, and a single
+-- on subclause to define how the tables are joined. With a three-table join, there are three
+-- tables and two join types in the from clause, and two on subclauses. Here’s another
+-- example of a query with a two-table join:
+SELECT a.account_id, c.fed_id 
+FROM account as a INNER JOIN customer as c ON c.cust_id = a.cust_id 
+WHERE c.cust_type_cd = 'B';
+
+-- This query, which returns the account ID and federal tax number for all business accounts, should look fairly straightforward by now. If, however, you add the employee
+-- table to the query to also retrieve the name of the teller who opened each account, it
+-- looks as follows:
+SELECT a.account_id, c.fed_id, e.fname, e.lname 
+FROM account as a INNER JOIN employee as e ON e.emp_id = a.open_emp_id 
+                  INNER JOIN customer as c ON c.cust_id = a.cust_id
+WHERE c.cust_type_cd = 'B';
+
+
+
+-- Now three tables, two join types, and two on subclauses are listed in the from clause,
+-- so things have gotten quite a bit busier. At first glance, the order in which the tables
+-- are named might cause you to think that the employee table is being joined to the
+-- customer table, since the account table is named first, followed by the customer table,
+-- and then the employee table. If you switch the order in which the first two tables appear,
+-- however, you will get the exact same results:
+SELECT a.account_id, c.fed_id, e.fname, e.lname
+FROM customer as c INNER JOIN account as a ON a.cust_id = c.cust_id
+			    INNER JOIN employee as e ON a.open_emp_id = e.emp_id
+WHERE c.cust_type_cd = 'B';
+
+-- The customer table is now listed first, followed by the account table and then the
+-- employee table. Since the on subclauses haven’t changed, the results are the same. For
+-- the sake of completeness, here’s the same query one last time, but with the table order
+-- completely reversed (employee to account to customer):
+SELECT a.account_id, c.fed_id, e.fname, e.lname
+FROM employee e INNER JOIN account a ON e.emp_id = a.open_emp_id
+				INNER JOIN customer c ON a.cust_id = c.cust_id
+WHERE c.cust_type_cd = 'B';
+ 
+ 
+-- Using Subqueries As Tables
+-- You have already seen several examples of queries that use three tables, but there is one
+-- variation worth mentioning: what to do if some of the data sets are generated by subqueries. Subqueries is the focus of Chapter 9, but I already introduced the concept of
+-- a subquery in the from clause in the previous chapter. Here’s another version of an
+-- earlier query (find all accounts opened by experienced tellers currently assigned to the
+-- Woburn branch) that joins the account table to subqueries against the branch and
+-- employee tables:
+
+# results are filtered before the join instead of after the join here using subquery.
+SELECT a.account_id, a.cust_id, a.open_date, a.product_cd
+FROM account as a 
+	INNER JOIN 
+		(SELECT emp_id, assigned_branch_id FROM employee WHERE start_date < '2007-01-01'
+			AND (title = 'Teller' OR title = 'Head Teller')) as e
+	ON a.open_emp_id = e.emp_id
+    INNER JOIN (SELECT branch_id FROM branch WHERE name = 'Woburn Branch') as b
+	ON e.assigned_branch_id = b.branch_id;
+   
+-- Using the Same Table Twice
+-- If you are joining multiple tables, you might find that you need to join the same table
+-- more than once. In the sample database, for example, there are foreign keys to the
+-- branch table from both the account table (the branch at which the account was opened)
+-- and the employee table (the branch at which the employee works). If you want to include
+-- both branches in your result set, you can include the branch table twice in the from
+-- clause, joined once to the employee table and once to the account table. For this to work,
+-- you will need to give each instance of the branch table a different alias so that the server
+-- knows which one you are referring to in the various clauses, as in:
+
+select * from account;
+select * from employee;
+
+# find account and emp id with open branch and employee branch id.
+# if employee was moved to a new branch, open and actual branch might differ.
+select a.account_id, e.emp_id, b_a.name as open_brach, b_e.name as emp_branch
+FROM account as a INNER JOIN employee as e ON e.emp_id = a.open_emp_id
+				  INNER JOIN branch as b_a ON b_a.branch_id = a.open_branch_id 
+                  INNER JOIN branch as b_e ON b_e.branch_id = e.assigned_branch_id
+WHERE a.product_cd = 'CHK';
+
+# one can find out the account where open and current branch could be different.
+
+-- Self-Joins
+-- Not only can you include the same table more than once in the same query, but you
+-- can actually join a table to itself. This might seem like a strange thing to do at first, but
+-- there are valid reasons for doing so. The employee table, for example, includes a selfreferencing foreign key, which means that it includes a column (superior_emp_id) that
+-- points to the primary key within the same table. This column points to the employee’s
+-- manager (unless the employee is the head honcho, in which case the column is null).
+-- Using a self-join, you can write a query that lists every employee’s name along with the
+-- name of his or her manager:
+select * from employee;
+SELECT e.fname, e.lname, e_mgr.fname as mgr_fname, e_mgr.lname as mgr_lname
+FROM employee as e INNER JOIN employee as e_mgr ON e.superior_emp_id = e_mgr.emp_id;
+
+# to include micheal who has no superior, use left join
+SELECT e.fname, e.lname, e_mgr.fname as mgr_fname, e_mgr.lname as mgr_lname
+FROM employee as e LEFT OUTER JOIN employee as e_mgr ON e.superior_emp_id = e_mgr.emp_id;
+
+-- Equi-Joins Versus Non-Equi-Joins
+-- All of the multitable queries shown thus far have employed equi-joins, meaning that
+-- values from the two tables must match for the join to succeed. An equi-join always
+-- employs an equals sign, as in:
+-- ON e.assigned_branch_id = b.branch_id
+-- While the majority of your queries will employ equi-joins, you can also join your tables
+-- via ranges of values, which are referred to as non-equi-joins. Here’s an example of a
+-- query that joins by a range of values:
+
+select * from product;
+SELECT e.emp_id, e.fname, e.lname, e.start_date
+FROM employee e INNER JOIN product p
+ ON e.start_date >= p.date_offered
+ AND e.start_date <= p.date_retired
+WHERE p.name = 'no-fee checking';
+
+-- You may also find a need for a self-non-equi-join, meaning that a table is joined to itself
+-- using a non-equi-join. For example, let’s say that the operations manager has decided
+-- to have a chess tournament for all bank tellers. You have been asked to create a list of
+-- all the pairings. You might try joining the employee table to itself for all tellers (title =
+-- 'Teller') and return all rows where the emp_ids don’t match (since a person can’t play
+-- chess against himself):
+
+select * from employee;
+
+SELECT e1.fname, e1.lname, 'VS' vs, e2.fname, e2.lname
+FROM employee as e1 LEFT JOIN employee as e2 ON e1.emp_id != e2.emp_id
+WHERE e1.title = 'Teller' AND e2.title = 'Teller';
+
+-- You’re on the right track, but the problem here is that for each pairing (e.g., Sarah
+-- Parker versus Chris Tucker), there is also a reverse pairing (e.g., Chris Tucker versus
+-- Sarah Parker). One way to achieve the desired results is to use the join condition
+-- e1.emp_id < e2.emp_id so that each teller is paired only with those tellers having a higher
+-- employee ID (you can also use e1.emp_id > e2.emp_id if you wish):
+SELECT e1.fname, e1.lname, 'VS' vs, e2.fname, e2.lname
+FROM employee as e1 INNER JOIN employee as e2 ON e1.emp_id < e2.emp_id
+WHERE e1.title = 'Teller' AND e2.title = 'Teller';
+
+-- Join Conditions Versus Filter Conditions
+-- You are now familiar with the concept that join conditions belong in the on subclause,
+-- while filter conditions belong in the where clause. However, SQL is flexible as to where
+-- you place your conditions, so you will need to take care when constructing your queries.
+-- For example, the following query joins two tables using a single join condition, and
+-- also includes a single filter condition in the where clause:
+SELECT a.account_id, a.product_cd, c.fed_id
+	FROM account a INNER JOIN customer c ON a.cust_id = c.cust_id
+    WHERE c.cust_type_cd = 'B';
+-- +------------+------------+------------+
+-- | account_id | product_cd | fed_id |
+-- +------------+------------+------------+
+-- | 24 | CHK | 04-1111111 |
+-- | 25 | BUS | 04-1111111 |
+-- | 27 | BUS | 04-2222222 |
+-- | 28 | CHK | 04-3333333 |
+-- | 29 | SBL | 04-4444444 |
+-- +------------+------------+------------+
+-- 5 rows in set (0.01 sec)
+-- That was pretty straightforward, but what happens if you mistakenly put the filter
+-- condition in the on subclause instead of in the where clause?
+SELECT a.account_id, a.product_cd, c.fed_id
+	FROM account a INNER JOIN customer c ON a.cust_id = c.cust_id
+	AND c.cust_type_cd = 'B';
+-- +------------+------------+------------+
+-- | account_id | product_cd | fed_id |
+-- +------------+------------+------------+
+-- | 24 | CHK | 04-1111111 |
+-- | 25 | BUS | 04-1111111 |
+-- | 27 | BUS | 04-2222222 |
+-- | 28 | CHK | 04-3333333 |
+-- | 29 | SBL | 04-4444444 |
+-- +------------+------------+------------+
+-- 5 rows in set (0.01 sec)
+-- As you can see, the second version, which has both conditions in the on subclause and
+-- has no where clause, generates the same results. What if both conditions are placed in
+-- the where clause but the from clause still uses the ANSI join syntax?
+SELECT a.account_id, a.product_cd, c.fed_id
+	FROM account a INNER JOIN customer c
+	WHERE a.cust_id = c.cust_id
+		AND c.cust_type_cd = 'B';
+-- +------------+------------+------------+
+-- | account_id | product_cd | fed_id |
+-- +------------+------------+------------+
+-- | 24 | CHK | 04-1111111 |
+-- | 25 | BUS | 04-1111111 |
+-- | 27 | BUS | 04-2222222 |
+-- | 28 | CHK | 04-3333333 |
+-- | 29 | SBL | 04-4444444 |
+-- +------------+------------+------------+
+-- 5 rows in set (0.01 sec)
+-- Once again, the MySQL server has generated the same result set. It will be up to you
+-- to put your conditions in the proper place so that your queries are easy to understand
+-- and maintain.
+
+
+-- Exercise 5-1
+-- Fill in the blanks (denoted by <#>) for the following query to obtain the results that
+-- follow:
+SELECT e.emp_id, e.fname, e.lname, b.name
+	FROM employee as e INNER JOIN branch as b ON e.assigned_branch_id = b.branch_id;
+
+-- Exercise 5-2
+-- Write a query that returns the account ID for each nonbusiness customer
+-- (customer.cust_type_cd = 'I') with the customer’s federal ID (customer.fed_id) and
+-- the name of the product on which the account is based (product.name).
+select * from account;
+select * from customer;
+select * from product;
+
+SELECT a.account_id, c.fed_id, p.name 
+FROM account as a INNER JOIN customer as c ON a.cust_id = c.cust_id
+				  INNER JOIN product as p ON p.product_cd = a.product_cd
+WHERE c.cust_type_cd = 'I';
+
+
+-- Exercise 5-3
+-- Construct a query that finds all employees whose supervisor is assigned to a different
+-- department. Retrieve the employees’ ID, first name, and last name.
+
+SELECT * from employee;
+
+SELECT e.emp_id, e.fname, e.lname, e.dept_id, e_mgr.dept_id as mgr_dept_id 
+FROM employee as e INNER JOIN employee as e_mgr ON e.superior_emp_id = e_mgr.emp_id
+WHERE e_mgr.dept_id != e.dept_id;
+
+
+select * from individual;
+select * from business;
+
+SELECT 'IND' as type_cd, cust_id, lname FROM individual
+UNION ALL
+SELECT 'BUS' as type_cd, incorp_date, name FROM business;
+
+-- Just to drive home the point that the union all operator doesn’t remove duplicates,
+-- here’s the same query as the previous example but with an additional query against the
+-- business table:
+SELECT 'IND' as type_cd, cust_id, lname as name FROM individual
+UNION ALL
+SELECT 'BUS' as type_cd, cust_id, name FROM business
+UNION ALL
+SELECT 'BUS' as type_cd, cust_id, name FROM business;
+
+-- While you are unlikely to repeat the same query twice in a compound query, here is
+-- another compound query that returns duplicate data:
+SELECT emp_id FROM employee WHERE assigned_branch_id = 2 AND (title='Teller' OR title='Head Teller')
+UNION ALL
+SELECT DISTINCT open_emp_id FROM account WHERE open_branch_id = 2;
+
+-- If you would like your combined table to exclude duplicate
+-- rows, you need to use the union operator instead of union all:
+SELECT emp_id FROM employee WHERE assigned_branch_id = 2 AND (title='Teller' OR title='Head Teller')
+UNION
+SELECT DISTINCT open_emp_id FROM account WHERE open_branch_id = 2;
+
+-- Sorting Compound Query Results
+-- If you want the results of your compound query to be sorted, you can add an order
+-- by clause after the last query. When specifying column names in the order by clause,
+-- you will need to choose from the column names in the first query of the compound
+-- query. Frequently, the column names are the same for both queries in a compound
+-- query, but this does not need to be the case, as demonstrated by the following:
+SELECT emp_id, assigned_branch_id FROM employee WHERE title = 'Teller'
+UNION
+SELECT open_emp_id, open_branch_id FROM account WHERE product_cd = 'SAV'
+ORDER BY emp_id;
+
+-- The column names specified in the two queries are different in this example. If you
+-- specify a column name from the second query in your order by clause, you will see the
+-- following error:
+-- ERROR 1054 (42S22): Unknown column 'open_emp_id' in 'order clause'
+
+SELECT emp_id, assigned_branch_id FROM employee WHERE title = 'Teller'
+UNION
+SELECT open_emp_id, open_branch_id FROM account WHERE product_cd = 'SAV'
+ORDER BY open_emp_id;
+
+
+-- Set Operation Precedence
+-- If your compound query contains more than two queries using different set operators,
+-- you need to think about the order in which to place the queries in your compound
+-- statement to achieve the desired results. Consider the following three-query compound
+-- statement:
+SELECT cust_id FROM account WHERE product_cd IN ('SAV', 'MM')
+UNION ALL
+SELECT a.cust_id FROM account as a 
+	INNER JOIN branch as b ON a.open_branch_id = b.branch_id
+WHERE b.name = 'Woburn Branch'
+UNION
+SELECT cust_id from account WHERE avail_balance BETWEEN 500 AND 2500;
+
+SELECT cust_id FROM account WHERE product_cd IN ('SAV', 'MM')
+UNION
+SELECT a.cust_id FROM account as a 
+	INNER JOIN branch as b ON a.open_branch_id = b.branch_id
+WHERE b.name = 'Woburn Branch'
+UNION ALL
+SELECT cust_id from account WHERE avail_balance BETWEEN 500 AND 2500;
+
+-- Looking at the results, it’s obvious that it does make a difference how the compound
+-- query is arranged when using different set operators. In general, compound queries
+-- containing three or more queries are evaluated in order from top to bottom, but with
+-- the following caveats:
+
+
+-- Exercise 6-1
+-- If set A = {L M N O P} and set B = {P Q R S T}, what sets are generated by the following
+-- operations?
+-- • A union B
+-- • A union all B
+-- • A intersect B
+-- • A except B
+
+
+-- Exercise 6-2
+-- Write a compound query that finds the first and last names of all individual customers
+-- along with the first and last names of all employees.
+select * from individual;
+select * from employee;
+
+SELECT fname, lname FROM individual
+UNION ALL
+SELECT fname, lname FROM employee;
+
+
+-- Exercise 6-3
+-- Sort the results from Exercise 6-2 by the lname column.
+
+SELECT fname, lname FROM individual
+UNION ALL
+SELECT fname, lname FROM employee
+ORDER BY lname;
+
+
+
+-- Grouping Concepts
+-- Sometimes you will want to find trends in your data that will require the database server
+-- to cook the data a bit before you can generate the results you are looking for. For
+-- example, let’s say that you are in charge of operations at the bank, and you would like
+-- to find out how many accounts are being opened by each bank teller. You could issue
+-- a simple query to look at the raw data:
+SELECT open_emp_id FROM account;
+
+-- With only 24 rows in the account table, it is relatively easy to see that four different
+-- employees opened accounts and that employee ID 16 has opened six accounts; however, if the bank has dozens of employees and thousands of accounts, this approach
+-- would prove tedious and error-prone.
+-- Instead, you can ask the database server to group the data for you by using the group
+-- by clause. Here’s the same query but employing a group by clause to group the account
+-- data by employee ID:
+SELECT open_emp_id FROM account
+GROUP BY open_emp_id;
+
+
+-- The result set contains one row for each distinct value in the open_emp_id column,
+-- resulting in four rows instead of the full 24 rows. The reason for the smaller result set
+-- is that each of the four employees opened more than one account. To see how many
+-- accounts each teller opened, you can use an aggregate function in the select clause to
+-- count the number of rows in each group:
+
+SELECT open_emp_id, COUNT(*) accounts FROM account
+GROUP BY open_emp_id;
+
+
+SELECT open_emp_id, group_concat(DISTINCT product_cd SEPARATOR '/') FROM account
+GROUP BY open_emp_id;
+
+-- The aggregate function count() counts the number of rows in each group, and the
+-- asterisk tells the server to count everything in the group. Using the combination of a
+-- group by clause and the count() aggregate function, you are able to generate exactly
+-- the data needed to answer the business question without having to look at the raw data.
+-- When grouping data, you may need to filter out undesired data from your result set
+-- based on groups of data rather than based on the raw data. Since the group by clause
+-- runs after the where clause has been evaluated, you cannot add filter conditions to your
+-- where clause for this purpose. For example, here’s an attempt to filter out any cases
+-- where an employee has opened fewer than five accounts:
+
+#  ERROR 1111 (HY000): Invalid use of group function
+SELECT open_emp_id, COUNT(*) how_many FROM account 
+WHERE COUNT(*) > 4 
+GROUP BY open_emp_id;
+
+-- You cannot refer to the aggregate function count(*) in your where clause, because the
+-- groups have not yet been generated at the time the where clause is evaluated. Instead,
+-- you must put your group filter conditions in the having clause. Here’s what the query
+-- would look like using having:
+SELECT open_emp_id, COUNT(*) how_many FROM account 
+GROUP BY open_emp_id
+HAVING COUNT(*) > 4;
+
+
+-- Aggregate Functions
+-- Aggregate functions perform a specific operation over all rows in a group. Although
+-- every database server has its own set of specialty aggregate functions, the common
+-- aggregate functions implemented by all major servers include:
+-- Max()
+-- Returns the maximum value within a set
+-- Min()
+-- Returns the minimum value within a set
+-- Avg()
+-- Returns the average value across a set
+-- Sum()
+-- Returns the sum of the values across a set
+-- Count()
+-- Returns the number of values in a set
+-- Here’s a query that uses all of the common aggregate functions to analyze the available
+-- balances for all checking accounts:
+SELECT MAX(avail_balance) as max_balance,
+	MIN(avail_balance) as min_balance,
+	AVG(avail_balance) as avg_balance,
+	SUM(avail_balance) as tot_balance,
+    COUNT(*) num_accounts
+FROM account 
+WHERE product_cd = 'CHK';
+
+-- Implicit Versus Explicit Groups
+-- In the previous example, every value returned by the query is generated by an aggregate
+-- function, and the aggregate functions are applied across the group of rows specified by
+-- the filter condition product_cd = 'CHK'. Since there is no group by clause, there is a
+-- single, implicit group (all rows returned by the query).
+-- In most cases, however, you will want to retrieve additional columns along with columns generated by aggregate functions. What if, for example, you wanted to extend
+-- the previous query to execute the same five aggregate functions for each product type,
+-- instead of just for checking accounts? For this query, you would want to retrieve the
+-- product_cd column along with the five aggregate functions, as in:
+
+#ERROR 1140 (42000): Mixing of GROUP columns (MIN(),MAX(),COUNT(),...) with no GROUP
+# columns is illegal if there is no GROUP BY clause
+select * from account;
+SELECT product_cd,
+ MAX(avail_balance) max_balance,
+ MIN(avail_balance) min_balance,
+ AVG(avail_balance) avg_balance,
+ SUM(avail_balance) tot_balance,
+ COUNT(*) num_accounts
+FROM account;
+
+SELECT product_cd,
+ MAX(avail_balance) max_balance,
+ MIN(avail_balance) min_balance,
+ AVG(avail_balance) avg_balance,
+ SUM(avail_balance) tot_balance,
+ COUNT(*) num_accounts
+FROM account
+GROUP BY product_cd;
+
+-- Counting Distinct Values
+-- When using the count() function to determine the number of members in each group,
+-- you have your choice of counting all members in the group, or counting only the
+-- distinct values for a column across all members of the group. For example, consider the
+-- following data, which shows the employee responsible for opening each account:
+
+SELECT account_id, open_emp_id FROM account
+ORDER BY open_emp_id;
+
+-- As you can see, multiple accounts were opened by four different employees (employee
+-- IDs 1, 10, 13, and 16). Let’s say that, instead of performing a manual count, you want
+-- to create a query that counts the number of employees who have opened accounts. If
+-- you apply the count() function to the open_emp_id column, you will see the following
+-- results:
+SELECT count(open_emp_id) FROM account;
+
+-- In this case, specifying the open_emp_id column as the column to be counted generates
+-- the same results as specifying count(*). If you want to count distinct values in the group
+-- rather than just counting the number of rows in the group, you need to specify the
+-- distinct keyword, as in:
+SELECT count(DISTINCT open_emp_id) FROM account;
+
+
+
+
+
+
+
+
+
+/* Indexes and Constraints */
+ALTER TABLE department ADD INDEX dept_name_idx (name);
+SHOW INDEX FROM department;
+ALTER TABLE department DROP INDEX dept_name_idx;
+
+-- Unique indexes
+-- When designing a database, it is important to consider which columns are allowed to
+-- contain duplicate data and which are not. For example, it is allowable to have two
+-- customers named John Smith in the individual table since each row will have a different
+-- identifier (cust_id), birth date, and tax number (customer.fed_id) to help tell them
+-- apart. You would not, however, want to allow two departments with the same name
+-- in the department table. You can enforce a rule against duplicate department names by
+-- creating a unique index on the department.name column.
+-- A unique index plays multiple roles in that, along with providing all the benefits of a
+-- regular index, it also serves as a mechanism for disallowing duplicate values in the
+-- indexed column. Whenever a row is inserted or when the indexed column is modified,
+-- the database server checks the unique index to see whether the value already exists in
+-- another row in the table. Here’s how you would create a unique index on the
+-- department.name column:
+ALTER TABLE department
+ADD UNIQUE dept_name_idx (name);
+
+
+-- Multicolumn indexes
+-- Along with the single-column indexes demonstrated thus far, you may build indexes
+-- that span multiple columns. If, for example, you find yourself searching for employees
+-- by first and last names, you can build an index on both columns together, as in:
+SHOW INDEX FROM employee;
+ALTER TABLE employee ADD INDEX emp_names_idx (lname, fname);
+ALTER TABLE employee DROP INDEX emp_names_idx;
+
+
+-- Types of Indexes
+-- Indexing is a powerful tool, but since there are many different types of data, a single
+-- indexing strategy doesn’t always do the job. The following sections illustrate the different types of indexing available from various servers.
+SHOW INDEX FROM account;
+
+# VIEWS #
+-- What Are Views?
+-- A view is simply a mechanism for querying data. Unlike tables, views do not involve
+-- data storage; you won’t need to worry about views filling up your disk space. You create
+-- a view by assigning a name to a select statement, and then storing the query for others
+-- to use. Other users can then use your view to access data just as though they were
+-- querying tables directly (in fact, they may not even know they are using a view).
+-- As a simple example, let’s say that you want to partially obscure the federal IDs (Social
+-- Security numbers and corporate identifiers) in the customer table. The customer service
+-- department, for example, may need access to just the last portion of the federal ID in
+-- order to verify the identity of a caller, but exposing the entire number would violate
+-- the company’s privacy policy. Therefore, instead of allowing direct access to the
+-- customer table, you define a view called customer_vw and mandate that all bank personnel use it to access customer data. Here’s the view definition:
+CREATE VIEW customer_vw
+	 (cust_id,
+	 fed_id,
+	 cust_type_cd,
+	 address,
+	 city,
+	 state,
+	 zipcode
+	 )
+AS
+	SELECT cust_id,
+	concat('ends with ', substr(fed_id, 8, 4)) fed_id,
+	 cust_type_cd,
+	 address,
+	 city,
+	 state,
+	 postal_code
+FROM customer;
+
+-- The actual query that the server executes is neither the one submitted by the user nor
+-- the query attached to the view definition. Instead, the server merges the two together
+-- to create another statement, which in this case looks as follows:
+-- SELECT cust_id,
+--  concat('ends in ', substr(fed_id, 8, 4)) fed_id,
+--  cust_type_cd
+-- FROM customer;
+-- Even though the customer_vw view definition includes seven columns of the customer
+-- table, the query executed by the server retrieves only three of the seven. As you’ll see
+-- later in the chapter, this is an important distinction if some of the columns in your view
+-- are attached to functions or subqueries.
+
+DESC customer_vw;
+
+-- You are free to use any clauses of the select statement when querying through a view,
+-- including group by, having, and order by. Here’s an example:
+SELECT cust_type_cd, count(*)
+FROM customer_vw WHERE state = 'MA'
+GROUP BY cust_type_cd
+ORDER BY 1;
+
+-- In addition, you can join views to other tables (or even to other views) within a query,
+-- as in:
+
+SELECT cst.cust_id, cst.fed_id, bus.name
+FROM customer_vw cst INNER JOIN business bus ON cst.cust_id = bus.cust_id;
+
+-- Why Use Views?
+-- In the previous section, I demonstrated a simple view whose sole purpose was to mask
+-- the contents of the customer.fed_id column. While views are often employed for this
+-- purpose, there are many reasons for using views, as I demonstrate in the following
+-- subsections.
+-- Data Security
+-- If you create a table and allow users to query it, they will be able to access every column
+-- and every row in the table. As I pointed out earlier, however, your table may include
+-- some columns that contain sensitive data, such as identification numbers or credit card
+-- numbers; not only is it a bad idea to expose such data to all users, but also it might
+-- violate your company’s privacy policies, or even state or federal laws, to do so.
+-- The best approach for these situations is to keep the table private (i.e., don’t grant
+-- select permission to any users) and then to create one or more views that either omit
+-- or obscure (such as the 'ends in ####' approach taken with the customer_vw.fed_id
+-- column) the sensitive columns. You may also constrain which rows a set of users may
+-- access by adding a where clause to your view definition. For example, the next view
+-- definition allows only business customers to be queried:
+CREATE VIEW business_customer_vw
+	 (cust_id,
+	 fed_id,
+	 cust_type_cd,
+	 address,
+	 city,
+	 state,
+	 zipcode
+	 )
+AS
+SELECT cust_id,
+	 concat('ends in ', substr(fed_id, 8, 4)) fed_id,
+	 cust_type_cd,
+	 address,
+	 city,
+	 state,
+	 postal_code
+FROM customer
+WHERE cust_type_cd = 'B';
+
+
+# SUBQUERY #
+SELECT account_id, product_cd, cust_id, avail_balance FROM account
+WHERE account_id = (SELECT MAX(account_id) FROM account);
+
+
+-- Subquery Types
+-- Along with the differences noted previously regarding the type of result set a subquery
+-- returns (single row/column, single row/multicolumn, or multiple columns), you can
+-- use another factor to differentiate subqueries; some subqueries are completely selfcontained (called noncorrelated subqueries), while others reference columns from the
+-- containing statement (called correlated subqueries). The next several sections explore
+-- these two subquery types and show the different operators that you can employ to
+-- interact with them.
+
+-- Noncorrelated Subqueries
+-- The example from earlier in the chapter is a noncorrelated subquery; it may be executed
+-- alone and does not reference anything from the containing statement. Most subqueries
+-- that you encounter will be of this type unless you are writing update or delete statements, which frequently make use of correlated subqueries (more on this later). Along
+-- with being noncorrelated, the example from earlier in the chapter also returns a table
+-- comprising a single row and column. This type of subquery is known as a scalar subquery and can appear on either side of a condition using the usual operators (=, <>, <,
+-- >, <=, >=). The next example shows how you can use a scalar subquery in an inequality
+-- condition:
+SELECT account_id, product_cd, cust_id, avail_balance, open_emp_id FROM account 
+WHERE open_emp_id != (
+	SELECT e.emp_id 
+	FROM employee as e INNER JOIN branch as b ON e.assigned_branch_id = b.branch_id
+    WHERE e.title = 'Head Teller' AND b.city = 'Woburn'
+);
+
+SELECT a.account_id, a.product_cd, a.cust_id, a.avail_balance, a.open_emp_id FROM account as a 
+	INNER JOIN employee as e ON a.open_emp_id != e.emp_id
+	INNER JOIN branch as b ON b.branch_id = e.assigned_branch_id
+WHERE e.title = 'Head Teller' AND b.city = 'Woburn';
+
+#ERROR 1242 (21000): Subquery returns more than 1 row
+SELECT account_id, product_cd, cust_id, avail_balance, open_emp_id FROM account 
+WHERE open_emp_id != (
+	SELECT e.emp_id 
+	FROM employee as e INNER JOIN branch as b ON e.assigned_branch_id = b.branch_id
+    WHERE e.title = 'Teller' AND b.city = 'Woburn'
+);
+
+
+-- Multiple-Row, Single-Column Subqueries
+-- If your subquery returns more than one row, you will not be able to use it on one side
+-- of an equality condition, as the previous example demonstrated. However, there are
+-- four additional operators that you can use to build conditions with these types of
+-- subqueries.
+-- The in and not in operators
+-- While you can’t equate a single value to a set of values, you can check to see whether
+-- a single value can be found within a set of values. The next example, while it doesn’t
+-- use a subquery, demonstrates how to build a condition that uses the in operator to
+-- search for a value within a set of values:
+/* end learning */
+SELECT emp_id, fname, lname, title FROM employee
+WHERE emp_id IN (
+	SELECT superior_emp_id FROM employee
+);
+
+
+SELECT emp_id, fname, lname, title FROM employee
+WHERE emp_id NOT IN (
+	SELECT superior_emp_id FROM employee
+	WHERE superior_emp_id IS NOT NULL
+);
+
+
+-- The all operator
+-- While the in operator is used to see whether an expression can be found within a set
+-- of expressions, the all operator allows you to make comparisons between a single value
+-- and every value in a set. To build such a condition, you will need to use one of the
+-- comparison operators (=, <>, <, >, etc.) in conjunction with the all operator. For example, the next query finds all employees whose employee IDs are not equal to any of
+-- the supervisor employee IDs:
+ SELECT emp_id, fname, lname, title FROM employee
+ WHERE emp_id != ALL (
+	SELECT superior_emp_id FROM employee
+	WHERE superior_emp_id IS NOT NULL
+);
+
+
+-- When using not in or <> all to compare a value to a set of values, you
+-- must be careful to ensure that the set of values does not contain a null
+-- value, because the server equates the value on the lefthand side of the
+-- expression to each member of the set, and any attempt to equate a value
+-- to null yields unknown. Thus, the following query returns an empty set:
+
+SELECT emp_id, fname, lname, title FROM employee WHERE emp_id NOT IN (1, 2, null);
+
+-- In some cases, the all operator is a bit more natural. The next example uses all to find
+-- accounts having an available balance smaller than all of Frank Tucker’s accounts:
+SELECT account_id, cust_id, product_cd, avail_balance FROM account
+WHERE avail_balance < ALL (
+	SELECT a.avail_balance
+	FROM account as a INNER JOIN individual as i ON a.cust_id = i.cust_id
+	WHERE i.fname = 'Frank' AND i.lname = 'Tucker'
+);
+
+
+-- The any operator
+-- Like the all operator, the any operator allows a value to be compared to the members
+-- of a set of values; unlike all, however, a condition using the any operator evaluates to
+-- true as soon as a single comparison is favorable. This is different from the previous
+-- example using the all operator, which evaluates to true only if comparisons against
+-- all members of the set are favorable. For example, you might want to find all accounts
+-- having an available balance greater than any of Frank Tucker’s accounts:
+SELECT account_id, cust_id, product_cd, avail_balance FROM account
+WHERE avail_balance < ANY (
+	SELECT a.avail_balance
+	FROM account as a INNER JOIN individual as i ON a.cust_id = i.cust_id
+	WHERE i.fname = 'Frank' AND i.lname = 'Tucker'
+);
+
+-- Frank has two accounts with balances of $1,057.75 and $2,212.50; to have a balance
+-- greater than any of these two accounts, an account must have a balance of at least
+-- $1,057.75.
+
+-- Multicolumn Subqueries
+-- So far, all of the subquery examples in this chapter have returned a single column and
+-- one or more rows. In certain situations, however, you can use subqueries that return
+-- two or more columns. To show the utility of multiple-column subqueries, it might help
+-- to look first at an example that uses multiple, single-column subqueries:
+SELECT account_id, product_cd, cust_id FROM account
+WHERE open_branch_id = (
+		SELECT branch_id FROM branch
+		WHERE name = 'Woburn Branch'
+    )
+AND open_emp_id IN (
+	SELECT emp_id FROM employee
+	WHERE title = 'Teller' OR title = 'Head Teller'
+);
+
+# OR 
+SELECT account_id, product_cd, cust_id FROM account
+WHERE (open_branch_id, open_emp_id) IN (
+	SELECT b.branch_id, e.emp_id 
+    FROM branch b INNER JOIN employee e ON b.branch_id = e.assigned_branch_id
+	WHERE b.name = 'Woburn Branch'
+	AND (e.title = 'Teller' OR e.title = 'Head Teller')
+);
+
+
+-- Correlated Subqueries
+-- All of the subqueries shown thus far have been independent of their containing statements, meaning that you can execute them by themselves and inspect the results. A
+-- correlated subquery, on the other hand, is dependent on its containing statement from
+-- which it references one or more columns. Unlike a noncorrelated subquery, a correlated
+-- subquery is not executed once prior to execution of the containing statement; instead,
+-- the correlated subquery is executed once for each candidate row (rows that might be
+-- included in the final results). For example, the following query uses a correlated subquery to count the number of accounts for each customer, and the containing query
+-- then retrieves those customers having exactly two accounts:
+SELECT c.cust_id, c.cust_type_cd, c.city 
+FROM customer as c
+WHERE (
+	SELECT COUNT(*) FROM account as a 
+    WHERE a.cust_id = c.cust_id
+) = 2;
+
+-- The reference to c.cust_id at the very end of the subquery is what makes the subquery
+-- correlated; the containing query must supply values for c.cust_id for the subquery to
+-- execute. In this case, the containing query retrieves all 13 rows from the customer table
+-- and executes the subquery once for each customer, passing in the appropriate customer
+-- ID for each execution. If the subquery returns the value 2, then the filter condition is
+-- met and the row is added to the result set.
+-- Along with equality conditions, you can use correlated subqueries in other types of
+-- conditions, such as the range condition illustrated here:
+SELECT c.cust_id, c.cust_type_cd, c.city 
+FROM customer c
+WHERE (
+	SELECT SUM(a.avail_balance) FROM account a
+	WHERE a.cust_id = c.cust_id
+) BETWEEN 5000 AND 10000;
+
+
+-- The exists Operator
+-- While you will often see correlated subqueries used in equality and range conditions,
+-- the most common operator used to build conditions that utilize correlated subqueries
+-- is the exists operator. You use the exists operator when you want to identify that a
+-- relationship exists without regard for the quantity; for example, the following query
+-- finds all the accounts for which a transaction was posted on a particular day, without
+-- regard for how many transactions were posted:
+SELECT a.account_id, a.product_cd, a.cust_id, a.avail_balance
+FROM account a
+WHERE EXISTS (
+	SELECT 1 FROM transaction t
+    WHERE t.account_id = a.account_id
+	AND t.txn_date = '2008-09-22'
+);
+
+
+-- Using the exists operator, your subquery can return zero, one, or many rows, and the
+-- condition simply checks whether the subquery returned any rows. If you look at the
+-- select clause of the subquery, you will see that it consists of a single literal (1); since
+-- the condition in the containing query only needs to know how many rows have been
+-- returned, the actual data the subquery returned is irrelevant. Your subquery can return
+-- whatever strikes your fancy, as demonstrated next:
+
+SELECT a.account_id, a.product_cd, a.cust_id, a.avail_balance
+FROM account a
+WHERE EXISTS (
+	SELECT t.txn_id, 'hello', 3.1415927 FROM transaction t
+	WHERE t.account_id = a.account_id
+	AND t.txn_date = '2008-09-22');
+
+-- However, the convention is to specify either select 1 or select * when using exists.
+-- You may also use not exists to check for subqueries that return no rows, as demonstrated by the following:
+
+SELECT a.account_id, a.product_cd, a.cust_id
+FROM account a
+WHERE NOT EXISTS (
+	SELECT * FROM business b
+	WHERE b.cust_id = a.cust_id
+);
+
+
+-- When to Use Subqueries
+-- Now that you have learned about the different types of subqueries and the different
+-- operators that you can employ to interact with the data returned by subqueries, it’s
+-- time to explore the many ways in which you can use subqueries to build powerful SQL
+-- statements. The next three sections demonstrate how you may use subqueries to construct custom tables, to build conditions, and to generate column values in result sets.
+
+
+-- Subqueries As Data Sources
+-- Back in Chapter 3, I stated that the from clause of a select statement names the tables to be used by the query. Since a subquery generates a result set containing rows
+-- and columns of data, it is perfectly valid to include subqueries in your from clause along
+-- with tables. Although it might, at first glance, seem like an interesting feature without
+-- much practical merit, using subqueries alongside tables is one of the most powerful
+-- tools available when writing queries. Here’s a simple example:
+select * from employee;
+select * from department;
+
+SELECT d.dept_id, d.name, e_cnt.employees as employees
+FROM department as d INNER JOIN (
+	SELECT dept_id, COUNT(*) employees FROM employee
+	GROUP BY dept_id
+) as e_cnt
+ON d.dept_id = e_cnt.dept_id;
+
+-- In this example, a subquery generates a list of department IDs along with the number
+-- of employees assigned to each department. Here’s the result set generated by the
+-- subquery:
+SELECT dept_id, COUNT(*) employees FROM employee
+GROUP BY dept_id;
+
+select emp_id from employee order by 1 desc limit 131212,1;
+-- Data fabrication
+-- Along with using subqueries to summarize existing data, you can use subqueries to
+-- generate data that doesn’t exist in any form within your database. For example, you
+-- may wish to group your customers by the amount of money held in deposit accounts,
+-- but you want to use group definitions that are not stored in your database. For example,
+-- let’s say you want to sort your customers into the groups shown in Table 9-1.
+-- Table 9-1. Customer balance groups
+-- Group name 		Lower limit Upper limit
+-- Small Fry 		0 			$4,999.99
+-- Average Joes 	$5,000 		$9,999.99
+-- Heavy Hitters 	$10,000 	$9,999,999.99
+-- To generate these groups within a single query, you will need a way to define these
+-- three groups. The first step is to define a query that generates the group definitions:
+SELECT 'Small Fry' name, 0 low_limit, 4999.99 high_limit
+UNION ALL
+SELECT 'Average Joes' name, 5000 low_limit, 9999.99 high_limit
+UNION ALL
+SELECT 'Heavy Hitters' name, 10000 low_limit, 9999999.99 high_limit;
+
+-- I have used the set operator union all to merge the results from three separate queries
+-- into a single result set. Each query retrieves three literals, and the results from the three
+-- queries are put together to generate a result set with three rows and three columns. You
+-- now have a query to generate the desired groups, and you can place it into the from
+-- clause of another query to generate your customer groups:
+select * from account;
+SELECT groups.name, COUNT(*) as num_customers
+FROM (
+		SELECT SUM(a.avail_balance) as cust_balance
+		FROM account as a 
+			INNER JOIN product as p ON a.product_cd = p.product_cd
+		WHERE p.product_type_cd = 'ACCOUNT'
+        GROUP BY a.cust_id
+	 ) as cust_rollup
+	 INNER JOIN
+	 (
+		SELECT 'Small Fry' name, 0 low_limit, 4999.99 high_limit
+		UNION ALL
+		SELECT 'Average Joes' name, 5000 low_limit, 9999.99 high_limit
+		UNION ALL
+		SELECT 'Heavy Hitters' name, 10000 low_limit, 9999999.99 high_limit
+	 ) as groups
+	 ON cust_rollup.cust_balance 
+		BETWEEN groups.low_limit AND groups.high_limit
+GROUP BY groups.name;
+
+
+-- Task-oriented subqueries
+-- In systems used for reporting or data-feed generation, you will often come across queries such as the following:
+
+-- This query sums all deposit account balances by account type, the employee that
+-- opened the accounts, and the branches at which the accounts were opened. If you look
+-- at the query closely, you will see that the product, branch, and employee tables are needed
+-- only for display purposes, and that the account table has everything needed to generate
+-- the groupings (product_cd, open_branch_id, open_emp_id, and avail_balance). Therefore, you could separate out the task of generating the groups into a subquery, and then
+-- join the other three tables to the table generated by the subquery to achieve the desired
+-- end result. Here’s the grouping subquery:
+select * from employee;
+select * from account;
+select * from branch;
+select * from product;
+
+SELECT p.name as product, b.name as branch, CONCAT(e.fname, ' ', e.lname) as name, SUM(a.avail_balance) as total_deposits
+FROM account as a INNER JOIN employee as e ON e.emp_id = a.open_emp_id
+				  INNER JOIN branch as b ON b.branch_id = a.open_branch_id
+				  INNER JOIN product as p ON p.product_cd = a.product_cd
+WHERE p.product_type_cd = 'ACCOUNT'
+GROUP BY p.name, b.name, e.fname, e.lname
+ORDER BY 1;
+
+
+SELECT product_cd, open_branch_id branch_id, open_emp_id emp_id, SUM(avail_balance) tot_deposits
+FROM account
+GROUP BY product_cd, open_branch_id, open_emp_id;
+
+-- This is the heart of the query; the other tables are needed only to provide meaningful
+-- strings in place of the product_cd, open_branch_id, and open_emp_id foreign key columns. The next query wraps the query against the account table in a subquery and joins
+-- the table that results to the other three tables:
+SELECT p.name product, b.name branch, CONCAT(e.fname, ' ', e.lname) name, account_groups.tot_deposits
+FROM (
+		SELECT product_cd, open_branch_id branch_id, open_emp_id emp_id, SUM(avail_balance) tot_deposits
+		FROM account
+		GROUP BY product_cd, open_branch_id, open_emp_id
+) as account_groups
+INNER JOIN employee e ON e.emp_id = account_groups.emp_id
+INNER JOIN branch b ON b.branch_id = account_groups.branch_id
+INNER JOIN product p ON p.product_cd = account_groups.product_cd
+WHERE p.product_type_cd = 'ACCOUNT'
+ORDER BY 1;
+
+-- I realize that beauty is in the eye of the beholder, but I find this version of the query to
+-- be far more satisfying than the big, flat version. This version may execute faster, as well,
+-- because the grouping is being done on small, numeric foreign key columns (product_cd,
+-- open_branch_id, open_emp_id) instead of potentially lengthy string columns
+-- (branch.name, product.name, employee.fname, employee.lname).
+
+-- Subqueries in Filter Conditions
+-- Many of the examples in this chapter used subqueries as expressions in filter conditions,
+-- so it should not surprise you that this is one of the main uses for subqueries. However,
+-- filter conditions using subqueries are not found only in the where clause. For example,
+-- the next query uses a subquery in the having clause to find the employee responsible
+-- for opening the most accounts:
+select * from account;
+
+SELECT open_emp_id, COUNT(*) how_many
+FROM account 
+GROUP BY open_emp_id
+HAVING COUNT(*) = (
+	SELECT MAX(emp_cnt.how_many)
+	FROM 
+	(
+		SELECT open_emp_id, COUNT(*) as how_many
+		FROM account
+		GROUP BY open_emp_id
+	) as emp_cnt
+);
+
+-- The subquery in the having clause finds the maximum number of accounts opened by
+-- any employee, and the containing query finds the employee that has opened that number of accounts. If multiple employees tie for the highest number of opened accounts,
+-- then the query would return multiple rows.
+
+
+
+# Joins Revisited #
+-- Outer Joins
+-- In all the examples thus far that have included multiple tables, we haven’t been concerned that the join conditions might fail to find matches for all the rows in the tables.
+-- For example, when joining the account table to the customer table, I did not mention
+-- the possibility that a value in the cust_id column of the account table might not match
+-- a value in the cust_id column of the customer table. If that were the case, then some of
+-- the rows in one table or the other would be left out of the result set.
+-- Just to be sure, let’s check the data in the tables. Here are the account_id and cust_id
+-- columns from the account table:
+
+SELECT account_id, cust_id FROM account;
+
+-- There are 24 accounts spanning 13 different customers, with customer IDs 1 through
+-- 13 having at least one account. Here’s the set of customer IDs from the customer table:
+
+SELECT cust_id FROM customer;
+
+-- There are 13 rows in the customer table with IDs 1 through 13, so every customer ID
+-- is included at least once in the account table. When the two tables are joined on the
+-- cust_id column, therefore, you would expect all 24 rows to be included in the result
+-- set (barring any other filter conditions):
+
+SELECT a.account_id, c.cust_id 
+FROM account a INNER JOIN customer c ON a.cust_id = c.cust_id;
+
+-- As expected, all 24 accounts are present in the result set. But what happens if you join
+-- the account table to one of the specialized customer tables, such as the business table?
+select cust_id from business;
+select account_id, cust_id from account; 
+
+SELECT a.account_id, b.cust_id, b.name
+FROM account a INNER JOIN business b ON a.cust_id = b.cust_id;
+
+-- Instead of 24 rows in the result set, there are now only five. Let’s look in the business
+-- table to see why this is:
+
+
+-- Of the 13 rows in the customer table, only four are business customers, and since one
+-- of the business customers has two accounts, a total of five rows in the account table are
+-- linked to business customers.
+
+-- But what if you want your query to return all the accounts, but to include the business
+-- name only if the account is linked to a business customer? This is an example where
+-- you would need an outer join between the account and business tables, as in:
+SELECT a.account_id, b.cust_id, b.name
+FROM account a LEFT OUTER JOIN business b ON a.cust_id = b.cust_id;
+
+-- SELECT a.account_id, b.cust_id, b.name
+-- FROM business b LEFT OUTER JOIN account a ON a.cust_id = b.cust_id;
+
+
+SELECT a.account_id, b.cust_id, b.name
+FROM account a RIGHT OUTER JOIN business b ON a.cust_id = b.cust_id;
+
+# same as previous results where all business customers are included that are there in account table and even those that are not.
+SELECT a.account_id, b.cust_id, b.name
+FROM business b LEFT OUTER JOIN account a ON a.cust_id = b.cust_id;
+
+
+-- An outer join includes all of the rows from one table and includes data from the second
+-- table only if matching rows are found. In this case, all rows from the account table are
+-- included, since I specified left outer join and the account table is on the left side of
+-- the join definition. The name column is null for all rows except for the four business
+-- customers (cust_ids 10, 11, 12, and 13). Here’s a similar query with an outer join to
+-- the individual table instead of the business table:
+
+SELECT a.account_id, a.cust_id, i.fname, i.lname
+FROM account a  LEFT OUTER JOIN individual i ON a.cust_id = i.cust_id;
+
+
+# 19 vs 24 with left out join.
+SELECT a.account_id, a.cust_id, i.fname, i.lname
+FROM account a INNER JOIN individual i ON a.cust_id = i.cust_id;
+
+# or below with 19 columns.
+SELECT a.account_id, a.cust_id, i.fname, i.lname
+FROM account a  RIGHT OUTER JOIN individual i ON a.cust_id = i.cust_id;
+
+
+-- Three-Way Outer Joins
+-- In some cases, you may want to outer-join one table with two other tables. For example,
+-- you may want a list of all accounts showing either the customer’s first and last names
+-- for individuals or the business name for business customers, as in:
+select * from account;
+select * from individual;
+SELECT a.cust_id, a.account_id, a.product_cd, CONCAT(i.fname, ' ', i.lname) person_name, b.name as business_name 
+FROM account as a LEFT OUTER JOIN individual as i ON a.cust_id = i.cust_id
+				  LEFT OUTER JOIN business as b ON a.cust_id = b.cust_id;
+
+# first step where we find all entries from account table and left join with individual table to get
+# all business cust_ids also. now we do left outer join with business to find mathing entiries but 
+# we have to also keep the existing individual entries so inner join wont work. 
+# two step process: get everything left + intersection and left + intersection again with business. 
+SELECT a.cust_id, a.account_id, a.product_cd, CONCAT(i.fname, ' ', i.lname) person_name, b.name as business_name 
+FROM account as a LEFT OUTER JOIN individual as i ON a.cust_id = i.cust_id
+				  LEFT OUTER JOIN business as b ON a.cust_id = b.cust_id;
+
+
+-- Self Outer Joins
+-- In Chapter 5, I introduced you to the concept of the self-join, where a table is joined
+-- to itself. Here’s a self-join example from Chapter 5, which joins the employee table to
+-- itself to generate a list of employees and their supervisors:
+select * from employee;
+
+SELECT e.emp_id, CONCAT(e.fname, ' ', e.lname) as employee_name, e_sup.emp_id as sup_emp_id,  CONCAT(e_sup.fname, ' ', e_sup.lname) as supervisor_name
+FROM employee as e INNER JOIN employee as e_sup ON e_sup.emp_id = e.superior_emp_id;
+
+# Micheal without any superior is left out so LEFT OUTER JOIN gives that entry too.
+SELECT e.emp_id, CONCAT(e.fname, ' ', e.lname) as employee_name, e_sup.emp_id as sup_emp_id,  CONCAT(e_sup.fname, ' ', e_sup.lname) as supervisor_name
+FROM employee as e LEFT OUTER JOIN employee as e_sup ON e_sup.emp_id = e.superior_emp_id;
+
+-- This query shows each supervisor (still the third and fourth columns) along with the
+-- set of employees he or she supervises. Therefore, Michael Smith appears twice as supervisor to Susan Barker and Robert Tyler; Susan Barker appears once as a supervisor
+-- to nobody (null values in the first and second columns). All 18 employees appear at
+-- least once in the third and fourth columns, with some appearing more than once if they
+-- supervise more than one employee, making a total of 28 rows in the result set. This is
+-- a very different outcome from the previous query, and it was prompted by changing
+-- only a single keyword (left to right). Therefore, when using outer joins, make sure
+-- you think carefully about whether to specify a left or right outer join.
+
+# includes all employees and if they supervise one more more employees, those entries show us too.
+SELECT e.emp_id, CONCAT(e.fname, ' ', e.lname) as employee_name, e_sup.emp_id as sup_emp_id,  CONCAT(e_sup.fname, ' ', e_sup.lname) as supervisor_name
+FROM employee as e RIGHT OUTER JOIN employee as e_sup ON e_sup.emp_id = e.superior_emp_id;
+
+
+
+-- Cross Joins
+-- Back in Chapter 5, I introduced the concept of a Cartesian product, which is essentially
+-- the result of joining multiple tables without specifying any join conditions. Cartesian
+-- products are used fairly frequently by accident (e.g., forgetting to add the join condition
+-- to the from clause) but are not so common otherwise. If, however, you do intend to
+-- generate the Cartesian product of two tables, you should specify a cross join, as in:
+
+SELECT pt.name, p.product_cd, p.name
+FROM product p CROSS JOIN product_type pt;
+
+# more to read #
+
+-- Natural Joins
+-- If you are lazy (and aren’t we all), you can choose a join type that allows you to name
+-- the tables to be joined but lets the database server determine what the join conditions
+-- need to be. Known as the natural join, this join type relies on identical column names
+-- across multiple tables to infer the proper join conditions. For example, the account
+-- table includes a column named cust_id, which is the foreign key to the customer table,
+-- whose primary key is also named cust_id. Thus, you can write a query that uses natural
+-- join to join the two tables:
+SELECT a.account_id, a.cust_id, c.cust_type_cd, c.fed_id
+FROM account a NATURAL JOIN customer c;
+
+# similar to this
+SELECT a.account_id, a.cust_id, c.cust_type_cd, c.fed_id
+FROM account a INNER JOIN customer c ON a.cust_id = c.cust_id;
+
+
+-- Because you specified a natural join, the server inspected the table definitions and added
+-- the join condition a.cust_id = c.cust_id to join the two tables.
+-- This is all well and good, but what if the columns don’t have the same name across the
+-- tables? For example, the account table also has a foreign key to the branch table, but
+-- the column in the account table is named open_branch_id instead of just branch_id. Let’s
+-- see what happens if I use natural join between the account and branch tables:
+
+SELECT a.account_id, a.cust_id, a.open_branch_id, b.name
+FROM account a NATURAL JOIN branch b;
+
+-- It looks like something has gone wrong; the query should return no more than 24 rows,
+-- since there are 24 rows in the account table. What has happened is that, since the server
+-- couldn’t find two identically named columns in the two tables, no join condition was
+-- generated and the two tables were cross-joined instead, resulting in 96 rows (24 accounts × 4 branches).
+-- So, is the reduced wear and tear on the old fingers from not having to type the join
+-- condition worth the trouble? Absolutely not; you should avoid this join type and use
+-- inner joins with explicit join conditions.
+
+
+
+
+

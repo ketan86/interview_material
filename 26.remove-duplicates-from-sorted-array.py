@@ -70,19 +70,23 @@ class Solution:
         if not nums:
             return 0
 
-        i = 1
-        prev = 0
+        # prev pointer
+        i = 0
+        # running pointer
+        j = 1
 
         # use two pointers and if forward pointers find a number that is not
-        # equal to current pointer value, swap with next element of prev
-        # and increment the i.
-        while i < len(nums):
-            if nums[i] != nums[prev]:
-                # NOTE: swap with next element of prev is the key.
-                nums[prev + 1], nums[i] = nums[i], nums[prev + 1]
-                prev += 1
-            i += 1
-        return prev
+        # equal to current pointer value (unique), increment the ith index
+        # and swap the number with j index.
+        while j < len(nums):
+            if nums[i] != nums[j]:
+                # increment first because till ith index, elements
+                # are unique already.
+                i += 1
+                nums[j], nums[i] = nums[i], nums[j]
+            j += 1
+
+        return i + 1
 
 
 print(Solution().removeDuplicates([1, 1, 2]))

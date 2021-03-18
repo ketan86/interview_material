@@ -1,1 +1,0 @@
-print("This is the comprehensive course on python concurrency")

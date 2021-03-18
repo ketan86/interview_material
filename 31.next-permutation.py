@@ -33,7 +33,6 @@
 # @lc code=start
 # pylint: skip-file
 
-
 class Solution:
     def nextPermutation(self, nums):
         """
@@ -47,6 +46,15 @@ class Solution:
         2. sort all element next to the right of the current element
         3. swap current element with first bigger element in the sorted
         array.
+
+
+        346943
+        346349
+        349346
+
+        1 3 2
+        1 2 3
+        2 1 3
         """
         if len(nums) == 1:
             return nums
@@ -62,14 +70,14 @@ class Solution:
         while end >= 0 and nums[end] >= nums[end + 1]:
             end -= 1
 
-        # reverse all the numbers starting from next of the current element.
-        self.reverse(nums, end + 1, len(nums) - 1)
-
         # if we did not find the element where current element is less than
         # the next element, there is no greater permutation so
         # we could return the reversed list.
         if end == -1:
             return nums
+
+        # reverse all the numbers starting from next of the current element.
+        self.reverse(nums, end + 1, len(nums) - 1)
 
         # traverse until current element is greater than next element
         # and next element is not crossing the array limit

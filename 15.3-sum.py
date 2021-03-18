@@ -1,6 +1,8 @@
 # @lc app=leetcode id=23 lang=python3
 
-# Given an array nums of n integers, are there elements a, b, c in nums such that a + b + c = 0? Find all unique triplets in the array which gives the sum of zero.
+# Given an array nums of n integers, are there elements a, b, c in nums such
+# that a + b + c = 0? Find all unique triplets in the array which gives the sum
+# of zero.
 
 # Note:
 
@@ -19,7 +21,7 @@
 
 # pylint:skip-file
 
-
+# O(N^2) -> Time Complexity
 class Solution:
     def threeSum(self, nums):
         """
@@ -33,6 +35,7 @@ class Solution:
         # go till 3rd last element
         for i in range(len(nums) - 2):
             # if i value is greater than 0, sum will never be 0.
+            # for ex, [1,3,4,8..]
             if nums[i] > 0:
                 break
 
@@ -45,9 +48,12 @@ class Solution:
             x = j = i + 1
             y = k = len(nums) - 1
 
-            # only till j < k and NOT j <=k beacuse we need two elements
+            # only till j < k and NOT j <=k because we need two elements
             while j < k:
-                # if prev value of the j or k is same, skip j or k
+                # if prev value of the j or k is same, skip j or k.
+                # NOTE: j > x and y < k (next condition) is to prevent
+                # j from matching the i and k from going out of
+                # bound in the first iteration.
                 if j > x and nums[j] == nums[j - 1]:
                     j += 1
                     continue
@@ -58,7 +64,7 @@ class Solution:
 
                 # sum of all the elements
                 sum_ = nums[i] + nums[j] + nums[k]
-                # if sum is 0, record the results and increament j and k
+                # if sum is 0, record the results and increment j and k
                 if sum_ == 0:
                     results.append([nums[i], nums[j], nums[k]])
                     j += 1

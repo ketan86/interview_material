@@ -65,7 +65,7 @@ class Solution:
         for i in range(len(s)):
             # expand from the middle to find the longest substring
             # instead of finding the ith and i+j/2th index, we can
-            # use i,i and i, i+1 which will take care of the both
+            # use (i,i) and (i, i+1) which will take care of the both
             # cases.
             # for ex, bab
             #         ^ <- ith

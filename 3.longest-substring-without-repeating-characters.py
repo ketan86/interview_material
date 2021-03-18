@@ -66,13 +66,13 @@ class Solution:
         # if string is empty, return 0
         if not s:
             return 0
-        # define running max length
-        max_length = 1
-        # set first pointer to 0 and second to 1
+        # define running max length to 0
+        max_length = 0
+        # set first and second pointers to 0
         i = 0
-        j = 1
+        j = 0
         # char set to store all the unique chars visited so far
-        char_set = {s[i]}
+        char_set = set()
         # when j reches the end, the window does not have to shrink, since
         # shrinking window might give some lengths but won't be greater than
         # the last window.
@@ -127,8 +127,9 @@ class Solution:
         return max_length
 
 
-print(Solution().lengthOfLongestSubstring('abcabcbb'))
-print(Solution().lengthOfLongestSubstring('bbbbbbb'))
-print(Solution().lengthOfLongestSubstring('pwwkew'))
+print(Solution().lengthOfLongestSubstring(' '))
+# print(Solution().lengthOfLongestSubstring('abcabcbb'))
+# print(Solution().lengthOfLongestSubstring('bbbbbbb'))
+# print(Solution().lengthOfLongestSubstring('pwwkew'))
 
 # @lc code=end

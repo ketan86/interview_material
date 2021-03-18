@@ -45,9 +45,23 @@
 
 class Solution:
     def longestCommonPrefix(self, strs):
+        """
+        Runtime: 28 ms, faster than 94.11% of Python3 online submissions
+        for Longest Common Prefix.
+
+        This approach comapres one char of each string at a time so we
+        can break when char does not match.
+        """
         if not strs:
             return ""
+
         # mark shortest string a longest common prefix.
+        # min without key argument returns the min string based on the
+        # lexicographical order of char.
+        # (Pdb) min('abc', 'cd')
+        # 'abc'
+        # (Pdb) min('abc', 'cd', key=len)
+        # 'cd'
         longest_prefix = min(strs, key=len)
         # we cant find a longest command prefix greater
         # than the shorted string so iterate over the
@@ -64,6 +78,41 @@ class Solution:
                 if other[i] != longest_prefix[i]:
                     return longest_prefix[:i]
         return longest_prefix
+
+    def slongestCommonPrefix(self, strs):
+        """
+        Runtime: 44 ms, faster than 20.11% of Python3 online submissions
+        for Longest Common Prefix.
+
+        This approach compares each string from beginning till end so runtime
+        is higher.
+        """
+
+        if not strs:
+            return ''
+
+        longest_prefix = strs[0]
+
+        for i in range(1, len(strs)):
+            longest_prefix = self.find_min_matching_str(
+                strs[i], longest_prefix)
+
+        return longest_prefix
+
+    def find_min_matching_str(self, s1, s2):
+        new_string = ''
+        i = 0
+        j = 0
+
+        while i < len(s1) and j < len(s2):
+            if s1[i] == s2[j]:
+                new_string += s1[i]
+                i += 1
+                j += 1
+            else:
+                break
+
+        return new_string
 
 
 print(Solution().longestCommonPrefix(["flower", "flow", "flight"]))

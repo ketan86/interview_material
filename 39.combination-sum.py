@@ -57,7 +57,45 @@
 
 class Solution:
     def combinationSum(self, candidates, target):
-        pass
+        """
+        In order to find combinations with repeated number, start with the list and extract all elements and find combination with
+        all the elements starting from that element to n.
+
+        When a sum of all elements is greater than target, break.
+        When a sum of all the elements is equal to target, save it.
+                                                                                        [2,3,5]
+                                                /                                                                    \          \
+                                            2 & [2,3,5],                                                            3 & [3,5], 5 &[5]
+            /                                    |                                 \
+    2,2 & [2,3,5],                          2,3 & [3,5],                        2,5 & [5]
+    /               \           \                 /         \                       |
+2,2,2 & [2,3,5], 2,2,3 & [3,5], 2,2,5 & [5]  2,3,3 & [3,5], 2,3,5 & [5]         2,5,5 & [5]
+                                ...
+
+        """
+        # save the results
+        results = []
+        self.find_combinations(candidates, target, results)
+        return results
+
+    def find_combinations(self, candidates, target, results, index=0, combinations=[], sum_=0):
+        # if sum is greater than target, return
+        if sum_ > target:
+            return
+        # if sum is equal to target, append combinations
+        if sum_ == target:
+            results.append(combinations)
+            return
+
+        # loop from index till end to cover all the combinations including the current element due to
+        # repeatability.
+        for i in range(index, len(candidates)):
+            # calculate new combinations. Note: combinations.append(candidate[i]) would change
+            # the combinations value for the next iteration so add new list with candidate i.
+            new_combinations = combinations + [candidates[i]]
+            new_sum = sum_ + candidates[i]
+            self.find_combinations(
+                candidates, target, results, i, new_combinations, new_sum)
 
 
 print(Solution().combinationSum([2, 3, 6, 7], 7))

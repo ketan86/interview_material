@@ -62,9 +62,10 @@ class Solution:
 
     Those values can be any values in any range.
 
-    In an UNSIGNED 32-bit number, the valid values are from 0 to 2^32-1
+    In an UNSIGNED 32-bit number, the valid values are from 0 to (2^32)-1
         (instead of 1 to 2^32, but the same number of VALUES, about 4.2
         billion).
+        1..2^32 or 1-1..(2^32)-1 = 0..((2^32) - 1) => 4,294,967,296 - 1 => 4,294,967,295
 
     In a SIGNED 32-bit number, one of the 32 bits is used to indicate whether
         the number is negative or not. This reduces the number of values by
@@ -75,19 +76,23 @@ class Solution:
     Summary:
         = 2^32 possible values
         = 2^32 values used for negative integers
-            1 bit for sign = -2^31
+            1 bit for sign = -2^31 => 4,294,967,295
         = 2^32 values available for positive integers
-            1..2^32 or 1-1..2^32-1 = 0..2^31
+            including 0, we have 0..(2^31)-1 => 2,147,483,647
     """
     INT_MAX = (2 ** 31) - 1   # 0..2^32
     INT_MIN = -(2 ** 31)
-    INT_MAX_BITS = 31
+    INT_MAX_BITS = 31  # keeping 1 bit for sign
 
     def divide(self, dividend, divisor):
         # division is a substracting divisor n time till dividend becomes 0.
         # for ex, dividend = 10, divisor = 3  (10-3 =7-3 =4-3 =1-3 =-2)
-        #                                            1     2     3   ->3 answer
+        #                 quotient             1     2     3   ->3 answer
+        #    divisor    | 10 <- dividend
+        #                 remainder
+
         sign = 1
+        # condition to check only one of the number is negative
         if (dividend < 0 and divisor > 0) \
                 or (dividend > 0 and divisor < 0):
             sign = -1
@@ -95,6 +100,7 @@ class Solution:
         if dividend == 0:
             return 0
 
+        # both are negative, we will get max unsigned integer
         if dividend == Solution.INT_MIN and divisor == -1:
             return Solution.INT_MAX
 
@@ -132,7 +138,7 @@ class Solution:
         #        quotient = 1 << 0 =  80 + 1 (1*3=3) = 85
         #
         # answer = 257/3 = 85.66666666666667 = 85
-        for i in range(31, -1, -1):  # start, stop and steps
+        for i in range(Solution.INT_MAX_BITS, -1, -1):  # start, stop and steps
             number = divisor << i
             if dividend >= number:
                 dividend -= number

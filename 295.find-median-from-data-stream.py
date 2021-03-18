@@ -95,8 +95,6 @@ for ex, 1,3,5,7,2,4,8   -> sorted version 1,2,3,4,5,7,8
 
       Doing such operations ensures that the elements order in the heaps is
       maintained.
-      
-
 """
 
 
@@ -106,6 +104,15 @@ class MedianFinder:
         """
         initialize your data structure here.
         """
+        # ** median of numbers can only be found when nums are sorted.
+        # now if we think about sorted number, it's increasing from left to right
+        #   and decreasing from right to left. [1,2,3,4,5,6,7]
+        # if we store 1 to 4 in max_heap and 5 to 7 in min_heap, 4 at the top of the
+        #   max_heap would be a median else (top of the min_heap + top of the max_heap) / 2.
+        # we can simply do that by adding number to max_heap first (considering that
+        #   max_heap contains one extra element) and then move top element to min_heap
+        #   to allow number to sort and later if min_heap has extra element, move it to
+        #   min_heap.
         self.min_heap = []
         self.max_heap = []
 
