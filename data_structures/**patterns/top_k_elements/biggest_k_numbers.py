@@ -19,18 +19,19 @@ import heapq
 
 
 def find_k_largest_numbers(nums, k):
-    heap_list = []
+    min_heap = []
     for num in nums:
         # add first k elements into the heap.
-        if len(heap_list) < k:
-            heapq.heappush(heap_list, num)
+        if len(min_heap) < k:
+            heapq.heappush(min_heap, num)
         # for, k + 1 to n, if element is greater than current min heap
         # element, pop the min element and insert the current element.
         else:
-            if num > heap_list[0]:
-                heapq.heapreplace(heap_list, num)
+            if num > min_heap[0]:
+                heapq.heapreplace(min_heap, num)
+
     # at the end, you have the biggest k elements.
-    return heap_list
+    return min_heap
 
 
 def main():

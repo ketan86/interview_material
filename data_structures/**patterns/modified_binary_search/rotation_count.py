@@ -28,13 +28,17 @@ def count_rotations(arr):
     # find peak element
     start_index = 0
     end_index = len(arr) - 1
+    # find peak element
     peak_index = _find_peak_index(arr, start_index, end_index)
+    # if peak element is last element, there is no rotation
     if peak_index == end_index:
         return 0
+    # else, rotation is peak - start + 1
     return peak_index - start_index + 1
 
 
 def _find_peak_index(arr, start_index, end_index):
+    # find peak element in the array
     while start_index <= end_index:
         mid = start_index + (end_index - start_index) // 2
         if arr[mid] < end_index:

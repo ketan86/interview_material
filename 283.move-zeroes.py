@@ -35,30 +35,36 @@
 
 class Solution:
     def moveZeroes(self, nums):
-        # i = 0
-        # j = 1
-        # while j < len(nums):
-        #     if nums[j] != 0 and nums[i] == 0:
-        #         nums[i], nums[j] = nums[j], nums[i]
-        #     elif nums[i] == 0 and nums[j] == 0:
-        #         j += 1
-        #     else:
-        #         i += 1
-        #         j += 1
+        """Runtime: 40 ms, faster than 98.09%"""
 
-        # return nums
+        """
+        NOTE: By setting j to 0, we can eliminate the need of first
+        while loop.
 
-        # two pointers where one pointer stays at 0 and other moves
-        # j pointers moves ahead and swaps non zero value with zero
-        # value at ith pointer.
+        i = 0
+        j = 1
 
+        while i < len(nums) and nums[i] != 0:
+            i += 1
+            j += 1
+
+        while j < len(nums):
+            if nums[j] != 0:
+                nums[j], nums[i] = nums[i], nums[j]
+                i += 1
+            j += 1
+
+        two pointers where one pointer stays at 0 and other moves
+        j pointers moves ahead and swaps non zero value with zero
+        value at ith pointer.
+        """
         n = len(nums)
         i = 0
         for j in range(n):
             # if current value is not zero, swap with ith value that is at
             # zero. move i and j
             # if current value is not zero, move j
-            if(nums[j] != 0):
+            if nums[j] != 0:
                 nums[i], nums[j] = nums[j], nums[i]
                 i += 1
         return nums

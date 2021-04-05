@@ -50,22 +50,20 @@ def can_construct(origin_sequence, sequences):
         return False
 
     # initialize the graph
-    in_degree = {}
-    graph = {}
-    for sequence in sequences:
-        for num in sequence:
-            in_degree[num] = 0
-            graph[num] = []
+    in_degree = {i: 0 for s in sequences for i in s}
+    graph = {i: [] for s in sequences for i in s}
 
-    # if we dont have ordering rules for all the numbers, we wont have the
-    # unique reconstruction.
+    # if we don't have the all numbers in the in_degree map, we can't
+    # construct the unique sequence.
     if len(origin_sequence) != len(in_degree):
         return False
 
-    # build the graph
+    # build the graph using the list of sequences
     for sequence in sequences:
-        for i in range(1, len(sequence)):
-            parent, child = sequence[i - 1], sequence[i]
+        # for each sequence, use two numbers and populate graph and in_degree
+        # maps.
+        for i in range(len(sequence)-1):
+            parent, child = sequence[i], sequence[i+1]
             graph[parent].append(child)
             in_degree[child] += 1
 
@@ -75,7 +73,10 @@ def can_construct(origin_sequence, sequences):
         if in_degree[key] == 0:
             sources.append(key)
 
-    # topological sorting
+    # NOTE: Because we can only have one unique sequence given in original_seq
+    # there won't be any vertex with in_degree of 2. It also means, we can't
+    # have two vertexes in the queue at the same time.
+
     while sources:
         # if there are more than two sources, we wont have the unique
         # reconstruction.
@@ -98,6 +99,8 @@ def can_construct(origin_sequence, sequences):
 
 
 def main():
+    print("Can construct: " +
+          str(can_construct([1, 2, 3], [[1, 2], [1, 3], [2, 3]])))
     print("Can construct: " +
           str(can_construct([1, 2, 3, 4], [[1, 2], [2, 3], [3, 4]])))
     print("Can construct: " +

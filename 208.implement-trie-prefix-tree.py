@@ -52,6 +52,8 @@ class Trie:
 
     def __init__(self):
         """
+        Runtime: 264 ms, faster than 15.42%
+
         Initialize your data structure here.
         """
         self.root = TrieNode(None)
@@ -89,6 +91,7 @@ class Trie:
             # does not exist.
             if not curr.child[index]:
                 return False
+
             curr = curr.child[index]
         # if we found all the chars of the word in the trie but if end char
         # is not marked end_word, word does not exist.
@@ -112,7 +115,7 @@ class Trie:
                 return False
             curr = curr.child[index]
 
-        # NOTE: prefix does not have to a complete word, so we dont check
+        # NOTE: prefix does not have to a complete word, so we don't check
         # if last char of the prefix word is a end word or not.
         return True
 

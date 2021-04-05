@@ -99,6 +99,41 @@ class Codec:
         return s.split(chr(258))
 
 
+class CodecAnotherSoulation:
+    def encode(self, strs):
+        """Encodes a list of strings to a single string.
+
+        1. first convert each char of the string to ascii number.
+        2. join them by `-` hyphen.
+        3. join each string by `@`.
+        4. decode them using split in reversed order.
+
+        NOTE: make sure to handle empty string while decoding.
+        empty string can not be handled 
+        """
+
+        encoded_str = ''
+        for str_index, substring in enumerate(strs):
+            for char_index, s in enumerate(substring):
+                encoded_str += str(ord(s))
+                if char_index != len(substring) - 1:
+                    encoded_str += '-'
+            if str_index != len(strs) - 1:
+                encoded_str += '@'
+        return encoded_str
+
+    def decode(self, s):
+        """Decodes a single string to a list of strings.
+        """
+        strs = []
+        for substring in s.split('@'):
+            s = ''
+            for char in substring.split('-'):
+                if char != '':
+                    s += chr(int(char))
+            strs.append(s)
+        return strs
+
 # Your Codec object will be instantiated and called as such:
 # codec = Codec()
 # codec.decode(codec.encode(strs))

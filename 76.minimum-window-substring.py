@@ -35,17 +35,20 @@
 #
 
 # @lc code=start
-from collections import defaultdict
+from collections import defaultdict, Counter
 
 
 class Solution:
     def minWindow(self, s, t):
+        """Runtime: 152 ms, faster than 33.65%"""
+        import pdb
+        pdb.set_trace()
         if len(s) < len(t):
             return ''
 
         # variable that represents the number of unique characters in the map.
         # for ex,
-        # pattern -> "abc" -> {a->2, b->1, c->1 }, match = 0
+        # pattern -> "abcb" -> {a->2, b->2, c->1 }, match = 0
         # if a is found, a ->1 and match -> 0 since freq is still not 0.
         # if a is found, a ->0 and match -> 1 since freq of the char *a* is 0.
         # if b is found, b ->0 and match -> 2 and so on.
@@ -55,6 +58,9 @@ class Solution:
         # initialize the map with freq of the chr from pattern string.
         for char in t:
             freq_map[char] += 1
+
+        # OR using counter
+        # freq_map = Counter(t)
 
         i = 0
         j = 0
@@ -101,5 +107,7 @@ class Solution:
             return ''
         return min_string
 
+
+print(Solution().minWindow('aasdfsad', 'asdf'))
 
 # @lc code=end

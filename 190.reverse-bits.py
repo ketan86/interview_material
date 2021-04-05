@@ -58,9 +58,13 @@ If this function is called many times, how would you optimize it?
 """
 
 # @lc code=start
+
+
 class Solution:
     def reverseBits(self, n):
         """
+        Runtime: 32 ms, faster than 69.32%
+
         To reverse bits or a 32 bit unsigned integer, find the right most
         bit of the number and right shift the number.
 
@@ -80,7 +84,7 @@ class Solution:
         b = 0
         (a) 00000000000000000000000000001000 & 1 = 0
         (a) 00000000000000000000000000001000 >> 1 = 0000000000000000000000000000100
-        
+
         b << 1 = 0
         b | 0 = 0
 
@@ -102,6 +106,7 @@ class Solution:
 
         b << 1 = 0
         b | 1 = 1
+
 
         **We can't stop at a == 0 because reversed number needs to append all
         remaining 0's of the a.**
@@ -129,8 +134,9 @@ class Solution:
         (b) 10000000000000000000000000000 (268435456) <-- answer
 
         """
+        INT_MAX_SIZE = 32
         reversed_number = 0
-        for _ in range(32):
+        for _ in range(INT_MAX_SIZE):
             reversed_number <<= 1
             reversed_number |= n & 1
             n >>= 1
@@ -139,4 +145,3 @@ class Solution:
 # print(Solution().reverseBits(43261596))
 # print(Solution().reverseBits(4294967293))
 # @lc code=end
-

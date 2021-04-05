@@ -34,7 +34,8 @@ import heapq
 
 
 def find_maximum_distinct_elements(nums, k):
-    # find the freq
+
+    # define freq map
     freq_map = defaultdict(int)
     for num in nums:
         freq_map[num] += 1
@@ -42,6 +43,8 @@ def find_maximum_distinct_elements(nums, k):
     # count distinct numbers and put non-distinct into min_heap (freq sorted)
     min_heap = []
     distinct = 0
+
+    # make min heap of only non-distinct numbers
     for num, freq in freq_map.items():
         if freq == 1:
             distinct += 1

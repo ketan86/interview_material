@@ -35,7 +35,6 @@
 
 # @lc code=start
 
-
 class Solution:
     """
     n |nodes| unique trees
@@ -55,7 +54,7 @@ class Solution:
                       1         +        2            3 
                     /   \              /   \        /   \
                    {}    {2,3}       {1}    {3}    {1,2} {}
-                n=0(1) * n=2(2) + n=1(1) * n=1(1) + n=2(2) *n=0{1} = 5 BST
+                n=0(1) * n=2(2) + n=1(1) * n=1(1) + n=2(2) *n=0(1) = 5 BST
 
                    j      i-j-1      j                j
                    0      3-0-1=2

@@ -81,11 +81,8 @@ class Solution:
         # if any nodes in the left of the both trees are not same or
         # any nodes in the right of the both trees are not same,
         # trees are not same.
-        if not self.isSameTree(p.left, q.left) \
-                or not self.isSameTree(p.right, q.right):
-            return False
+        return self.isSameTree(p.left, q.left) \
+            and self.isSameTree(p.right, q.right)
 
-        # trees are same.
-        return True
 
 # @lc code=end

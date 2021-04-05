@@ -19,19 +19,22 @@ import heapq
 
 
 def find_k_frequent_numbers(nums, k):
-    result = []
+    # use min heap
+    min_heap = []
+    # freq map to store the number and freq of each number
     freq_map = defaultdict(int)
     for num in nums:
         freq_map[num] += 1
 
+    # iterate over the freq map
     for num, freq in freq_map.items():
-        if len(result) < k:
-            heapq.heappush(result, (freq, num))
+        if len(min_heap) < k:
+            heapq.heappush(min_heap, (freq, num))
         else:
-            if freq > result[0][0]:
-                heapq.heapreplace(result, (freq, num))
+            if freq > min_heap[0][0]:
+                heapq.heapreplace(min_heap, (freq, num))
 
-    return [num for _, num in result]
+    return [num for _, num in min_heap]
 
 
 def _print(result):

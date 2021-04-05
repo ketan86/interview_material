@@ -21,19 +21,20 @@ from collections import defaultdict
 
 
 def sort_character_by_frequency(s):
+    # use freq map to store the freq of each char
     freq_map = defaultdict(int)
     for char in s:
         freq_map[char] += 1
 
     # create a max heap and store freq and char (heap sorted by freq)
-    char_heap = []
+    max_heap = []
     for char, freq in freq_map.items():
-        heapq.heappush(char_heap, (-freq, char))
+        heapq.heappush(max_heap, (-freq, char))
 
     # pop element and form a new string
     output_str = ''
-    while char_heap:
-        freq, char = heapq.heappop(char_heap)
+    while max_heap:
+        freq, char = heapq.heappop(max_heap)
         output_str += char * -freq
 
     return output_str

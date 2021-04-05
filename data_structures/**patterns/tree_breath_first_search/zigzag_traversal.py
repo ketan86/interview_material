@@ -25,16 +25,20 @@ class TreeNode:
 
 
 def traverse(root):
+    # store results
     result = []
+    # if root is None, return results
     if root is None:
         return result
+    # queue to iterate over the nodes
     queue = deque()
     queue.append(root)
+
+    # store level
     level = 0
     while queue:
         level_length = len(queue)
-        # this is the key, lets you append nodes from left to right and
-        # right to left efficiently.
+        # store level results using deque for efficient append on both sides
         level_results = deque()
         for i in range(level_length):
             node = queue.popleft()
@@ -42,12 +46,17 @@ def traverse(root):
                 queue.append(node.left)
             if node.right:
                 queue.append(node.right)
+            # if level is odd, append left or right
             if level % 2 == 1:
                 level_results.appendleft(node.val)
             else:
                 level_results.append(node.val)
+        # copy level result to results list by copying the list
         result.append(list(level_results))
+        # increment the level
         level += 1
+
+    # return the results
     return result
 
 

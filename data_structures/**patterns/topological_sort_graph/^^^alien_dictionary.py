@@ -59,12 +59,8 @@ def find_order(words):
     order of characters in the alien language
     """
     # initialize the graph
-    in_degree = {}
-    graph = {}
-    for word in words:
-        for char in word:
-            in_degree[char] = 0
-            graph[char] = []
+    in_degree = {char: 0 for word in words for char in word}
+    graph = {char: [] for word in words for char in word}
 
     # build the graph
     for i in range(len(words) - 1):

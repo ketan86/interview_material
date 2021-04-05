@@ -62,6 +62,7 @@
 class Solution:
 
     def lowestCommonAncestor(self, root, p, q):
+        """Runtime: 80 ms, faster than 47.31%"""
         # NOTE: use BST property to decide if root is current root or it's
         # in left or right.
 

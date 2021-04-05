@@ -35,14 +35,18 @@ class Point:
 
 
 def find_closest_points(points, k):
-    heap_list = []
+    # use max heap to store the distance from the origin
+    max_heap = []
     for point in points:
-        if len(heap_list) < k:
-            heapq.heappush(heap_list, point)
+        # till k points, store it in the max heap
+        if len(max_heap) < k:
+            heapq.heappush(max_heap, point)
         else:
-            if heap_list[0] < point:
-                heapq.heapreplace(heap_list, point)
-    return heap_list
+            # if point is less than the max heap top, replace the top
+            # element with current point.
+            if max_heap[0] < point:
+                heapq.heapreplace(max_heap, point)
+    return max_heap
 
 
 def main():

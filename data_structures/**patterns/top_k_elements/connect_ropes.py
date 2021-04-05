@@ -29,20 +29,25 @@ import heapq
 
 
 def minimum_cost_to_connect_ropes(rope_lengths):
-    result = []
-    total_sum = 0
+    # define min_heap list
+    min_heap = []
+    # total cost for connection
+    total_cost = 0
     # push all lengths to min heap
     for rope_length in rope_lengths:
-        heapq.heappush(result, rope_length)
+        heapq.heappush(min_heap, rope_length)
 
     # read first two values and save sum to total sum and push sum to heap
     # until last two values are left.
-    while result:
-        sum_ = heapq.heappop(result) + heapq.heappop(result)
-        total_sum += sum_
-        if result:
-            heapq.heappush(result, sum_)
-    return total_sum
+    while min_heap:
+        sum_ = heapq.heappop(min_heap) + heapq.heappop(min_heap)
+        total_cost += sum_
+        # push sum of the top two values into heap for further calculation
+        if min_heap:
+            heapq.heappush(min_heap, sum_)
+
+    # return total cost
+    return total_cost
 
 
 def main():

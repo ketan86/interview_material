@@ -24,6 +24,7 @@ class TreeNode:
 
 
 def tree_right_view(root):
+    """Only include the node that is last in each level"""
     result = []
     if root is None:
         return result

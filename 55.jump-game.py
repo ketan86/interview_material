@@ -52,12 +52,59 @@
 # @lc code=start
 class Solution:
 
-    def canJump(self, nums: List[int]) -> bool:
+    def canJump(self, nums):
+        """Runtime: 80 ms, faster than 94.02%
+
+        [2, 3, 1, 1, 4]
+
+        n = 4
+        target = 4
+        ti = 4
+
+        i -> 3
+        1 + 3 == 4 -> true 
+            ti -> 3
+
+        i -> 2
+        1 + 2 = 3 -> true 
+            ti -> 2
+
+        i -> 1
+        3 + 1 = 4 -> false 
+
+        i -> 0
+        2 + 0 = 2 -> true 
+        ti -> 0
+
+        return True
+        """
+        n = len(nums) - 1
+        target = nums[n]
+        target_index = n
+
+        # target index remains on the index from where we can reach the end index
+        # i moves from second last index to 0 and updates target index when
+        # there is a path form i to target index.
+
+        # start from second last index till 0
+        for i in range(n - 1, -1, -1):
+            # if current index value and index is greater than the target index,
+            # we can reach target index from the current index, so set the
+            # target index to i.
+            if nums[i] + i >= target_index:
+                target_index = i
+
+        return target_index == 0
+
+    def canJumpBitComplicated(self, nums) -> bool:
+        """Runtime: 80 ms, faster than 94.02%"""
         # Greedy approach to find the path.
 
         # start with the last index
         last_index = len(nums) - 1
 
+        #   <len(nums) - 1>, <-1>,                                    <-1>
+        #   <last index>,    <0 (inclusive) (till -1 to include 0)>  ,<reversed>
         for i in range(len(nums) - 1, -1, -1):
             # if current index value is greater or equal to the
             # diff of the last index and current index, we could
@@ -75,6 +122,16 @@ class Solution:
         return self.dfs(nums, index=0, memo=memo)
 
     def dfs(self, nums, index, memo):
+        """
+                        [2,3,1,1,4]
+
+                    loop(2) & [2,3,1,1,4]
+                                 ^
+                loop(3) [2,3,1,1,4]   loop(1) [2,3,1,1,4]
+                             ^                       ^
+                        ....
+                find last index, return True else False
+        """
         # if we reach the last index, we found path
         if index == len(nums) - 1:
             return True
@@ -93,7 +150,7 @@ class Solution:
         # we could take minimum 1 and max of index value steps.
 
         # min(nums[index] + 1, len(nums)) ensures that if the value
-        # at the index is greater than the length, we dont want to
+        # at the index is greater than the length, we don't want to
         # continue.
         for i in range(1, min(nums[index] + 1, len(nums))):
             # if in either direction, we find the path to last index,

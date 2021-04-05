@@ -74,6 +74,7 @@ def topological_sort(vertices, edges):
     while sources:
         vertex = sources.popleft()
         result.append(vertex)
+        # reduce the in_degree count of each child
         for child in graph[vertex]:
             in_degree[child] -= 1
             # if there is a cycle, in_degree of child will not set to 0,

@@ -52,6 +52,7 @@
 #         self.right = right
 class Solution:
     def invertTree(self, root):
+        """Runtime: 32 ms, faster than 60.48% """
         def dfs(node):
             # if node is none, return
             if not node:

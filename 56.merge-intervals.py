@@ -41,6 +41,7 @@
 
 class Solution:
     def merge(self, intervals):
+        """Runtime: 80 ms, faster than 91.78% """
         # sort intervals so we can merge it without checking if
         # next interval's start time is less or greater than current.
         intervals.sort()
@@ -53,7 +54,8 @@ class Solution:
                 # since intervals are sorted, check if the last interval
                 # end time is >= current internal start time.
                 if result[-1][1] >= interval[0]:
-                    result[-1][0] = min(result[-1][0], interval[0])
+                    # since intervals are sorted by start time, we don't have
+                    # to update the start time using the min function.
                     result[-1][1] = max(result[-1][1], interval[1])
                 else:
                     # if can't be merged, append it to result.

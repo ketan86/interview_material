@@ -44,16 +44,56 @@ class Job:
 
 
 def max_cpu_load(jobs):
+    """
+    jobs -> [Job(1, 8, 2), Job(6, 20, 1), Job(9, 16, 5), Job(13,17,3)]
+
+    1  2  3  4  5  6  7  8  9  10  11  12  13  14  15  16  17  18  19  20
+    ----------------------
+              1-8
+                   ------------------------------------------------------
+                                        6-20
+                            -----------------------------
+                                        9-16
+                                            ----------------
+                                                  13-17
+
+    Min Heap -> Maintain job that is ending first
+
+
+        max_cpu = 3 + 5 + 1 = max(9,6) -> [9]
+
+    13-----17(end)  -> start_time 13 >= end_time 16 -> remove job ending with 8
+    9-----16(end)
+    6-----20(end)
+
+        max_cpu = 5 + 1 -> max(6,3) -> 6
+        min_heap (by end_time)
+
+    9-----16(end)  -> start_time 9 >= end_time 8 -> remove job ending with 8
+    1------8(end)
+    6-----20(end)
+
+        max_cpu = 2 + 1 -> max(3,0) -> 3
+        min_heap (by end_time) - job ending at 20 moves down
+
+    6-----20(end)  -> start_time 6 >= end_time 8
+    1------8(end)
+
+    """
     # sort by start time. here we explicitely mention the key because, __lt__
     # func of the Job class uses end time to store jobs in min_heap.
     jobs.sort(key=lambda x: x.start)
+
+    # capture max cpu time.
     max_cpu_load = 0
+
+    # min_heap to maintain job that ends
     min_heap = []
     for job in jobs:
         #  remove all jobs ended so far.
         while min_heap and job.start >= min_heap[0].end:
             heappop(min_heap)
-        # push elements
+        # push current job
         heappush(min_heap, job)
         # calculate max cpu load by summing the cpu load of all the jobs
         # that are running.
@@ -62,7 +102,7 @@ def max_cpu_load(jobs):
     return max_cpu_load
 
 
-def WILL_NOT_WORK_max_cpu_load_no_heap(jobs):
+def WONT_WORK_max_cpu_load_no_heap(jobs):
     # merged based approach does not work since it does not consider the
     # start and end time of the job.
     # [Job(1, 8, 2), Job(6, 20, 1), Job(9, 16, 5), Job(13,17,3)]
@@ -98,8 +138,10 @@ def WILL_NOT_WORK_max_cpu_load_no_heap(jobs):
 # print(max_cpu_load([Job(1, 4, 3), Job(2, 5, 4), Job(7, 9, 6)]))
 # print(max_cpu_load([Job(6, 7, 10), Job(2, 4, 11), Job(8, 12, 15)]))
 # print(max_cpu_load([Job(1, 4, 2), Job(2, 4, 1), Job(3, 6, 5)]))
+# print(max_cpu_load(
+#     [Job(1, 8, 2), Job(6, 20, 1), Job(9, 12, 5), Job(13, 17, 3)]))
 print(max_cpu_load(
-    [Job(1, 8, 2), Job(6, 20, 1), Job(9, 12, 5), Job(13, 17, 3)]))
+    [Job(1, 8, 2), Job(6, 20, 1), Job(9, 16, 5), Job(13, 17, 3)]))
 
 # print(WILL_NOT_WORK_max_cpu_load_no_heap([Job(1, 4, 3), Job(2, 5, 4), Job(7, 9, 6)]))
 # print(WILL_NOT_WORK_max_cpu_load_no_heap([Job(6, 7, 10), Job(2, 4, 11), Job(8, 12, 15)]))

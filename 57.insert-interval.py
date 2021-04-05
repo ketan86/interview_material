@@ -74,8 +74,33 @@
 class Solution:
     def insert(self, intervals, newInterval):
         """
+        Runtime: 88 ms, faster than 29.57%
+
         NOTE: Instead of merging with last result's interval, new interval
         is merged with the current interval if necessary.
+
+        **APPORCHES**
+
+        There are 3 possible places where new interval can be inserted.
+        1. before the current interval
+            - This can be done without any problem
+        2. after the current interval
+            - This can be done but then we run into merge issues
+        3. merge with current inteval
+            - This merge could lead to further merge problems
+
+        Instead,
+
+        1. current interval comes before the new interval
+            - push current interval to result
+        2. new interval comes before the current interval
+            - return by appending new interval to results followed by
+              remaining intervals
+        3. current and merge intervals merge
+            - update new interval by merging current with new interval
+        4. if we did not return, we have a new interval possibly merged with
+           others or never merged (last interval). insert that into the
+           result and return.
         """
         result = []
         for index, interval in enumerate(intervals):

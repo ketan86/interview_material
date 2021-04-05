@@ -44,17 +44,29 @@
 
 class Solution:
     def plusOne(self, digits):
-        n = len(digits)
+        """32 ms, faster than 71.11%"""
+        n = len(digits) - 1
+        # use carry flag
         carry = False
-        for i in range(n):
-            i = n - 1 - i
+        # reversed loop
+        for i in range(n, -1, -1):
+            # increment the digit by 1. We break when
+            # carry is False, so increment by 1 also serves
+            # the carry addition.
             digits[i] += 1
+
+            # if digit is greater than 9, set it's value to
+            # 0 and carry to True
             if digits[i] > 9:
                 digits[i] = 0
                 carry = True
+            # if digit is less than 9, we wont need to check
+            # left digits since they will remain same. so break
             else:
                 carry = False
                 break
+        # if carry is set, insert additional digit to left of the
+        # array
         if carry:
             digits.insert(0, 1)
 

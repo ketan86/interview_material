@@ -71,6 +71,8 @@
 class Solution:
     def rotate(self, nums, k):
         """
+        Runtime: 64 ms, faster than 56.54%
+
         Do not return anything, modify nums in-place instead.
 
         Let n=7 and k=3.

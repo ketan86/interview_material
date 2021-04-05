@@ -22,15 +22,20 @@ import heapq
 
 
 def find_K_smallest_number(nums, k):
-    heap_list = []
+    # use max heap to store top max elements
+    max_heap = []
     for num in nums:
-        if len(heap_list) < k:
-            heapq.heappush(heap_list, -num)
+        # push k elements to max heap using the negative sign
+        if len(max_heap) < k:
+            heapq.heappush(max_heap, -num)
         else:
-            if heap_list[0] < -num:
-                heapq.heapreplace(heap_list, -num)
+            # if top element value is greater than current element value,
+            # swap top element with current element
+            if max_heap[0] < -num:
+                heapq.heapreplace(max_heap, -num)
 
-    return [-num for num in heap_list]
+    # return the top k elements by changing the sign to recreate the prev list
+    return [-num for num in max_heap]
 
 
 def main():

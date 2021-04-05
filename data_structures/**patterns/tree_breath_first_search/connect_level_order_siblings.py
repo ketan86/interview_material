@@ -9,7 +9,9 @@ from collections import deque
 class TreeNode:
     def __init__(self, val):
         self.val = val
-        self.left, self.right, self.next = None, None, None
+        self.left = None
+        self.right = None
+        self.next = None
 
     # level order traversal using 'next' pointer
     def print_level_order(self):
@@ -29,41 +31,25 @@ class TreeNode:
 
 
 def connect_level_order_siblings(root):
+    # if root is None, return
     if root is None:
         return
+    # use deque and add root
     queue = deque()
     queue.append(root)
+    # loop until queue is empty
     while queue:
-        level_nodes = len(queue)
+        # find the total nodes at each level
+        total_nodes = len(queue)
+        # define prev node
         prev = None
-        for i in range(level_nodes):
+        # pop each node
+        for i in range(total_nodes):
             node = queue.popleft()
-            node.next = prev
+            # if prev node is not None
+            if prev:
+                prev.next = node
             prev = node
-            # insert right first and left later
-            if node.right:
-                queue.append(node.right)
-            if node.left:
-                queue.append(node.left)
-
-#####
-# OR Another solution
-#####
-
-
-def connect_level_order_siblings_2(root):
-    if root is None:
-        return
-    queue = deque()
-    queue.append(root)
-    while queue:
-        level_nodes = len(queue)
-        next_ = None
-        for i in range(level_nodes):
-            node = queue.popleft()
-            if next_ is not None:
-                next_.next = node
-            next_ = node
             # insert left first and right later
             if node.left:
                 queue.append(node.left)

@@ -97,6 +97,8 @@ class Trie:
             return True
         return False
 
+        # OR return curr.is_end_word
+
     def delete(self, key):
         """
         Case 1: Word with No Suffix or Prefix

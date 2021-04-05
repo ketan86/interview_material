@@ -58,6 +58,8 @@
 class Solution:
     def productExceptSelf(self, nums):
         """
+        Runtime: 244 ms, faster than 54.55%
+
         [1, 2, 3, 4]
           \  \  \  \
            1  1  2  6
@@ -72,7 +74,7 @@ class Solution:
         ----------
         24 12 8  6
         """
-        new_nums = []
+        result = []
 
         n = len(nums)
         if n < 2:
@@ -80,10 +82,11 @@ class Solution:
 
         # calculate product on left side of the each element
         frw_product = 1
-        new_nums.append(1)
+        result.append(1)
+
         for i in range(1, n):
             frw_product *= nums[i - 1]
-            new_nums.append(frw_product)
+            result.append(frw_product)
 
         # calculate product of the right side of the each element
         bkw_product = 1
@@ -91,9 +94,9 @@ class Solution:
             bkw_product *= nums[i + 1]
             # also multiple with the forward products values to get the final
             # product
-            new_nums[i] *= bkw_product
+            result[i] *= bkw_product
 
-        return new_nums
+        return result
 
 
 print(Solution().productExceptSelf([1, 2, 4, 5, 6, 7]))

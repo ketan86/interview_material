@@ -68,6 +68,8 @@ class Solution:
 class Solution:
     def maxSubArray(self, nums):
         """
+        Runtime: 60 ms, faster than 91.95% of Python3
+
         At each index, either the current element is max sum or prev sum +
         current element is max.
 

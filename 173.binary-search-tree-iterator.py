@@ -16,19 +16,19 @@
 #
 # Implement an iterator over a binary search tree (BST). Your iterator will be
 # initialized with the root node of a BST.
-# 
+#
 # Calling next() will return the next smallest number in the BST.
-# 
-# 
-# 
-# 
-# 
-# 
+#
+#
+#
+#
+#
+#
 # Example:
-# 
-# 
-# 
-# 
+#
+#
+#
+#
 # BSTIterator iterator = new BSTIterator(root);
 # iterator.next();    // return 3
 # iterator.next();    // return 7
@@ -39,19 +39,19 @@
 # iterator.hasNext(); // return true
 # iterator.next();    // return 20
 # iterator.hasNext(); // return false
-# 
-# 
-# 
-# 
+#
+#
+#
+#
 # Note:
-# 
-# 
+#
+#
 # next() and hasNext() should run in average O(1) time and uses O(h) memory,
 # where h is the height of the tree.
 # You may assume that next() call will always be valid, that is, there will be
 # at least a next smallest number in the BST when next() is called.
-# 
-# 
+#
+#
 #
 
 # @lc code=start
@@ -64,7 +64,8 @@
 # pylint: skip-file
 
 class BSTIterator:
-    
+    """Runtime: 80 ms, faster than 31.35%"""
+
     def __init__(self, root):
         self.root = root
         # create an iterator from the dfs method.
@@ -74,7 +75,7 @@ class BSTIterator:
         # has next value or not. this item is stored and returned
         # as a first item when next item is retrieved.
         self.next_item = None
-        
+
     def __iter__(self):
         return self
 
@@ -86,7 +87,7 @@ class BSTIterator:
             return True
 
         # if we do not have an item, pull a new item, store it and
-        # return true. if we dont have an item, return false.
+        # return true. if we don't have an item, return false.
         try:
             self.next_item = next(self.iterator)
         except StopIteration:
@@ -102,7 +103,7 @@ class BSTIterator:
             # reset next item to None so we do not return the same item again.
             self.next_item = None
             return value
-        
+
         # pull a new item and return the value.
         try:
             return next(self.iterator)

@@ -1,33 +1,4 @@
 """
-Given a Bitonic array, find if a given ‘key’ is present in it.
-An array is considered bitonic if it is monotonically increasing
-and then monotonically decreasing. Monotonically increasing or
-decreasing means that for any index i in the array arr[i] != arr[i+1].
-
-Write a function to return the index of the ‘key’. If the ‘key’ is not present, 
-return -1.
-
-Example 1:
-
-Input: [1, 3, 8, 4, 3], key=4
-Output: 3
-Example 2:
-
-Input: [3, 8, 3, 1], key=8
-Output: 1
-Example 3:
-
-Input: [1, 3, 8, 12], key=12
-Output: 3
-Example 4:
-
-Input: [10, 9, 8], key=10
-Output: 0
-"""
-# pylint: skip-file
-
-
-"""
 Problem Statement #
 Find the value in a given Bitonic array. An array is considered
 bitonic if it is monotonically increasing and then monotonically decreasing.
@@ -54,7 +25,7 @@ Output: 0
 """
 
 
-def search_bitonic_array(arr, target, overlap=True):
+def find_in_botanic_array(arr, target, overlap=True):
     """
     NOTE: In botanic array (left increasing, right decreasing) arrays
     overlap, for ex. {-3, 9, 18, 20, 17, 5, 1}, after finding max, we have to
@@ -155,12 +126,7 @@ def _find(arr, start_index, end_index, target, reversed):
     return -1
 
 
-def main():
-    print(search_bitonic_array([1, 3, 8, 4, 3], 4))
-    print(search_bitonic_array([3, 8, 3, 1], 8))
-    print(search_bitonic_array([1, 3, 8, 12], 12))
-    print(search_bitonic_array([1, 3, 8, 3], 3))
-    print(search_bitonic_array([10, 9, 8], 10))
-
-
-main()
+print(find_in_botanic_array([1, 3, 8, 12, 4, 4], 12))
+print(find_in_botanic_array([3, 8, 3, 1], 3))
+print(find_in_botanic_array([1, 3, 8, 12], 8))
+print(find_in_botanic_array([10, 9, 8], 9))

@@ -4,6 +4,7 @@
   "python.testing.unittestEnabled": false,
   "python.testing.nosetestsEnabled": false,
   "cSpell.words": [
+    "bitonic",
     "curr",
     "deque",
     "heapify",

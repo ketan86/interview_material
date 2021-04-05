@@ -84,8 +84,12 @@ class Solution:
         return max_money_robbed
 
     def rob(self, nums):
+        """Runtime: 20 ms, faster than 98.93%"""
         if not nums:
             return 0
+        return max(self.rob_helper(nums[1:]), self.rob_helper(nums[:-1]))
+
+    def rob_helper(self, nums):
         # dp to store money collected at house index.
         dp = [0] * (len(nums) + 1)
 
@@ -96,20 +100,10 @@ class Solution:
         for i in range(2, len(nums) + 1):
             # if last house or odd number of houses, remove the first house
             # profit.
-
-            # for ex, [1,2,3,4], when we are at the 4th house, we would have
-            # not included first house anyway.
-            # 2 -> 4
-            # for ex, [1,2,3,4,5], when we are at the 5th house, profit of
-            # the first house is included if current house profit is
-            # included in the total profit.
-            if i == len(nums) and i % 2 == 1:
-                dp[i] = max(dp[i - 2] + nums[i - 1] - dp[1], dp[i - 1])
-            else:
-                dp[i] = max(dp[i - 2] + nums[i - 1], dp[i - 1])
+            dp[i] = max(dp[i - 2] + nums[i - 1], dp[i - 1])
         return dp[len(nums)]
 
 
 # print(Solution().rob([2, 7, 3, 6, 9]))
-print(Solution().rob([1, 2, 3, 4]))
+print(Solution().rob([2, 1, 1, 2]))
 # # @lc code=end

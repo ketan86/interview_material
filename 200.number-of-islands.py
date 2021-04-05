@@ -17,30 +17,30 @@
 # islands. An island is surrounded by water and is formed by connecting
 # adjacent lands horizontally or vertically. You may assume all four edges of
 # the grid are all surrounded by water.
-# 
+#
 # Example 1:
-# 
-# 
+#
+#
 # Input:
 # 11110
 # 11010
 # 11000
 # 00000
-# 
+#
 # Output: 1
-# 
-# 
+#
+#
 # Example 2:
-# 
-# 
+#
+#
 # Input:
 # 11000
 # 11000
 # 00100
 # 00011
-# 
+#
 # Output: 3
-# 
+#
 #
 
 # @lc code=start
@@ -48,6 +48,8 @@
 class Solution:
     def numIslands(self, grid):
         """
+        Runtime: 140 ms, faster than 68.31%
+
         when we land on the island, we explore the island till we find the
         water and then return 1 to represent that island.
         for ex,
@@ -67,7 +69,7 @@ class Solution:
 
         all these islands are summed together to find total islands.
         """
-        # store the count of islands 
+        # store the count of islands
         islands = 0
 
         # edge condition check
@@ -81,7 +83,7 @@ class Solution:
             # if we are out of bound, return 0
             if i < 0 or j < 0 or i >= len(grid) or j >= len(grid[i]):
                 return 0
-            
+
             # if we find the water, return 0
             if grid[i][j] == '0':
                 return 0
@@ -92,7 +94,7 @@ class Solution:
             # mark the current index '0' and explore all directions from
             # current index.
             grid[i][j] = '0'
-            
+
             # dfs on all the directions.
             # NOTE: here the returned value of the dfs call is not used
             # for anything.
@@ -115,5 +117,37 @@ class Solution:
                     islands += dfs(i, j)
         return islands
 
-# @lc code=end
+    def numIslands(self, grid):
+        """
+        Runtime: 140 ms, faster than 68.31%
 
+        Solution without returning any value from dfs function.
+        """
+        num_of_island = 0
+        if not grid:
+            return num_of_island
+
+        for row in range(len(grid)):
+            for col in range(len(grid[row])):
+                if grid[row][col] == "1":
+                    self.dfs(grid, row, col)
+                    num_of_island += 1
+
+        return num_of_island
+
+    def dfs(self, grid, row, col):
+
+        if row >= len(grid) or row < 0 or col >= len(grid[row]) or col < 0:
+            return
+
+        if grid[row][col] == "0":
+            return
+
+        grid[row][col] = "0"
+
+        self.dfs(grid, row + 1, col)
+        self.dfs(grid, row - 1, col)
+        self.dfs(grid, row, col + 1)
+        self.dfs(grid, row, col - 1)
+
+# @lc code=end

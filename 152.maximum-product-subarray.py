@@ -38,29 +38,35 @@
 
 class Solution:
     def maxProduct(self, nums):
+        """Runtime: 56 ms, faster than 62.51%"""
         n = len(nums)
         if n < 1:
             return 0
-        minVal = nums[0]
-        maxVal = nums[0]
-        maxProduct = nums[0]
 
-        for i in range(1, len(nums)): 
+        # maintain min and max so far and max product total
+        min_so_far = nums[0]
+        max_so_far = nums[0]
+        max_product = nums[0]
 
-            # When multiplied by -ve number, 
-            # maxVal becomes minVal 
-            # and minVal becomes maxVal. 
-            if (nums[i] < 0): 
-                maxVal, minVal = minVal, maxVal
+        # start from 1.. till end
+        for i in range(1, len(nums)):
 
-            # maxVal and minVal stores the 
-            # product of subarray ending at nums[i]. 
-            maxVal = max(nums[i], maxVal * nums[i]) 
-            minVal = min(nums[i], minVal * nums[i]) 
+            # if current number is negative, multiplying with current min and
+            # max so far would change the product so min and max should be
+            # swapped to keep the max product always max.
+            if nums[i] < 0:
+                max_so_far, min_so_far = min_so_far, max_so_far
 
-            # Max Product of array. 
-            maxProduct = max(maxProduct, maxVal) 
+            # either current element is max or current and max so far is max.
+            max_so_far = max(nums[i], max_so_far * nums[i])
+            # same as above
+            min_so_far = min(nums[i], min_so_far * nums[i])
+
+            # find total max
+            max_product = max(max_product, max_so_far)
+
+        return max_product
 
 
-print(Solution().maxProduct([6, -2, 3, -4, 5]))
+print(Solution().maxProduct([2, 3, -2, 4]))
 # @lc code=end

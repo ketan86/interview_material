@@ -40,6 +40,7 @@
 
 
 class Solution:
+    # O(n) with O(n) space
     def majorityElement(self, nums):
         # since there is a guaranty that the majority element exists, we can
         # use hash map to store the freq of the element while iterating,
@@ -54,12 +55,23 @@ class Solution:
                 if freq_map[i] > len(nums) / 2:
                     return i
 
+    # O(nlogn)
     def majorityElement(self, nums):
+        """
+        NOTE: We can not have more than two distinct elements. Algorithm will
+        not work if there are.
+        """
         # sort the array and return the mid element
         nums.sort()
         return nums[len(nums) // 2]
 
+    # O(n)
     def majorityElement(self, nums):
+        """
+        Runtime: 168 ms, faster than 58.89%
+        NOTE: We can not have more than two distinct elements. Algorithm will
+        not work if there are.
+        """
         # moore voting algorithm. the key here is, if you sum(majority
         # elements) - sum(no_majority elements) > 0, there is a majority
         # element.
@@ -76,6 +88,7 @@ class Solution:
             if majority_element != nums[i]:
                 if count == 0:
                     majority_element = nums[i]
+                    count += 1
                 else:
                     count -= 1
             # else, majority element is same, increase the count
@@ -85,5 +98,5 @@ class Solution:
         return majority_element
 
 
-print(Solution().majorityElement([2, 2, 1, 1, 1, 2, 2, 1, 1]))
+print(Solution().majorityElement([2, 1, 1, 2, 2, 2, 1, 1]))
 # @lc code=end

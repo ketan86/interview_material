@@ -63,22 +63,25 @@ class Solution:
 
 
 class Solution:
-    def maxProfit(self, prices: List[int]) -> int:
+    def maxProfit(self, prices):
+        """Runtime: 972 ms, faster than 76.50%"""
         max_profit = 0
         if not prices:
             return max_profit
 
-        # move lowest_prev only when new lowest is found. otherwise
-        # keep calculating the max profit against the prev lowest
+        # find a profit when min_price is less than current price.
+        # when current price is less than min_price, we found the
+        # next min_price so move current price. This is because,
+        # the diff between the new min price and current price
+        # will always be more than the previous min price and current price.
+        # [7,1,5,3,6,4]
+        #  when min price is 7, any value from 1 to 4 would always give lower
+        # profit than price when min is 1.
+        min_price = prices[0]
+        for p in prices:
+            if p <= min_price:
+                min_price = p
+            else:
+                max_profit = max(max_profit, p - min_price)
 
-
-        # the lowest left and highest right will give the max profit.
-        # only move left when you find the lower left otherwise keep
-	    # calculating max against last lowest.
-
-        prev_lowest = prices[0]
-        for i in range(len(prices)):
-            max_profit = max(max_profit, prices[i] - prev_lowest)
-            if prices[i] < prev_lowest:
-                prev_lowest = prices[i]
         return max_profit

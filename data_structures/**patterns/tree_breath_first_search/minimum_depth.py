@@ -13,6 +13,7 @@ class TreeNode:
 
 
 def find_minimum_depth(root):
+    """At first leaf node, return the total number of levels."""
     if root is None:
         return - 1
     level = 1

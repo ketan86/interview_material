@@ -71,18 +71,56 @@
 #
 
 # @lc code=start
-"""
 # Definition for a Node.
 class Node:
     def __init__(self, x: int, next: 'Node' = None, random: 'Node' = None):
         self.val = int(x)
         self.next = next
         self.random = random
-"""
 
 
 class Solution:
     def copyRandomList(self, head):
-        pass
+        "Runtime: 36 ms, faster than 62.90%"
+        # if not head, return
+        if not head:
+            return head
+
+        # use dict to store the given node and the pointer to new node
+        d = {}
+        # copy head so we can loop again
+        node = head
+        # create a first result node
+        result = Node(node.val)
+        # store a reference from give node to newly created node. if someone
+        # is pointing to node 7 of original list, a new node would be stored
+        # to create a random pointer.
+        d[node] = result
+        # copy result head node
+        result_head = result
+
+        # start from second node. result stays one node behind so we can point
+        # next new node to node.
+        while node.next:
+            # create a new node and assign result's next to new node
+            new_node = Node(node.next.val)
+            result.next = new_node
+            # create node and new node reference
+            d[node.next] = new_node
+            # move both nodes
+            node = node.next
+            result = result.next
+
+        # copy head and result head
+        node = head
+        new_node = result_head
+        # both head should be at the same node level
+        while node:
+            # create a random pointer and move both nodes
+            new_node.random = d.get(node.random, None)
+            new_node = new_node.next
+            node = node.next
+
+        return result_head
 
 # @lc code=end

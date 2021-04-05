@@ -87,8 +87,88 @@ class Solution:
 
     #     return matrix
 
+    def setZeroesMostEfficient(self, matrix):
+        """Runtime: 120 ms, faster than 97.21%"""
+        rows = len(matrix)
+        cols = len(matrix[0])
+
+        first_col_zero = False
+        first_row_zero = False
+
+        # find if first row has 0
+        for j in range(cols):
+            if matrix[0][j] == 0:
+                first_row_zero = True
+
+        # find if first col has 0
+        for i in range(rows):
+            if matrix[i][0] == 0:
+                first_col_zero = True
+
+        # loop from 2nd row, 2nd col till end
+        for i in range(1, rows):
+            for j in range(1, cols):
+                # if number is 0, set 0th row and 0th col to 0
+                if matrix[i][j] == 0:
+                    matrix[0][j] = 0
+                    matrix[i][0] = 0
+
+        # loop from 2nd row and 2nd col till end
+        for i in range(1, rows):
+            for j in range(1, cols):
+                # if first row and col value is zero, set current number to zero
+                if matrix[0][j] == 0 or matrix[i][0] == 0:
+                    matrix[i][j] = 0
+
+        # if first col is 0, set all rows to zero
+        if first_col_zero:
+            for i in range(rows):
+                matrix[i][0] = 0
+
+        # if first row is 0, set all cols to zero
+        if first_row_zero:
+            for i in range(cols):
+                matrix[0][i] = 0
+
+        return matrix
+
+    def setZeroesBitMask(self, matrix):
+        """
+        Runtime: 156 ms, faster than 18.46%
+        Do not return anything, modify matrix in-place instead.
+        """
+        if not matrix:
+            return matrix
+
+        m = len(matrix)
+        n = len(matrix[0])
+
+        # Use two integers to store the mask of the row and columns that are
+        # zero using 1.
+        row_mask = 0
+        col_mask = 0
+
+        for i in range(len(matrix)):
+            for j in range(len(matrix[i])):
+                # if element is zero
+                if matrix[i][j] == 0:
+                    # set bit at ith and jth index of row and col respectively
+                    row_mask |= 1 << (m - i - 1)
+                    col_mask |= 1 << (n - j - 1)
+
+        for i in range(len(matrix)):
+            for j in range(len(matrix[i])):
+                # if either row and column was set, set it to zero.
+                if self.is_bit_set(row_mask, m-i-1) == 1 \
+                        or self.is_bit_set(col_mask, n - j-1) == 1:
+                    matrix[i][j] = 0
+
+    def is_bit_set(self, mask, position):
+        return (mask >> position) & 1
+
     def setZeroesSlightlyEfficient(self, matrix):
         """
+        # 124 ms, faster than 90.51%
         Do not return anything, modify matrix in-place instead.
         """
         rows = len(matrix)
@@ -112,41 +192,6 @@ class Solution:
                     matrix[i][j] = 0
 
         return matrix
-
-    # def setZeroes(self, matrix):
-    #     rows = len(matrix)
-    #     cols = len(matrix[0])
-
-    #     first_col_zero = False
-    #     first_row_zero = False
-
-    #     for i in range(rows):
-    #         if matrix[i][0] == 0:
-    #             first_col_zero = True
-
-    #     for j in range(cols):
-    #         if matrix[0][j] == 0:
-    #             first_row_zero = True
-
-    #     for i in range(1, rows):
-    #         for j in range(1, cols):
-    #             if matrix[i][j] == 0:
-    #                 matrix[0][j] = 0
-    #                 matrix[i][0] = 0
-    #     for i in range(1, rows):
-    #         for j in range(1, cols):
-    #             if matrix[0][j] == 0 or matrix[i][0] == 0:
-    #                 matrix[i][j] = 0
-
-    #     if first_col_zero:
-    #         for i in range(rows):
-    #             matrix[i][0] = 0
-
-    #     if first_row_zero:
-    #         for i in range(cols):
-    #             matrix[0][i] = 0
-
-    #     return matrix
 
 
 print(Solution().setZeroesSlightlyEfficient([

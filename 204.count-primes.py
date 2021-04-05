@@ -25,6 +25,12 @@
 #
 #
 
+# What are Prime Numbers?
+# In math, prime numbers are whole numbers greater than 1, that have only two factors – 1 and the number itself.
+# Prime numbers are divisible only by the number 1 or itself.
+
+# For example, 2, 3, 5, 7 and 11 are the first few prime numbers.
+
 # @lc code=start
 # pylint: skip-file
 
@@ -49,7 +55,7 @@ class Solution:
 
     """
 
-    def countPrimes(self, n):
+    def countPrimesTimeLimitExceed(self, n):
         count = 0
         # 0 and 1 are not prime so start with 2.
         for i in range(2, n):
@@ -72,6 +78,7 @@ class Solution:
     # Optimized using space.
     def countPrimes(self, n):
         """
+        Runtime: 732 ms, faster than 47.44%
         0   1   2   3   4
         5   6   7   8   9
         10  11  12  13  14

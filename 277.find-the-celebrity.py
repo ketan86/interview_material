@@ -85,6 +85,7 @@ class Solution:
 
     # O(n^2) solution
     def findCelebrity(self, n: int) -> int:
+        # NOTE: CHECK THE VALIDITY OF THIS SOLUTION -> WHY RETURN -1 EARLY
         # store the total number of people knows the person in array
         for celebrity in range(n):
             for person in range(n):
@@ -95,6 +96,20 @@ class Solution:
                 else:
                     return celebrity
         return -1
+
+        """
+        NOTE: IS THIS NOT RIGHT INSTEAD ?
+
+        for i in range(n):
+            for j in range(n):
+                if i == j:
+                    continue
+                if knows(j, i) and not knows(i, j):
+                    break
+            else:
+                return i
+        return -1
+        """
 
     # O(n) solution
 
@@ -108,8 +123,8 @@ class Solution:
                 candidate = i
 
         # once we find the celebrity candidate, check if candidate if truly
-        # by checking if candiate knows other person but other person does
-        # not know candiate. return -1 if that check fails.
+        # by checking if candidate knows other person but other person does
+        # not know candidate. return -1 if that check fails.
         for i in range(n):
             if i == candidate:
                 continue

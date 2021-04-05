@@ -44,6 +44,8 @@ from collections import defaultdict
 
 
 class Solution:
+    """Runtime: 48 ms, faster than 60.95%"""
+
     def isAnagram(self, s, t):
         # if both strings are not the same size, they are not
         # anagram.

@@ -45,15 +45,17 @@ def search_min_diff_element(arr, key):
         else:
             return arr[mid]
 
+    # NOTE: WE most prob don't need this condition. Any usecase ?
     # at the end of the while loop, 'start == end+1'
-    
     # once element is not found, end index (lower value) is always less than
     # start_index (start_index <= end_index),
     # so 7 10 and key == 8
     # 8 - 7 less than 10 - 8,  7 is the answer arr(end_index)
     # else, 10 is the answer arr(start_index)
-    if key - arr[end_index] < arr[start_index] - key:
-        return arr[end_index]
+
+    # if key - arr[end_index] < arr[start_index] - key:
+    #    return arr[end_index]
+
     return arr[start_index]
 
 
@@ -62,6 +64,7 @@ def main():
     print(search_min_diff_element([4, 6, 10], 4))
     print(search_min_diff_element([1, 3, 8, 10, 15], 4))
     print(search_min_diff_element([4, 6, 10], 17))
+    print(search_min_diff_element([7, 10], 8))
 
 
 main()

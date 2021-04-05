@@ -41,10 +41,13 @@
 
 class Solution:
     def generate(self, numRows):
+        """Runtime: 12 ms, faster than 100.00%"""
         arr = []
         for i in range(numRows):
             arr.append([])
             for j in range(i + 1):
+                # when i ==0 (one time only for first row), j will be 0 too and
+                # loop will exit so dont need i==0.
                 if j == 0 or j == i:
                     arr[i].append(1)
                 else:

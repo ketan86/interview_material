@@ -14,7 +14,7 @@
 # Testcase Example:  '"A man, a plan, a canal: Panama"'
 #
 # Given a string, determine if it is a palindrome, considering only
-# alphanumeric characters and ignoring cases.
+# alphanumeric characters (a-z,A-Z,0-9) and ignoring cases.
 #
 # Note: For the purpose of this problem, we define empty string as valid
 # palindrome.
@@ -43,6 +43,7 @@ from string import ascii_lowercase, digits
 
 class Solution:
     def isPalindrome(self, s):
+        """Runtime: 52 ms, faster than 43.80%"""
         # create alpha numeric char list
         alpha_numeric = ascii_lowercase + digits
 
@@ -66,23 +67,6 @@ class Solution:
 
         # if it's empty or one char or if palindrome, return true
         return True
-
-        # output = ''
-        # for char in s:
-        #     if char.lower() in ascii_lowercase + digits:
-        #         output += char.lower()
-
-        # i = 0
-        # j = len(output) - 1
-
-        # while i <= j:
-        #     if output[i] != output[j]:
-        #         return False
-        #     i += 1
-        #     j -= 1
-
-        # return True
-
 
 # print(Solution().isPalindrome(";  "))
 # print(Solution().isPalindrome("A man, a plan, a canal: Panama"))

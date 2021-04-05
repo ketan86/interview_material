@@ -32,9 +32,12 @@ Output: 2
 def binary_search(arr, key):
     start = 0
     end = len(arr) - 1
+    # find the sorting order
     ascending = True
     if arr[start] > arr[end]:
         ascending = False
+
+    # regular binary search by keeping the sorting order in mind.
     while start <= end:
         mid = start + (end - start) // 2
         if arr[mid] > key:
@@ -49,6 +52,7 @@ def binary_search(arr, key):
                 end = mid - 1
         else:
             return mid
+
     return -1
 
 

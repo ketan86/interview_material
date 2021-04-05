@@ -164,10 +164,9 @@ class Solution:
         # characters for dfs search. if both conditions satisfy, we return True.
         # for ex, "d" is found and "og" is found, we found the word.
         for i in range(len(s)):
-            if s[: i + 1] in wordDict:
-                if self._dfs(s[i + 1:], memo, wordDict):
-                    memo[s] = True
-                    return True
+            if s[: i + 1] in wordDict and self._dfs(s[i + 1:], memo, wordDict):
+                memo[s] = True
+                return True
         # if word is not found, we save the results so same word is not searched
         # again.
         memo[s] = False
@@ -175,22 +174,35 @@ class Solution:
         return False
 
     def wordBreak(self, s, wordDict):
+        """
+        Runtime: 32 ms, faster than 93.10%
+
+        Mark each char with True or False based on whether a string from 0
+        till that char is present in the word dict or not.
+
+        """
+        word_set = set(wordDict)
         # create a dp array to hold the results of the string.
         dp = [False] * (len(s) + 1)
-        # emptry string would not be present  in the word dict so set to False.
-        dp[0] = False
+        # empty string would be present  in the word dict so set to True.
+        dp[0] = True
         # if first char is present, mark the dp index 1 to True else False
-        dp[1] = s[0] in wordDict
-        for i in range(2, len(s) + 1):
-            print(dp)
-            for j in range(i + 1):
-                print(j, i)
-                print(s[j:i], dp[j])
-                if dp[j] and s[j:i] in wordDict:
-                    dp[i] = True
+        dp[1] = s[0] in word_set
+
+        # "abc", ["a", "b", "c"] -> b to c
+        for j in range(2, len(s) + 1):
+            # j(2) at "b", 0..2
+            for i in range(j + 1):
+                # 0th inter: d[""] -> True and "ab" in wordset -> False
+                # 1st iter: d["a"] -> True and "b" in wordset -> d[2] -> True
+                # break
+                # We can find the word starting from 0 to till "b".
+                if dp[i] and s[i:j] in word_set:
+                    dp[j] = True
                     break
         return dp[len(s)]
 
 
-print(Solution().wordBreak("leetcode", ["leet", "code"]))
+print(Solution().wordBreak("abc", ["a", "bc"]))
+print(Solution().topDownWordBreak("abc", ["a", "b", "c"]))
 # @lc code=end

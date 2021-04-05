@@ -43,6 +43,7 @@
 
 class Solution:
     def containsDuplicate(self, nums: List[int]) -> bool:
+        """Runtime: 120 ms, faster than 58.34%"""
         unique = set()
         for i in nums:
             if i in unique:

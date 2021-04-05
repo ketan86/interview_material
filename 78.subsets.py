@@ -38,9 +38,6 @@
 
 # @lc code=start
 
-import time
-
-
 class Solution:
     # def subsets(self, nums):
     #     s_time = time.time()
@@ -60,14 +57,41 @@ class Solution:
     #     return result
 
     def subsets(self, nums):
+        """Runtime: 32 ms, faster than 82.45%"""
+        result = [[]]
+        # loop over the nums list
+        for i in range(len(nums)):
+            # copy the last index  of the result list.
+            # NOTE: this can not be done in the range function as result
+            # length would change at run time.
+            j = len(result)
+            # loop over prev results from 0 to last element and append
+            # current element to each sublist to find next the permutation.
+            for k in range(j):
+                # create a new list from the result
+                new_list = list(result[k])
+                # append current element.
+                new_list.append(nums[i])
+
+                # NOTE: Above two steps have to be done outside since list
+                # is updated in place.
+
+                # push new list to result list as a next permutation.
+                result.append(new_list)
+
+        return result
+
+    def subsetsRecursive(self, nums):
+        """Runtime: 28 ms, faster than 94.36%"""
         # start with empty set
         result = [[]]
-        return self.find(nums, 0, result)
+        self.find(nums, 0, result)
+        return result
 
     def find(self, nums, index, result):
-        # if index == length, return list with empty set
+        # if index == length, return result list
         if index == len(nums):
-            return [[]]
+            return
 
         # use temp result to find subset of new number with existing results.
         temp_result = []
@@ -85,9 +109,6 @@ class Solution:
 
         # recursive call for next index
         self.find(nums, index + 1, result)
-
-        # return the results
-        return result
 
 
 print(Solution().subsets([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,

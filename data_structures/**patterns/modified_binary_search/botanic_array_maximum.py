@@ -23,25 +23,31 @@ Example 4:
 Input: [10, 9, 8]
 Output: 10
 """
+
+
 # pylint: skip-file
 
 
 def find_max_in_bitonic_array(arr):
     start_index = 0
     end_index = len(arr) - 1
-    if end_index < 1:
-        return arr[end_index]
 
-    while start_index <= end_index:
+    # until start index is less than the end index.
+    while start_index < end_index:
         mid = start_index + (end_index - start_index) // 2
-        if mid == len(arr) - 1 or mid == 0:
+        # if left element is less than equal to and right element
+        # is less than the mid, we found the max.
+        if arr[mid - 1] <= arr[mid] and arr[mid+1] < arr[mid]:
             return arr[mid]
-        if arr[mid] > arr[mid - 1] and arr[mid] < arr[mid + 1]:
-            start_index = mid + 1
-        elif arr[mid] < arr[mid - 1] and arr[mid] > arr[mid + 1]:
+        # if left >= mid, move to left
+        if arr[mid-1] >= arr[mid]:
             end_index = mid - 1
-        else:
-            return arr[mid]
+        # if right >= mid, move to right
+        if arr[mid+1] >= arr[mid]:
+            start_index = mid + 1
+
+    # when both elements meet, that is the max
+    return arr[end_index]
 
 # do not have to check both sides, just check if left value is less than
 # mid value and if it is, go right else go left,

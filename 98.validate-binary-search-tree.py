@@ -79,11 +79,13 @@ class Solution:
         # if current node value less than the lower or >= upper
         if node.val <= lower or node.val >= upper:
             return False
+
         # if while traversing left node, send the current node value as highest
         # you could expect (node.val <= upper). lower can be -inf. node can not be
         # less than -inf so (node.val <= lower) will never going to pass.
         if not self.traverse(node.left, lower, node.val):
             return False
+
         # if while traversing right node, send the current node value as lowest
         # you could expect (node.val >= lower).. higher can be +inf. node can be higher than
         # +inf so (node.val >= upper) will never going to pass.
@@ -95,14 +97,17 @@ class Solution:
         return True
 
     prev = None
+
     def isValidBST(self, root):
         """
-        In this approach, we do inorder traversal and during the traversal,
+        # Runtime: 32 ms, faster than 99.44%
+
+        In this approach, we do in-order traversal and during the traversal,
         if we find a node that is <= prev node, return False.
         """
         return self._is_bst(root)
 
-    def _is_bst(self, node, prev=None):
+    def _is_bst(self, node):
         # if node is None, return True
         if node is None:
             return True
@@ -118,7 +123,7 @@ class Solution:
 
         # set the prev node to current node
         self.prev = node
-        
+
         # right traversal
         if not self._is_bst(node.right):
             return False

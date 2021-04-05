@@ -19,16 +19,33 @@ Explanation: output list contains the common intervals between the two lists.
 
 
 def interval_intersection(arr1, arr2):
+    """
+    Runtime: 152 ms, faster than 43.18%
+
+            0  1  2  3  4  5  8  10  11   12  13  15  23  24  25  26
+        A -------        --------           ----------  ------
+            0-2            5-10                12-23    24-25
+        B   -------------   -------------       ----------  ------
+                    1-5             8-12              15-24     25-26
+
+    """
     i = 0
     j = 0
     results = []
     # loop over the two arrays and stop when one of them finishes. no need
     # to continue if either one is done.
     while i < len(arr1) and j < len(arr2):
+        # NOTE: We can not check if start of the secondList is greater
+        # than the end time of the firstList because both lists are sorted
+        # not sorted together.
         # intersection is max of first interval and min of second interval.
         start = max(arr1[i][0], arr2[j][0])
         end = min(arr1[i][1], arr2[j][1])
-        # if end is GE to start, we find the intersection, record the results.
+
+        # if end >= start, we find the intersection, record the results.
+        # NOTE: for usecase where arr2 [8, 12] and arr1 [13, 23], intersection
+        # is not possible because start of the one array is greater than end of
+        # another.
         if end >= start:
             results.append([start, end])
         # move the index for which end interval is lesser.

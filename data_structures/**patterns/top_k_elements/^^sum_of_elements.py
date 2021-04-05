@@ -23,23 +23,29 @@ import heapq
 
 
 def find_sum_of_elements(nums, k1, k2):
+    # store sum
     sum_ = 0
+    # put all elements into the min heap
     min_heap = []
     for num in nums:
         heapq.heappush(min_heap, num)
 
+    # pop elements from min_heap until we find k1
     k1_bkp = k1
 
     while k1 > 0:
         heapq.heappop(min_heap)
         k1 -= 1
 
+    # pop elements from min_heap until we find k2.
+    # NOTE: sum numbers while poping
     k2 = k2 - k1_bkp
 
     while k2 > 1:
         sum_ += heapq.heappop(min_heap)
         k2 -= 1
 
+    # return sum
     return sum_
 
 

@@ -28,9 +28,9 @@
 #
 # Given input matrix =
 # [
-# ⁠ [1,2,3],
-# ⁠ [4,5,6],
-# ⁠ [7,8,9]
+# ⁠ [1,2,3],          [7,4,1]
+# ⁠ [4,5,6],          [8,5,6]
+# ⁠ [7,8,9]           [9,2,3]
 # ],
 #
 # rotate the input matrix in-place such that it becomes:
@@ -70,24 +70,48 @@ class Solution:
     def rotate(self, matrix):
         """
         Do not return anything, modify matrix in-place instead.
+
+        1. swap rows
+        # [
+        # ⁠ [1,2,3],      [7,8,9]          [7,4,1]
+        # ⁠ [4,5,6],   -> [4,5,6]      ->  [8,5,6]
+        # ⁠ [7,8,9]       [1,2,3]          [9,2,3]
+        # ],
         """
-        m = len(matrix)
-        n = len(matrix[0])
+        i = 0
+        j = len(matrix) - 1
 
-        # transpose matrix
-        for i in range(m):
-            for j in range(i, n):  # <------ key
-                matrix[j][i], matrix[i][j] = matrix[i][j], matrix[j][i]
+        # swap rows
+        while i < j:
+            matrix[i], matrix[j] = matrix[j], matrix[i]
+            i += 1
+            j -= 1
 
-        print(matrix)
-        # swap colums
-        for i in range(m):
-            for j in range(int(n / 2)):  # <----- key
-                matrix[i][j], matrix[i][n -
-                                        (j + 1)] = matrix[i][n - (
-                                            j + 1)], matrix[i][j]
-            # or matrix[i].reverse()
-        return matrix
+        # swap diagonally. only swap upper right triangle.
+        # [7,8,9]              [7 8 9]
+        # ⁠[4,5,6] swap only ->    5 6]
+        # ⁠[1,2,3]                   3]
+        for i in range(len(matrix)):
+            for j in range(i, len(matrix[i])):
+                matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+
+        # m = len(matrix)
+        # n = len(matrix[0])
+
+        # # transpose matrix
+        # for i in range(m):
+        #     for j in range(i, n):  # <------ key
+        #         matrix[j][i], matrix[i][j] = matrix[i][j], matrix[j][i]
+
+        # print(matrix)
+        # # swap colums
+        # for i in range(m):
+        #     for j in range(int(n / 2)):  # <----- key
+        #         matrix[i][j], matrix[i][n -
+        #                                 (j + 1)] = matrix[i][n - (
+        #                                     j + 1)], matrix[i][j]
+        #     # or matrix[i].reverse()
+        # return matrix
 
 
 print(Solution().rotate([

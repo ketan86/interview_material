@@ -20,6 +20,7 @@ the left view.
 """
 # pylint: skip-file
 from collections import deque
+import pdb
 
 
 class TreeNode:
@@ -52,8 +53,29 @@ def find_tree_boundary(root):
                 # results based on if there are any node ahead of the current
                 # with child.
 
-                # If the len of the queue only contains the that are in
+                # If the len of the queue only contains the nodes that are in
                 # current level, add the node into result else back in queue.
+                """
+                                                 12
+                                             /       \
+                                            7           1
+                                         /    \     /      \
+                                        4      3   10        5
+                                     /    \                /
+                                    9      15             6
+                                 /  \
+                               13    14
+
+                at node 3, we found a leaf node but number of nodes at level 3
+                already contains node 9 and node 15 so queue length wont be
+                equal to total nodes - current node. If not, push element to
+                queue. so current node list would be,
+                    [10, 5, 9, 15, 3]
+                    [5, 9, 15, 3, 10]
+                    [9, 15, 3, 10, 6]
+                """
+                # only last level would not add any more nodes to queue so
+                # length of the queue would be equal to current node to end.
                 if len(queue) == level_nodes - (i + 1):
                     result.append(node)
                 else:
@@ -89,8 +111,10 @@ def main():
     root.right = TreeNode(1)
     root.left.left = TreeNode(4)
     root.left.left.left = TreeNode(9)
+    root.left.left.left.left = TreeNode(13)
+    root.left.left.left.right = TreeNode(14)
     root.left.right = TreeNode(3)
-    root.left.right.left = TreeNode(15)
+    root.left.left.right = TreeNode(15)
     root.right.left = TreeNode(10)
     root.right.right = TreeNode(5)
     root.right.right.left = TreeNode(6)
@@ -99,33 +123,46 @@ def main():
     for node in result:
         print(str(node.val) + " ", end='')
 
-    root = TreeNode(12)
-    root.right = TreeNode(1)
-    root.right.left = TreeNode(10)
-    root.right.right = TreeNode(5)
-    result = find_tree_boundary(root)
-    print("\nTree boundary: ", end='')
-    for node in result:
-        print(str(node.val) + " ", end='')
+    """
+                         12
+                      /       \
+                    7           1
+                 /    \     /      \
+                4      3   10        5
+              /      /             /
+            9      15             6
+          /  \
+         4    3
 
-    root = TreeNode(1)
-    root.left = TreeNode(2)
-    root.right = TreeNode(3)
-    root.left.left = TreeNode(4)
-    root.left.left.left = TreeNode(8)
-    root.left.left.right = TreeNode(9)
-    root.left.right = TreeNode(5)
-    root.left.right.right = TreeNode(10)
-    root.right.left = TreeNode(6)
-    root.right.right = TreeNode(7)
-    root.right.left.left = TreeNode(11)
-    root.right.right.left = TreeNode(12)
-    root.right.right.right = TreeNode(13)
-    result = find_tree_boundary(root)
-    print("\nTree boundary: ", end='')
-    for node in result:
-        print(str(node.val) + " ", end='')
-    print()
+    """
+
+    # root = TreeNode(12)
+    # root.right = TreeNode(1)
+    # root.right.left = TreeNode(10)
+    # root.right.right = TreeNode(5)
+    # result = find_tree_boundary(root)
+    # print("\nTree boundary: ", end='')
+    # for node in result:
+    #     print(str(node.val) + " ", end='')
+
+    # root = TreeNode(1)
+    # root.left = TreeNode(2)
+    # root.right = TreeNode(3)
+    # root.left.left = TreeNode(4)
+    # root.left.left.left = TreeNode(8)
+    # root.left.left.right = TreeNode(9)
+    # root.left.right = TreeNode(5)
+    # root.left.right.right = TreeNode(10)
+    # root.right.left = TreeNode(6)
+    # root.right.right = TreeNode(7)
+    # root.right.left.left = TreeNode(11)
+    # root.right.right.left = TreeNode(12)
+    # root.right.right.right = TreeNode(13)
+    # result = find_tree_boundary(root)
+    # print("\nTree boundary: ", end='')
+    # for node in result:
+    #     print(str(node.val) + " ", end='')
+    # print()
 
 
 main()

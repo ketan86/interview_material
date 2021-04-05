@@ -59,7 +59,45 @@ class TrieNode:
         self.child = [None] * 26
 
 
+class SolutionTimeLimitExceed:
+    """
+    # because even if word is not present in the dict, we iterate over the
+    # board to find all possible substrings.
+    """
+
+    def findWords(self, board, words):
+        word_dict = set(words)
+        result = []
+        for row in range(len(board)):
+            for col in range(len(board[row])):
+                self.dfs(board, row, col, '', word_dict, result)
+        return result
+
+    def dfs(self, board, row, col, sub_string, word_dict, result):
+
+        if row < 0 or col < 0 or row >= len(board) or col >= len(board[row]) or board[row][col] == '-':
+            return
+
+        sub_string += board[row][col]
+
+        # because even if word is not present in the dict, we iterate over the
+        # board to find all possible substrings.
+        if sub_string not in result and sub_string in word_dict:
+            result.append(sub_string)
+
+        temp = board[row][col]
+        board[row][col] = '-'
+
+        self.dfs(board, row + 1, col, sub_string, word_dict, result)
+        self.dfs(board, row - 1, col, sub_string, word_dict, result)
+        self.dfs(board, row, col + 1, sub_string, word_dict, result)
+        self.dfs(board, row, col - 1, sub_string, word_dict, result)
+
+        board[row][col] = temp
+
+
 class Solution:
+    """Runtime: 9536 ms, faster than 5.02%"""
 
     def __init__(self):
         # trie data structure to make search efficient.
@@ -120,7 +158,8 @@ class Solution:
         """
 
         # if out of bound or board[i][j] is equal to '-', return
-        if i < 0 or j < 0 or i >= len(board) or j >= len(board[i]) or board[i][j] == '-':
+        if i < 0 or j < 0 or i >= len(board) or j >= len(board[i]) \
+                or board[i][j] == '-':
             return
 
         # add new char to a substring
@@ -136,7 +175,7 @@ class Solution:
         # if trie node is not none and if word is complete, add it to result.
         if trie.end_word:
             result.append(substring)
-            # we can unmark that word to avoid duplicates in results.
+            # we can un-mark that word to avoid duplicates in results.
             # NOTE: if aleration to trie is not accepted, check if substring
             # is present in the result before adding.
             trie.end_word = False

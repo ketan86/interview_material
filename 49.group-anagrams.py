@@ -49,6 +49,7 @@ from collections import defaultdict
 class Solution:
     # O(n *k * log(k))
     def groupAnagrams(self, strs):
+        """Runtime: 92 ms, faster than 88.71%"""
         # we can use map to store the sorted string and values
         # would be anagram of the sorted string.
         # for ex, eat, ate, tea -> {'aet': ['eat', 'ate', 'tea']}
@@ -68,6 +69,7 @@ class Solution:
 
     # O(n*k)
     def groupAnagramsOptimized(self, strs):
+        """Runtime: 112 ms, faster than 39.76%"""
         d = defaultdict(list)
         for s in strs:
             # define a char array with 26 indexes

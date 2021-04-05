@@ -25,7 +25,9 @@ class ListNode:
 
 
 def merge_lists(lists):
+    # min_heap to maintain the min elements
     min_heap = []
+    # new linked list head
     new_ll_head = None
     # insert root elements of each list to min heap.
     for ll in lists:
@@ -33,13 +35,16 @@ def merge_lists(lists):
 
     # pop min node and keep adding next node to the heap.
     while min_heap:
+        # pop item from the min heap
         ll = heapq.heappop(min_heap)
-        # form, new link list
+        # form, new link list if it's none, else set next of the new ll to
+        # current node and move new ll to next node
         if new_ll_head is None:
             new_ll_head = ll
         else:
             new_ll_head.next = ll
             new_ll_head = new_ll_head.next
+
         # if next node is not none, add it to min_heap
         if ll.next is not None:
             heapq.heappush(min_heap, ll.next)

@@ -43,6 +43,22 @@
 #         self.left = left
 #         self.right = right
 class Solution:
+    def maxDepth2ndSimple(self, root):
+        """Runtime: 40 ms, faster than 76.55% """
+
+        # max depth of the binary tree is,
+        # max(left sub tree height, right sub tree height)
+
+        def dfs(node):
+            # if node is none, return the max_depth
+            if not node:
+                return 0
+
+            # find the max(left,right) + 1 (to add current node)
+            return max(dfs(node.left), dfs(node.right)) + 1
+
+        return dfs(root)
+
     def maxDepth(self, root):
         # max depth of the binary tree is,
         # max(left sub tree height, right sub tree height)
@@ -63,21 +79,5 @@ class Solution:
 
         return dfs(root, max_depth)
 
-    def maxDepth2ndVersion(self, root):
-        # max depth of the binary tree is,
-        # max(left sub tree height, right sub tree height)
 
-        def dfs(node):
-            # if node is none, return the max_depth
-            if node is None:
-                return 0
-
-            # find the max(left,right) + 1 (to add current node)
-            max_depth = 0
-
-            max_depth += max(dfs(node.left), dfs(node.right)) + 1
-
-            return max_depth
-
-        return dfs(root)
 # @lc code=end

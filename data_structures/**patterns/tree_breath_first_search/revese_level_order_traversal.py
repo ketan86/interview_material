@@ -23,6 +23,7 @@ class TreeNode:
 
 
 def traverse(root):
+    """Push nodes in front of the list"""
     result = deque()
     if not root:
         return result

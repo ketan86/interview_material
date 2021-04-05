@@ -111,9 +111,10 @@ class Solution:
     def cloneGraph(self, node):
         if not node:
             return node
-        return self.dfs(node)
 
-    def dfs(self, root):
+        # copy node
+        root = node
+
         # visited dict to store the visited node and respective clone.
         visited = {}
 
@@ -128,7 +129,7 @@ class Solution:
             node = queue.popleft()
             # visit all non-visited neighbors
             for neighbor in node.neighbors:
-                # if node not visted
+                # if node not visited
                 if neighbor not in visited:
                     # add neighbor to a visited node with a clone copy.
                     visited[neighbor] = Node(neighbor.val, [])

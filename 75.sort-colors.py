@@ -48,34 +48,38 @@
 class Solution:
     def sortColors(self, nums):
         """
+        # Runtime: 28 ms, faster than 92.67%
+
         Do not return anything, modify nums in-place instead.
 
-        KEY: m pointer advances and swaps numbers with i and j pointers
+        KEY: j pointer advances and swaps numbers with i and k pointers
         based on the fact that the all 0's must be on left and all 2's
         must be on right.
         """
-        # here i represent the far left (0) and j far right(2)
-        # m moves ahead and if it is 0, swap with i and if 2,
-        # swap with j.
+        # here i represent the far left (0) and k far right(2)
+        # j moves ahead and if it is 0, swap with i and if 2,
+        # swap with k.
         i = 0
-        j = len(nums) - 1
-        m = 0
-        # move m till it crosses j. m and j must meet :)
-        # NOTE: usecase fails if m < j ([2,0,1])
-        while m <= j:
-            # if m is 0, swap with i and increment i and m
-            if nums[m] == 0:
-                nums[m], nums[i] = nums[i], nums[m]
+        j = 0
+        k = len(nums) - 1
+        # move j till it crosses k.
+        # NOTE: usecase fails if j < k ([2,0,1]). after swapping j with k,
+        # it is not necessary that j is 1, it could be 0 so need to be
+        # swapped with i.
+        while j <= k:
+            # if j is 0, swap with i and increment i and j
+            if nums[j] == 0:
+                nums[j], nums[i] = nums[i], nums[j]
                 i += 1
-                m += 1
+                j += 1
 
-            # if m is 1, move m
-            elif nums[m] == 1:
-                m += 1
-            # if m is 2, swap with j and decrement j
-            elif nums[m] == 2:
-                nums[m], nums[j] = nums[j], nums[m]
-                j -= 1
+            # if j is 1, move m
+            elif nums[j] == 1:
+                j += 1
+            # if j is 2, swap with k and decrement k
+            elif nums[j] == 2:
+                nums[k], nums[j] = nums[j], nums[k]
+                k -= 1
 
         return nums
 

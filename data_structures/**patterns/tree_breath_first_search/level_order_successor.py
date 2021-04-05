@@ -25,17 +25,23 @@ class TreeNode:
 
 
 def find_successor(root, key):
+    # if root is None, return
     if root is None:
-        return None
+        return
+    # define queue and add root to it
     queue = deque()
     queue.append(root)
+    # use a flag to mark the node when found
     found = False
     while queue:
         node = queue.popleft()
+        # if node was found, current node is the successor
         if found:
             return node
+        # if node is found, set found to True
         if node.val == key:
             found = True
+        # left and right traversal
         if node.left:
             queue.append(node.left)
         if node.right:

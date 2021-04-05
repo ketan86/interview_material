@@ -50,6 +50,8 @@ from collections import deque
 
 
 class Solution:
+    """Runtime: 36 ms, faster than 63.12%"""
+
     def levelOrder(self, root):
         result = []
         # if root node is None, return result

@@ -78,7 +78,9 @@ class Solution:
         self.find_combinations(candidates, target, results)
         return results
 
-    def find_combinations(self, candidates, target, results, index=0, combinations=[], sum_=0):
+    def find_combinations(self, candidates, target, results, index=0, combinations=None, sum_=0):
+        if combinations is None:
+            combinations = []
         # if sum is greater than target, return
         if sum_ > target:
             return

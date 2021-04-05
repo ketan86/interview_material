@@ -44,12 +44,56 @@
 #
 #
 
+
 # @lc code=start
 from collections import defaultdict
 from string import ascii_uppercase
 
 
 class Solution:
+    def numDecodingsWithoutDict(self, s):
+
+        # map to store the already computed results.
+        memo = {}
+
+        def dfs(s):
+            """
+            try all possible combinations
+
+                                226 
+                        /                     \
+                    "2" & "26"                ...
+                          / \
+                "2" & "6"    "26" & ""
+                    / 
+            "6" and ""     
+
+            """
+            # if string results are already stored, return the results
+            if s in memo:
+                return memo[s]
+
+            # if string is empty, return 1
+            if s == '':
+                return 1
+
+            total_ways = 0
+            for i in range(len(s)):
+                # split string in two sections
+                first, second = s[: i + 1], s[i + 1:]
+                # if first string does not start with 0 and value of
+                # first string is less than or equal to 26, combinations
+                # are possible with second string.
+                if not first.startswith("0") and int(first) <= 26:
+                    # add all values into total ways
+                    total_ways += dfs(second)
+            # store results
+            memo[s] = total_ways
+            # return total ways
+            return total_ways
+
+        return dfs(s)
+
     def numDecodings(self, s):
 
         # define a map that stores int keys as string and upper case char.
@@ -71,7 +115,7 @@ class Solution:
                                 226 
                         /                     \
                     "2" & "26"                ...
-                    /         \
+                          / \
                 "2" & "6"    "26" & ""
                     / 
             "6" and ""     

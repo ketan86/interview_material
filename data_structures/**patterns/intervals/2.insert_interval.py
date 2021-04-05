@@ -36,38 +36,57 @@ into one [1,4].
 """
 
 
-def insert_interval(intervals, new_interval):
-    results = []
-    inserted = False
-    # merge intervals.
-    for interval in intervals:
+def insert_interval(intervals, newInterval):
+    """
+    Runtime: 88 ms, faster than 29.57%
 
-        # insert new interval at appropriate position only once.
-        if not inserted:
-            if new_interval[0] < interval[0]:
-                results.append(new_interval)
-                inserted = True
+    NOTE: Instead of merging with last result's interval, new interval
+    is merged with the current interval if necessary.
 
-        if not results:
-            results.append(interval)
+    **APPORCHES**
+
+    There are 3 possible places where new interval can be inserted.
+    1. before the current interval
+        - This can be done without any problem
+    2. after the current interval
+        - This can be done but then we run into merge issues
+    3. merge with current inteval
+        - This merge could lead to further merge problems
+
+    Instead,
+
+    1. current interval comes before the new interval
+        - push current interval to result
+    2. new interval comes before the current interval
+        - return by appending new interval to results followed by
+            remaining intervals
+    3. current and merge intervals merge
+        - update new interval by merging current with new interval
+    4. if we did not return, we have a new interval possibly merged with
+        others or never merged (last interval). insert that into the
+        result and return.
+    """
+    result = []
+    for index, interval in enumerate(intervals):
+        # if current interval comes before the new interval, insert
+        # current interval into the result
+        if newInterval[0] > interval[1]:
+            result.append(interval)
+        # if current interval comes after the new interval, return
+        # result so far + new_interval + all remaining intervals
+        elif interval[0] > newInterval[1]:
+            return result + [newInterval] + intervals[index:]
+        # if current interval and new interval merges, instead of
+        # merging with result, merge current interval with
+        # new interval.
         else:
-            if results[-1][1] > interval[0]:
-                _merge_with(interval, results[-1])
-            else:
-                results.append(interval)
+            newInterval[0] = min(newInterval[0], interval[0])
+            newInterval[1] = max(newInterval[1], interval[1])
+    # if we are done with looping and did not return so far, a new
+    # interval should be appended in the result.
+    result.append(newInterval)
 
-    return results
-
-
-def _merge(i, j):
-    return [min([i[0], j[0]]), max(i[1], j[1])]
-
-
-def _merge_with(i, j):
-    min_ = min([i[0], j[0]])
-    max_ = max(i[1], j[1])
-    j[0] = min_
-    j[1] = max_
+    return result
 
 
 print(insert_interval([[2, 3], [5, 7]], [1, 4]))

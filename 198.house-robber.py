@@ -74,7 +74,7 @@ class Solution:
         if index in memo:
             return memo[index] + money_robbed
 
-        # if index is equal or greater than lengh, we are done and return the
+        # if index is equal or greater than length, we are done and return the
         # current money.
         if index >= len(nums):
             return money_robbed
@@ -95,6 +95,8 @@ class Solution:
         return max_money_robbed
 
     def rob(self, nums):
+        """Runtime: 28 ms, faster than 85.03% """
+
         # initialize array to hold the max money collected at given house.
         dp = [0] * (len(nums) + 1)
         # at house 0, there is 0 money collected
@@ -120,7 +122,19 @@ class Solution:
             #   max(dp[2]=2+4, dp[3]=3)=6
             # ]
 
-            dp[i] = max(dp[i - 2] + nums[i], dp[i - 1])
+            # TWO CHOICES: Rob ith home or not
+            # 1. If you rob, you will add current profit to second last home's
+            # total profile
+            # 2. If you not, you will contine with last home's total profit.
+
+            """
+            #         [1,2,3,1]
+            #         [0,1,0,0,0]
+            #          0 1 2 3 4  -> nums[2] -> 3 and not 2
+            # nums[i-1] represent the one element lesser in the nums array due
+            # to the length of the nums and dp array diff.
+            """
+            dp[i] = max(dp[i - 2] + nums[i-1], dp[i - 1])
         return dp[len(nums)]
 
 

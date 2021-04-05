@@ -95,6 +95,7 @@ class Solution:
                         return i
                 return -1
 
+        @Runtime: 136 ms, faster than 42.54%
         Solution 4: XOR property of the number. When two same numbers are XORed
                 result is 0. Using this property, we can XOR all the numbers
                 o to len(nums) and all give numbers. XOR the two XOR results
@@ -120,23 +121,7 @@ class Solution:
                         = A3
 
         """
-        # total_sum = sum(nums)
-        # n = len(nums) + 1
-        # return ((n * (n-1))// 2) - total_sum
-
-        # n = len(nums)
-        # i = 0
-        # while i < n:
-        #     j = nums[i]
-        #     if j < n and nums[i] != i:
-        #         nums[i], nums[j] = nums[j], nums[i]
-        #     else:
-        #         i += 1
-
-        # for i in range(n):
-        #     if i != nums[i]:
-        #         return i
-        # return -1
+        # Runtime: 136 ms, faster than 42.54%
 
         n = len(nums)
         r1 = 0

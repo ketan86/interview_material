@@ -84,7 +84,7 @@ def _print_all_orders(graph, in_degree, task_queue, schedule):
             for sub_task in graph[task]:
                 in_degree[sub_task] += 1
 
-    # when len of the schedule == in_degree lenth, print schedules.
+    # when len of the schedule == in_degree length, print schedules.
     if len(schedule) == len(in_degree):
         print(schedule)
 

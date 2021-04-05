@@ -14,37 +14,38 @@
 # Testcase Example:  '"11"\n"1"'
 #
 # Given two binary strings, return their sum (also a binary string).
-# 
+#
 # The input strings are both non-empty and contains only characters 1 or 0.
-# 
+#
 # Example 1:
-# 
-# 
+#
+#
 # Input: a = "11", b = "1"
 # Output: "100"
-# 
+#
 # Example 2:
-# 
-# 
+#
+#
 # Input: a = "1010", b = "1011"
 # Output: "10101"
-# 
-# 
+#
+#
 # Constraints:
-# 
-# 
+#
+#
 # Each string consists only of '0' or '1' characters.
 # 1 <= a.length, b.length <= 10^4
 # Each string is either "0" or doesn't contain any leading zero.
-# 
-# 
+#
+#
 #
 
 # @lc code=start
 class Solution:
     def addBinary(self, a, b):
         """
-        # NOTE: Solution without using binary opeations. (using operators)
+        # NOTE: Solution without using binary operator.
+
         result = ''
         carry = 0
         length = max(len(a), len(b))
@@ -71,13 +72,15 @@ class Solution:
             result = '1' + result
         return result
         """
+        # 40 ms, faster than 27.34%
+
         # NOTE: solution using binary operators.
         carry = 0
         # covert string values to binary
         a = int(a, 2)
         b = int(b, 2)
         # when carry becomes zero, stop
-        while b !=0:
+        while b != 0:
             # find the carry
             carry = a & b
             # xor a and b to find the sum
@@ -85,8 +88,9 @@ class Solution:
             # set carry value left shifted so carry can be added to the sum
             # (stored in a)
             b = carry << 1
-            
+
         return format(a, 'b')
 
-# @lc code=end
 
+print(Solution().addBinary('001', '101'))
+# @lc code=end

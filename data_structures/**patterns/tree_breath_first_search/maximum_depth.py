@@ -13,6 +13,7 @@ class TreeNode:
 
 
 def find_maximum_depth(root):
+    """ Calculate the level in DFS"""
     if root is None:
         return - 1
     level = 0

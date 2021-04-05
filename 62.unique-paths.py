@@ -54,6 +54,8 @@
 class Solution:
     def uniquePaths(self, m: int, n: int) -> int:
         """
+        Runtime: 28 ms, faster than 87.99%
+
         for 3x3 grid,
 
                      1step     2..n step
@@ -87,6 +89,16 @@ class Solution:
         # set all distances to 1 for horizontal cells.
         for j in range(n):
             paths[0][j] = 1
+
+        # Replaces above 3 steps:
+        # matrix = [0] * m
+        # for i in range(m):
+        #     matrix[i] = [0] * n
+        #     for j in range(n):
+        #         if i == 0 or j == 0:
+        #             matrix[i][j] = 1
+        #         else:
+        #             matrix[i][j] = 0
 
         # for rest of the cells starting from 1,1, find the distance
         # top and left cell distance addition

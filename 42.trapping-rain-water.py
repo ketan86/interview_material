@@ -36,6 +36,7 @@
 class Solution:
     def trap(self, elevation_map):
         """
+        Runtime: 1748 ms
         The idea here is to find the total water we could trap over the
         current bar. It will be min of two highest bar - current height.
         """
@@ -53,6 +54,33 @@ class Solution:
                 unit_of_water += min(
                     left_highest, right_highest) - elevation_map[i]
         return unit_of_water
+
+    def trap_improved(self, elevation_map):
+        """
+        Runtime: 60 ms, faster than 44.71%
+        """
+        total_water = 0
+        left_max_so_far = 0
+        right_max_array = [0] * len(elevation_map)
+
+        self._fill_right_max_array(elevation_map, right_max_array)
+
+        for i in range(len(elevation_map)):
+            left_max_so_far = max(left_max_so_far, elevation_map[i])
+
+            min_height = min(left_max_so_far, right_max_array[i])
+
+            if min_height > elevation_map[i]:
+                total_water += min_height - elevation_map[i]
+
+        return total_water
+
+    def _fill_right_max_array(self, arr, right_max_array):
+        max_ = 0
+        for i in range(len(arr)):
+            j = len(arr) - 1 - i
+            max_ = max(max_, arr[j])
+            right_max_array[j] = max_
 
 
 # print(Solution().trap([0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]))

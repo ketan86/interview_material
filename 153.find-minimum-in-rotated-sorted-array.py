@@ -43,6 +43,9 @@
 
 class Solution:
     def findMin(self, nums):
+        """
+        Runtime: 40 ms, faster than 69.30% 
+        """
         start_index = 0
         end_index = len(nums) - 1
 
