@@ -44,6 +44,18 @@
 
 # @lc code=start
 class Solution:
+    def firstMissingPositive(self, nums: List[int]) -> int:
+        nums = set(nums)
+        missing_num = 0
+        flag = 1
+        while(flag == 1):
+            if missing_num + 1 in nums:
+                missing_num = missing_num+1
+            else:
+                flag = 0
+
+        return missing_num + 1
+
     def firstMissingPositive(self, nums):
         """
         Instead of using cyclic sort n^2, this algorithm marks

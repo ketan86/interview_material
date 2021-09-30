@@ -56,6 +56,54 @@
 
 
 class Solution:
+
+    def combinationSum(self, candidates, target):
+        """
+        Backtracking helps in reducing the cost of creating a new list for each
+        combination.
+
+        for ex,
+                candidates = [2,3,5], target = 8
+                comb = [2], t=6
+                       [2,2], t=4
+                       [2,2,2], t=2
+                       [2,2,2,2], t=0 <- return res = [[2,2,2,2]]
+
+                       [2,2,2,3], t=-1 <- return
+                       [2,2,2,5], t=-3 <- return
+
+                       [2,2,3], t=-1 <- return
+                       [2,2,5], t=-3 <- return
+
+                       [2,3] t=1
+                       [2,3,3], t=0 <- return  res = [[2,2,2,2], [2,3,3]]
+                       [2,3,5], t=-4 <- return
+                       [2,5], t=-1 -< return 
+
+                       ...
+                       [3,5] t=0  res = [[2,2,2,2],[2,3,3], [3,5]]
+                       ...
+
+        """
+        results = []
+
+        def backtrack(remain, comb, start):
+            if remain == 0:
+                # make a deep copy of the current combination
+                results.append(comb[:])
+            elif remain > 0:
+                for i in range(start, len(candidates)):
+                    # add the number into the combination
+                    comb.append(candidates[i])
+                    # give the current number another chance, rather than moving on
+                    backtrack(remain - candidates[i], comb, i)
+                    # backtrack, remove the number from the combination
+                    comb.pop()
+
+        backtrack(target, [], 0)
+
+        return results
+
     def combinationSum(self, candidates, target):
         """
         In order to find combinations with repeated number, start with the list and extract all elements and find combination with

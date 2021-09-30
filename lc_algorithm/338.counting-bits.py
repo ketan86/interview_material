@@ -118,5 +118,6 @@ class Solution:
         # return all values till n
         return dp
 
-# print(Solution().countBits(15))
+
+print(Solution().countBits(5))
 # @lc code=end

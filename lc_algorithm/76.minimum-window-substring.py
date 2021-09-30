@@ -41,8 +41,6 @@ from collections import defaultdict, Counter
 class Solution:
     def minWindow(self, s, t):
         """Runtime: 152 ms, faster than 33.65%"""
-        import pdb
-        pdb.set_trace()
         if len(s) < len(t):
             return ''
 
@@ -62,8 +60,8 @@ class Solution:
         # OR using counter
         # freq_map = Counter(t)
 
-        i = 0
-        j = 0
+        left = 0
+        right = 0
         # initialize the variable to store the min substring use existing
         # string and add one extra character. any substring of the string would
         # be less than m.
@@ -73,12 +71,12 @@ class Solution:
         # and can't be compared with new string using min function.
 
         # expand the window size until reaches the end.
-        while j < len(s):
+        while right < len(s):
             # if chr found in map, reduce the freq of the char
-            if s[j] in freq_map:
-                freq_map[s[j]] -= 1
+            if s[right] in freq_map:
+                freq_map[s[right]] -= 1
                 # when freq goes to 0, increase the match count
-                if freq_map[s[j]] == 0:
+                if freq_map[s[right]] == 0:
                     match += 1
 
             # when match count equal to length of the map. in other words, window
@@ -90,17 +88,17 @@ class Solution:
             # while loop to make sure we eliminate all the chr that are not
             # paresent in pattern and stop at the first match.
             while match == len(freq_map):
-                min_string = min(min_string, s[i: j + 1], key=len)
+                min_string = min(min_string, s[left: right + 1], key=len)
                 # keep reducing the window size, until the first char of the
                 # pattern is found
-                if s[i] in freq_map:
-                    if freq_map[s[i]] == 0:
+                if s[left] in freq_map:
+                    if freq_map[s[left]] == 0:
                         match -= 1
                     # increment the freq of the char
-                    freq_map[s[i]] += 1
-                i += 1
+                    freq_map[s[left]] += 1
+                left += 1
             # increment the end index
-            j += 1
+            right += 1
 
         # if min
         if len(min_string) > len(s):

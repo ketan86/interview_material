@@ -114,6 +114,7 @@ class Solution:
     # O(n) solution
 
     def findCelebrity(self, n: int) -> int:
+        """Runtime: 1840 ms, faster than 75.97%"""
         # consider first person a celebrity
         candidate = 0
         # if candidate knows the other person, he/she can not be a celebrity.
@@ -126,10 +127,9 @@ class Solution:
         # by checking if candidate knows other person but other person does
         # not know candidate. return -1 if that check fails.
         for i in range(n):
-            if i == candidate:
-                continue
-            if knows(candidate, i) or not knows(i, candidate):
-                return - 1
+            if i != candidate:
+                if knows(candidate, i) or not knows(i, candidate):
+                    return - 1
 
         return candidate
 

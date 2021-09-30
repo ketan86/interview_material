@@ -87,7 +87,7 @@ class Solution:
                 if stack and d[stack[-1]] == char:
                     stack.pop()
                 else:
-                    # if stack is empty and found the right
+                    # if stack is empty and found the wrong
                     # parenthese, its invalid
                     return False
         # if stack is not empty, it's not balanced.

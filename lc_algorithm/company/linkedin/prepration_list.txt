@@ -1,0 +1,68 @@
+** Screen ( 1 coding + 1 behavior ) , On-site ( 3 system design + 1-2 coding + 1 Craftsmanship + lunch interview )
+
+https://igotanoffer.com/blogs/tech/linkedin-software-engineer-interview#system-design
+------------------
+Staff/Background Interview: (60 mins)
+
+10 mins - Quick intro on the interviewer
+Topics:
+    Leadership:
+        Roles of SE and SSE and how do you transition SE to SSE, conflict resolution with your peer
+    Execution:
+        Bit of high-level SD questions. Single monolithic application into components
+    Craftsmanship:
+        How well you did? - challenges and most proud work etc
+
+5 mins - any questions from the interviewee.
+
+Phone Interview: (60 mins)
+    5 mins - Quick intro on the interviewer
+
+    Question #1: Evaluate Reverse Polish Notation (LC # 150) - Medium
+        https://leetcode.com/problems/evaluate-reverse-polish-notation/description/
+
+    Question #2: Two Sum - Data structure design (LC # 170) - Easy
+        https://leetcode.com/problems/two-sum-iii-data-structure-design/description/
+
+    Followup question: How do you design this for three-sum? (Just talking no implementation)
+
+5 mins - any questions from the interviewee.
+
+Tips:
+
+    1. Please ensure to relate to examples in your life for each question in background round.
+    2. Talk out loud on all possible approaches for the problems and why you pick the one you implemented in the Phone interview.
+
+
+
+----------------------
+Craftsmanship:
+    https://engineering.linkedin.com/blog/2016/03/what-is-craftsmanship-and-why-is-it-important-
+
+    - What is your coverage that you aim for in automation testing etc?
+    - Do you like code reviews? Your opinion on unit testing/ integration testing
+    - Software craftsmanship is all about getting your opinion on various steps of SDLC? Do you like design review. How do you conduct them
+
+    quality, priority, coaching
+
+System Design:
+
+    K V store ,
+    Job scheduler,
+    LinkedIn,
+    Twitter,
+    Messaging service,
+    Monitoring service,
+    File System
+
+Questions:
+    regex
+
+
+behavioral:
+    https://biginterview.com/blog/
+
+https://interviewing.io/
+
+
+https://engineering.linkedin.com/blog/2016/05/from-good-to-world-class--what-makes-software-engineers-excel-at

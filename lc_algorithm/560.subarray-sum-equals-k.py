@@ -40,6 +40,63 @@ from collections import defaultdict
 
 
 class Solution:
+    def subarraySum(self, nums, k):
+        """
+        Hash map <running_sum:freq> to store the running sum at each index.
+        if running_sum - k is found in map, the sum of the all elements
+        from (map's running_sum -> index + 1) to current index is k:
+
+        running_sum - k -> running_sum = k
+
+        nums-> [0, 9, 1,  8,  6,  3], k=9
+        sum -> [0, 9, 10, 18, 24, 27] <--- when running_sum == k, for (9) add that to count.
+
+        d = {running_sum:freq}
+                ^
+                0-9 in d -> no ;d = {0 -> 1}
+                   ^
+                   9-9=0 in d -> yes, count += d[0] ; d {0 -> 1, 9 -> 1}
+                      ^
+                      10-9=1 in d -> no ; d  {0 -> 1, 9 -> 1, 10 -> 1}
+                           ^
+                           18-9=9 in d -> yes count +=d[9] ; d {0 -> 1, 9 -> 1, 10 -> 1, 18 -> 1}
+                           ...
+
+        """
+        d = defaultdict(int)
+
+        running_sum = 0
+        count = 0
+
+        # loop over the array and keep calculating the running sum
+        for i in range(len(nums)):
+            running_sum += nums[i]
+
+            # if running sum == k, increment the count
+            if running_sum == k:
+                count += 1
+
+            # if running_sum - k in dict, increment count by total instances
+            # running_sum
+            # for ex, [-2,-1,1,3,-3], k=0 -> running sum [-2,-3,-2,1,-2]
+            # [-1,1], [-1,1,3,-3], [3,-3] = total 3 instances
+            # count when index at 2, is 1
+            # count when index at 4, is (1(prev)+2) = 3
+            # [-2,-3,-2,1,-2] -> after sum was -3, it became -2 at index 2 for
+            #                    subarray [-1,1]
+            #                 -> after sum was -3, it became -2 at index 4 for
+            #                    subarray [-1,1,3,-3]
+            #                 -> after sum was 1, it became -2
+            #                    subarray [3,-3]
+            if (running_sum - k) in d:
+                count += d[running_sum - k]
+            # increment runing sum value by 1 to represent the total instances
+            # where running_sum was 0.
+            d[running_sum] += 1
+            print(d)
+
+        return count
+
     def subarraySumN2(self, nums, k):
         """
         O(n^2) solution.
@@ -109,51 +166,9 @@ class Solution:
             j += 1
         return count
 
-    def subarraySum(self, nums, k):
-        """
-        Hash map <running_sum:index> to store the running sum at each index.
-        if running_sum - k is found in map, the sum of the all elements
-        from (map's running_sum -> index + 1) to current index is k:
 
-        running_sum - k -> running_sum = k
-        """
-        d = defaultdict(int)
-
-        running_sum = 0
-        count = 0
-
-        # loop over the array and keep calculating the running sum
-        for i in range(len(nums)):
-            running_sum += nums[i]
-
-            # if running sum == k, increment the count
-            if running_sum == k:
-                count += 1
-
-            # if running_sum - k in dict, increment count by total instances
-            # running_sum
-            # for ex, [-2,-1,1,3,-3] -> running sum [-2,-3,-2,1,-2]
-            # [-1,1], [-1,1,3,-3], [3,-3] = total 3 instances
-            # count when index at 2, is 1
-            # count when index at 4, is (1(prev)+2) = 3
-            # [-2,-3,-2,1,-2] -> after sum was -3, it became -2 at index 2 for
-            #                    subarray [-1,1]
-            #                 -> after sum was -3, it became -2 at index 4 for
-            #                    subarray [-1,1,3,-3]
-            #                 -> after sum was 1, it became -2
-            #                    subarray [3,-3]
-            if (running_sum - k) in d:
-                count += d[running_sum - k]
-
-            # increment runing sum value by 1 to represent the total instances
-            # where runnig_sum was 0.
-            d[running_sum] += 1
-
-        return count
-
-
-print(Solution().onlyPositiveSubarraySum([0, 9, 1, 8, 6, 3], 9))
-print(Solution().subarraySumN2([-2, -1, 1, 3, -3], 0))
-print(Solution().subarraySum([-2, -1, 1, 3, -3], 0))
+print(Solution().subarraySum([0, 9, 1, 8, 6, 3], 9))
+# print(Solution().subarraySumN2([-2, -1, 1, 3, -3], 0))
+# print(Solution().subarraySum([-2, -1, 1, 3, -3], 0))
 # print(Solution().subarraySum([5, 4, 2, 1, 4, 5, 4, 4, 1], 9))
 # @lc code=end

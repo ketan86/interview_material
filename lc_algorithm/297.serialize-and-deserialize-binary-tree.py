@@ -28,6 +28,7 @@ class CodecBFS:
         if not root:
             return
         result = []
+
         queue = deque()
         queue.append(root)
 
@@ -79,7 +80,7 @@ class CodecBFS:
 
             # increment the
             i += 1
-            if nodes[i] != 'none':
+            if nodes[i] != 'None':
                 right = TreeNode(int(nodes[i]))
                 node.right = right
                 queue.append(right)

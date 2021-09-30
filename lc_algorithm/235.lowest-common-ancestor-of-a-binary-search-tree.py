@@ -62,7 +62,11 @@
 class Solution:
 
     def lowestCommonAncestor(self, root, p, q):
-        """Runtime: 80 ms, faster than 47.31%"""
+        """
+        Runtime: 80 ms, faster than 47.31%
+
+        Time -> O(log n) because in BST we can search in either left or right.
+        """
         # NOTE: use BST property to decide if root is current root or it's
         # in left or right.
 

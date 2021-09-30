@@ -99,7 +99,7 @@ class Solution:
                 elif stack[-1] == -asteroid:
                     stack.pop()
                     break
-                # 3: prev asteroid is less than curr (prev explodes)
+                # 3: prev asteroid is smaller than curr (prev explodes)
                 else:
                     break
 

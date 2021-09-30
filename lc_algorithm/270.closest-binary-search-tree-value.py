@@ -36,9 +36,15 @@ class Solution:
         """
         Runtime: 40 ms, faster than 64.37%
 
+        for a balanced tree: 
+        h = log(n)
+        hence o(h) = o(log n)
+
+        O(H) -> Height of the tree.
+
         """
-        # maintain closest diff and closest node
-        self.closest_diff = float('inf')
+        # maintain closest distance and closest node
+        self.closest_distance = float('inf')
         self.closest_node = root.val
 
         def dfs(node):
@@ -46,13 +52,13 @@ class Solution:
             if not node:
                 return
 
-            # find the min diff so far
-            diff = min(self.closest_diff, abs(node.val - target))
+            # find the min distance so far
+            distance = min(self.closest_distance, abs(node.val - target))
 
-            # if diff is not same as prev, update clostest node and diff
-            if diff != self.closest_diff:
+            # if distance is not same as prev, update clostest node and distance
+            if distance != self.closest_distance:
                 self.closest_node = node.val
-                self.closest_diff = diff
+                self.closest_distance = distance
 
             # BST so go left if target is less than node else right
             if target < node.val:

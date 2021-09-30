@@ -75,7 +75,7 @@ class Solution:
         # 40 ms, faster than 27.34%
 
         # NOTE: solution using binary operators.
-        carry = 0
+        = 0
         # covert string values to binary
         a = int(a, 2)
         b = int(b, 2)

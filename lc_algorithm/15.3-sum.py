@@ -21,15 +21,22 @@
 
 # pylint:skip-file
 
+
 # O(N^2) -> Time Complexity
 class Solution:
     def threeSum(self, nums):
         """
         Key of this problem is **sorting** and skipping **duplicate** elements.
+
+        You can make use 2 sum problem logic to find 3 sum.
+            - Go over the one integer and find diff in rest of the elements
+            using 2 sum.
         """
         results = []
+
         if not nums:
             return results
+
         nums.sort()
 
         # go till 3rd last element

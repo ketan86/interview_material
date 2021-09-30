@@ -76,16 +76,13 @@ def find_available_times(schedule):
     # merge meetings
     merged_meetings = []
     for meeting in all_meetings:
-        if not merged_meetings:
-            merged_meetings.append(meeting)
+        if merged_meetings and meeting[0] < merged_meetings[-1][1]:
+            merged_meetings[-1] = (
+                min(merged_meetings[-1][0], meeting[0]),
+                max(merged_meetings[-1][1], meeting[1])
+            )
         else:
-            if meeting[0] < merged_meetings[-1][1]:
-                merged_meetings[-1] = (
-                    min(merged_meetings[-1][0], meeting[0]),
-                    max(merged_meetings[-1][1], meeting[1])
-                )
-            else:
-                merged_meetings.append(meeting)
+            merged_meetings.append(meeting)
 
     result = []
     # find available time

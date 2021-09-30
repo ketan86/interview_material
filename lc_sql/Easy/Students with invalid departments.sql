@@ -9,7 +9,7 @@
 -- +---------------+---------+
 -- id is the primary key of this table.
 -- The table has information about the id of each department of a university.
- 
+
 
 -- Table: Students
 
@@ -22,7 +22,7 @@
 -- +---------------+---------+
 -- id is the primary key of this table.
 -- The table has information about the id of each student at a university and the id of the department he/she studies at.
- 
+
 
 -- Write an SQL query to find the id and the name of all students who are enrolled in departments that no longer exists.
 
@@ -69,8 +69,8 @@
 -- department 14, 33, 74 and 77 doesn't exist in the Departments table.
 
 -- Solution
-Select s.id, s.name
-from students s left join
-departments d
-on s.department_id = d.id
+select s.id, s.name
+from students s
+    left join departments d
+    on s.department_id = d.id
 where d.name is null

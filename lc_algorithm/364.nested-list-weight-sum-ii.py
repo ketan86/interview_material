@@ -80,6 +80,8 @@ class NestedInteger:
 class Solution:
     def depthSumInverse(self, nested_list: List[NestedInteger]) -> int:
         """
+        Runtime: 28 ms, faster than 89.26%
+
         For each integer in the list, the final result is 
         integer * (maxDepth - (the depth of the integer) + 1) 
             => integer * maxDepth + integer * (1 - depth)
@@ -90,24 +92,63 @@ class Solution:
         So we need to accumulate every integer to get the sum of all integers
         while we traverse. Once we completes traversal, we will know have both
         sum(all integers) and maxDepth in hand.
+
+
+        weight = max_depth - depth of the integer + 1
+
+
+        weighted_sum = sum(weight * interger)
+                           /     \
+                sum((max_depth  +   (1 - depth_of_integer))  * interger value)
+                    |
+                sum(max_depth   * integer_value + (1 - depth_of_integer) * integer_value)
+                    |               |                            |
+                sum(max_depth   * integer_value + integer_value - (depth_of_integer * integer_value))
+                    |               |                             |
+                sum(max_depth   * integer_value) + sum(integer_value) - sum(depth_of_integer * integer_value)
+                    |
+                sum(interger_value) * ( max_depth + 1) - sum(depth_of_integer * integer_value)
+
         """
         max_depth = 0
         integer_sum = 0
-        weighted_sum = 0
+        integer_weighted_sum = 0
 
         # unpack nested integers object into queue
         queue = deque((i, 1) for i in nested_list)
 
         while queue:
-            ni, level = queue.popleft()
+            ni, depth = queue.popleft()
             # keep calculating the max depth
-            max_depth = max(max_depth, level)
+            max_depth = max(max_depth, depth)
             if ni.isInteger():
-                # find the weighted sum by adding each level.
-                weighted_sum += ni.getInteger() * (1-level)
+                # find the weighted sum by adding each depth.
+                integer_weighted_sum += ni.getInteger() * depth
                 # calculate the integer sum
                 integer_sum += ni.getInteger()
             else:
                 for item in ni.getList():
-                    queue.append((item, level+1))
-        return weighted_sum + integer_sum * max_depth
+                    queue.append((item, depth+1))
+
+        return integer_sum * (max_depth + 1) - integer_weighted_sum
+
+        # max_depth = 0
+        # integer_sum = 0
+        # partial_weighted_sum = 0
+
+        # # unpack nested integers object into queue
+        # queue = deque((i, 1) for i in nested_list)
+
+        # while queue:
+        #     ni, depth = queue.popleft()
+        #     # keep calculating the max depth
+        #     max_depth = max(max_depth, depth)
+        #     if ni.isInteger():
+        #         # find the weighted sum by adding each depth.
+        #         partial_weighted_sum += ni.getInteger() * (1-depth)
+        #         # calculate the integer sum
+        #         integer_sum += ni.getInteger()
+        #     else:
+        #         for item in ni.getList():
+        #             queue.append((item, depth+1))
+        # return partial_weighted_sum + integer_sum * max_depth

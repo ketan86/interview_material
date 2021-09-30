@@ -58,19 +58,20 @@ class Solution:
 
         # expand from the middle
         def expand_from_middle(s, left, right):
-            nonlocal total_palindrome_substrings
-
+            palindromes = 0
             # if string is empty or left > right, return the
             # total_palindrome_substrings
             if not s or left > right:
-                return total_palindrome_substrings
+                return
 
             # for every match, increment the total_palindrome_substrings count.
             # because, every smallest substring can be a palindrome.
             while left >= 0 and right < len(s) and s[left] == s[right]:
-                total_palindrome_substrings += 1
+                palindromes += 1
                 left -= 1
                 right += 1
+
+            return palindromes
 
         # expand from the middle and keep counting the palindrome string.
         # for ex, "aba" -> 1. "a" total_palindrome_substrings = 1
@@ -81,12 +82,12 @@ class Solution:
             #               -> 1."a" total_palindrome_substrings = 4
             #                  2. "a " total_palindrome_substrings = 4
         for i in range(len(s)):
-            expand_from_middle(s, i, i)
-            expand_from_middle(s, i, i + 1)
+            total_palindrome_substrings += expand_from_middle(s, i, i)
+            total_palindrome_substrings += expand_from_middle(s, i, i + 1)
 
         return total_palindrome_substrings
 
-    def countSubstrings(self, s):
+    def countSubstringsDP(self, s):
         """
         Runtime: 556 ms, faster than 12.50%
 
@@ -145,5 +146,5 @@ class Solution:
         return 1 if s == s[::-1] else 0
 
 
-print(Solution().countSubstrings('aba'))
+print(Solution().countSubstrings('abaddedsed'))
 # @lc code=end

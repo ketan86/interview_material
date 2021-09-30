@@ -72,7 +72,11 @@ def evaluatePostFix(exp):
     # loop over the expression
     for char in exp:
         # add digits to stack until operator is found
-        if char.isdigit():
+        if char.isdigit():  # NOTE: Does not work for "-11" if given as whole
+            # as integer
+            # Here it works because it's a string input but
+            # ["10","-11","*"] does not work so check if operator
+            # else consider digit.
             stack.push(char)
         else:
             # pop last two items and evaluate the results

@@ -75,7 +75,7 @@ class Solution:
 
     Summary:
         = 2^32 possible values
-        = 2^32 values used for negative integers
+        = 2^31 values used for negative integers
             1 bit for sign = -2^31 => 4,294,967,295
         = 2^32 values available for positive integers
             including 0, we have 0..(2^31)-1 => 2,147,483,647

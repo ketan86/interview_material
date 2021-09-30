@@ -50,6 +50,15 @@ Explanation: M = 1000, CM = 900, XC = 90 and IV = 4.
 
 class Solution:
     def romanToInt(self, s: str) -> int:
+        """
+        1. process number from left to right
+        2. if next number is less than the current,
+            - substract current number from next and add to result
+            - increment index by 2
+        3. if next number is greater than current
+            - add current number to result
+            - increment index by 1
+        """
         d = {
             'I': 1,
             'V': 5,
@@ -68,6 +77,7 @@ class Solution:
             # and add it to total
             # for ex,   IV
             #       V(5) > I(1) so 5-1=4 is the answer
+
             if i + 1 < len(s) and d[s[i]] < d[s[i + 1]]:
                 total += d[s[i + 1]] - d[s[i]]
                 # just two indexes

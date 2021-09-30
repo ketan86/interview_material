@@ -66,23 +66,19 @@
 #         self.right = right
 class Solution:
     def isSameTree(self, p, q):
-        # if both nodes are node, we are the the leaf node of both
-        # trees so they are considered same.
-        if not p and not q:
-            return True
-        # if either p or q is none, trees are not same.
-        if (not p and q) or (not q and p):
-            return False
 
-        # if values are not same, return False
-        if p.val != q.val:
-            return False
+        def dfs(p, q):
+            # if both nodes are none, it's same tree
+            if not p and not q:
+                return True
 
-        # if any nodes in the left of the both trees are not same or
-        # any nodes in the right of the both trees are not same,
-        # trees are not same.
-        return self.isSameTree(p.left, q.left) \
-            and self.isSameTree(p.right, q.right)
+            # if either one is not none, it's not same
+            if not p or not q:
+                return False
 
+            # root, left and right nodes should be same
+            return p.val == q.val and dfs(p.left, q.left) and dfs(p.right, q.right)
+
+        return dfs(p, q)
 
 # @lc code=end

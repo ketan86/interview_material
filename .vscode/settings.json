@@ -7,8 +7,11 @@
     "bitonic",
     "curr",
     "deque",
+    "followee",
     "heapify",
     "heapq",
+    "inorder",
+    "isdigit",
     "nums",
     "pylint"
   ]

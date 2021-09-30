@@ -1,6 +1,5 @@
 def fib(n):
     if n == 0:
-        print
         return 0
     if n == 1:
         return 1

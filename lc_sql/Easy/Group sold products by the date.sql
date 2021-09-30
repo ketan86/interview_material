@@ -52,8 +52,11 @@ SELECT
     -- can contain duplicate products so using distinct
     COUNT(DISTINCT product) as num_sold,
     -- group concatinate distinct product order by product ASC, separated by ','
-    group_concat(DISTINCT product
-ORDER BY product ASC SEPARATOR ',' ) as products
+    -- default seperator is ','
+    group_concat(
+        DISTINCT product
+ORDER BY product ASC
+) as products
 FROM Activities
 GROUP BY sell_date
 ORDER BY sell_date;

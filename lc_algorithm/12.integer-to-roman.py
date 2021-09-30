@@ -199,17 +199,21 @@ class Solution:
         Answer: MCCCXX
         """
         result = []
-        ints = (1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
-        nums = ('M', 'CM', 'D', 'CD', 'C', 'XC',
-                'L', 'XL', 'X', 'IX', 'V', 'IV', 'I')
-
+        digits = [
+            (1000, "M"), (900, "CM"), (500, "D"), (400, "CD"), (100, "C"),
+            (90, "XC"), (50, "L"), (40, "XL"), (10, "X"), (9, "IX"),
+            (5, "V"), (4, "IV"), (1, "I")
+        ]
         # divide the number from 1000 to 1 and keep adding relevent roman
         # characters counts time.
-        for i in range(len(ints)):
-            remainder = num // ints[i]
-            result.append(nums[i] * remainder)
-            num -= remainder * ints[i]
+        for value, symbol in digits:
+            if num == 0:
+                break
+            quotient = num // value
+            num = num % value
+            result.append(symbol * quotient)
+
         return ''.join(result)
 
 
-print(Solution().intToRoman(1320))
+print(Solution().intToRoman(43))

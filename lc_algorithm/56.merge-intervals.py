@@ -47,19 +47,15 @@ class Solution:
         intervals.sort()
         result = []
         for interval in intervals:
-            # if there are no intervals in the result, add the first one.
-            if not result:
-                result.append(interval)
+            # since intervals are sorted, check if the last interval
+            # end time is >= current internal start time.
+            if result and result[-1][1] >= interval[0]:
+                # since intervals are sorted by start time, we don't have
+                # to update the start time using the min function.
+                result[-1][1] = max(result[-1][1], interval[1])
             else:
-                # since intervals are sorted, check if the last interval
-                # end time is >= current internal start time.
-                if result[-1][1] >= interval[0]:
-                    # since intervals are sorted by start time, we don't have
-                    # to update the start time using the min function.
-                    result[-1][1] = max(result[-1][1], interval[1])
-                else:
-                    # if can't be merged, append it to result.
-                    result.append(interval)
+                # if can't be merged, append it to result.
+                result.append(interval)
         return result
 
 # @lc code=end

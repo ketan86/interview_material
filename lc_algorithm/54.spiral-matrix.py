@@ -52,8 +52,9 @@ class Solution:
 
         # create row and col start and end boundaries
         row_start = 0
-        row_end = len(matrix) - 1
         col_start = 0
+
+        row_end = len(matrix) - 1
         col_end = len(matrix[0]) - 1
 
         # direction variable to store the direction
@@ -67,31 +68,29 @@ class Solution:
                 for i in range(col_start, col_end + 1):
                     result.append(matrix[row_start][i])
                 row_start += 1
-                direction += 1
             # go down
             elif direction == 1:
                 # traverse row by keeping the col fixed.
                 for i in range(row_start, row_end + 1):
                     result.append(matrix[i][col_end])
                 col_end -= 1
-                direction += 1
             # go left
             elif direction == 2:
                 # traverse col in reverse by keping the row fixed.
                 for i in reversed(range(col_start, col_end + 1)):
                     result.append(matrix[row_end][i])
                 row_end -= 1
-                direction += 1
             # go up
             elif direction == 3:
                 # traverse row in reverse by keeping the col fixed.
                 for i in reversed(range(row_start, row_end + 1)):
                     result.append(matrix[i][col_start])
                 col_start += 1
-                direction += 1
             else:
                 # reset the direction
-                direction = 0
+                direction = -1
+
+            direction += 1
 
         return result
 

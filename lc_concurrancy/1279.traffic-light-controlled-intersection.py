@@ -108,10 +108,10 @@ class TrafficLight:
             # if opposite direction car was waiting, do not allow if direction has changed.
             while self.road_id != roadId:
                 self.condition.wait()
-                # update the road direction
-                self.road_id = roadId
                 # turn signal green
                 turnGreen()
+                # update the road direction
+                self.road_id = roadId
 
             self.count += 1
 

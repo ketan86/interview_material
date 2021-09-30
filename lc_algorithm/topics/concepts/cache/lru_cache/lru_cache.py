@@ -77,18 +77,18 @@ class LRUCache:
             # access the node from a key
             node = self.hash_map[key]
             # move node to front due to access.
-            self._adjust(node)
+            self._move_to_front(node)
 
     def get(self, key):
         # if key is present in map, access the node and move node to front
         if key in self.hash_map:
             node = self.hash_map[key]
-            self._adjust(node)
+            self._move_to_front(node)
             # return the node value
             return node.data
         return -1
 
-    def _adjust(self, node):
+    def _move_to_front(self, node):
 
         # if node is a head node, no need to move the node to front.
         if node == self.head:

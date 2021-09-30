@@ -76,7 +76,11 @@ queue.dequeue();    // Consumer thread C3 calls dequeue.
 queue.enqueue(3);   // One of the producer threads enqueues 3 to the queue.
 queue.size();       // 1 element remaining in the queue.
 
-Since the number of threads for producer/consumer is greater than 1, we do not know how the threads will be scheduled in the operating system, even though the input seems to imply the ordering. Therefore, any of the output [1,0,2] or [1,2,0] or [0,1,2] or [0,2,1] or [2,0,1] or [2,1,0] will be accepted.
+Since the number of threads for producer/consumer is greater than 1, we do not 
+know how the threads will be scheduled in the operating system, even though the 
+input seems to imply the ordering. 
+Therefore, any of the output [1,0,2] or [1,2,0] or [0,1,2] or [0,2,1] or 
+    [2,0,1] or [2,1,0] will be accepted.
  
 
 Constraints:
@@ -86,7 +90,7 @@ Constraints:
 1 <= size <= 30
 0 <= element <= 20
 The number of calls to enqueue is greater than or equal to the number of calls to dequeue.
-At most 40 calls will be made to enque, deque, and size.
+At most 40 calls will be made to enqueue, deque, and size.
 """
 
 from threading import Condition, Lock, Semaphore

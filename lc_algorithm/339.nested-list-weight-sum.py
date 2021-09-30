@@ -85,19 +85,19 @@ class Solution:
 
         queue = deque()
 
-        # Put items into the queue with level depth 1
+        # Put items into the queue with depth 1
         for item in nested_list:
             queue.append((item, 1))
 
         while queue:
-            ni, level = queue.popleft()
+            ni, depth = queue.popleft()
             # if ni is an integer, update weighted sum
             if ni.isInteger():
-                weighted_sum += ni.getInteger() * level
+                weighted_sum += ni.getInteger() * depth
             else:
                 # go over the list and put it in queue
                 for l in ni.getList():
-                    queue.append((l, level+1))
+                    queue.append((l, depth+1))
 
         return weighted_sum
 

@@ -3,11 +3,12 @@ import time
 import random
 import threading
 
-class Fork:
+
+class ForkCondition:
     def __init__(self, number):
         self.number = number
         self.condition = threading.Condition(threading.Lock())
-        self.taken = False 
+        self.taken = False
 
     def take(self, user):
         # print(f'{user=} is waiting to lock fork={self.number}')
@@ -20,10 +21,30 @@ class Fork:
 
     def drop(self, user):
         # print(f'{user=} is waiting to lock fork={self.number}')
-        with self.condition: 
+        with self.condition:
             self.taken = False
             # print(f'fork={self.number} dropped by {user=}')
             self.condition.notify_all()
+
+
+class ForkSemaphore:
+    def __init__(self, number):
+        self.number = number
+        self.take_semaphore = threading.Semaphore(1)
+        self.drop_semaphore = threading.Semaphore(0)
+
+    def take(self, user):
+        # print(f'{user=} is waiting to lock fork={self.number}')
+        self.take_semaphore.acquire()
+        # print(f'fork={self.number} taken by {user=}')
+        self.drop_semaphore.release()
+
+    def drop(self, user):
+        # print(f'{user=} is waiting to lock fork={self.number}')
+        self.drop_semaphore.acquire()
+        # print(f'fork={self.number} dropped by {user=}')
+        self.take_semaphore.release()
+
 
 class Philosopher(threading.Thread):
     """
@@ -84,6 +105,7 @@ class Philosopher(threading.Thread):
     waiting threads.
 
     """
+
     def __init__(self, user, left, right):
         super().__init__()
         self.user = user
@@ -92,11 +114,10 @@ class Philosopher(threading.Thread):
 
     def think(self):
         # print(f'user={self.user} thinking...')
-        time.sleep(random.randrange(0,2))
-
+        time.sleep(random.randrange(0, 2))
 
     def run(self):
-        for i in range(2):
+        for i in range(1):
             print(f'user={self.user} is starting to eat..')
             self.left.take(self.user)
             self.think()
@@ -108,7 +129,10 @@ class Philosopher(threading.Thread):
             self.right.drop(self.user)
             print(f'user={self.user} is done eating..')
 
-n = 5
+
+# Fork = ForkCondition
+Fork = ForkSemaphore
+n = 2
 forks = [Fork(i) for i in range(n)]
 
 philosophers = [
@@ -116,7 +140,7 @@ philosophers = [
         i,
         # forks[i],
         # forks[(i+1) % n]
-        forks[min(i, (i+1) % n)], 
+        forks[min(i, (i+1) % n)],
         forks[max(i, (i+1) % n)]
     ) for i in range(n)]
 
@@ -125,4 +149,3 @@ for i in range(n):
 
 for i in range(n):
     philosophers[i].join()
-

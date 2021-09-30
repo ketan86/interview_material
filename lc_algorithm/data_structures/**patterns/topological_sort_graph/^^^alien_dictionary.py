@@ -56,7 +56,18 @@ def find_order(words):
     the dictionary. we need to only compare the first different char between
     adjacent words to form the graph since words are in lexicographical
     order. By running the topological sort, we can determine the correct
-    order of characters in the alien language
+    order of characters in the alien language.
+
+    Input: Words: ["ba", "bc", "ac", "cab"]
+    Output: bac
+
+                        b
+                        |
+                        a
+                        |
+                        c
+
+
     """
     # initialize the graph
     in_degree = {char: 0 for word in words for char in word}
@@ -72,6 +83,7 @@ def find_order(words):
                 in_degree[child] += 1
                 break
 
+    print(graph, in_degree)
     # find all sources with in_degree 0
     sources = deque()
     for key in in_degree:

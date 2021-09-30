@@ -8,7 +8,7 @@
 
 class Bucket:
     def __init__(self):
-        self.bucket = []
+        self.bucket = []  # (k, v)
 
     def get(self, key):
         for k, v in self.bucket:
@@ -36,8 +36,9 @@ class MyHashMap:
         """
         Initialize your data structure here.
         """
+        # better to be a prime number, less collision
         self.key_space = 2069
-        self.hash_table = [Bucket() for i in range(self.key_space)]
+        self.hash_table = [Bucket() for _ in range(self.key_space)]
 
     def put(self, key: int, value: int) -> None:
         """

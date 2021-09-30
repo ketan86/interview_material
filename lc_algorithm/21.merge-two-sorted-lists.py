@@ -34,7 +34,7 @@ class ListNode:
 
 class Solution:
     def mergeTwoLists(self, l1, l2):
-        head = dummy_node = ListNode()
+        head = dummy_node = ListNode(0)
 
         while l1 and l2:
             if l1.val > l2.val:
@@ -46,14 +46,14 @@ class Solution:
 
             head = head.next
 
-        if l1:
-            head.next = l1
+        if l1 or l2:
+            head.next = l1 or l2
 
-        if l2:
-            head.next = l2
+        # if l1:
+        #     head.next = l1
 
-        # if l1 0r l2:
-        #   head.next = l1 or l2
+        # if l2:
+        #     head.next = l2
 
         return dummy_node.next
 # @lc code=end

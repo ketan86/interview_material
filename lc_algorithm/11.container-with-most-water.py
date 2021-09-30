@@ -59,13 +59,12 @@ print(Solution().maxArea([1, 8, 6, 2, 5, 4, 8, 3, 7]))
 # O(n)
 class Solution:
     def maxArea(self, heights):
-        n = len(heights)
-        max_hight = 0
+        max_area = 0
         i = 0
-        j = n - 1
+        j = len(heights) - 1
         while i < j:
             area = (j - i) * min(heights[i], heights[j])
-            max_hight = max(max_hight, area)
+            max_area = max(max_area, area)
             # why we move smaller line ?
             # for ex, [1, 8, 6, 2, 5, 4, 8, 3, 7]
             #          i                       j
@@ -82,7 +81,7 @@ class Solution:
                 i += 1
             else:
                 j -= 1
-        return max_hight
+        return max_area
 
 
 print(Solution().maxArea([1, 8, 6, 2, 5, 4, 8, 3, 7]))

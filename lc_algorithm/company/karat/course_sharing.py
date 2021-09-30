@@ -71,17 +71,15 @@ from collections import defaultdict
 
 def find_pairs(student_course_pairs):
     result = {}
-    # use student list to store all unique student ids (Ask interviewer about
-    # uniqueness otherwise use set and then convert to list)
     student_ids = list()
 
     # store student <-> [courses] in map
     student_courses_map = defaultdict(set)
     for student_id, course in student_course_pairs:
-        student_ids.append(student_id)
+        if student_id not in student_ids:
+            student_ids.append(student_id)
         student_courses_map[student_id].add(course)
 
-    print(student_ids)
     # iterate over the pairs
     for i in range(len(student_ids)):
         for j in range(i + 1, len(student_ids)):

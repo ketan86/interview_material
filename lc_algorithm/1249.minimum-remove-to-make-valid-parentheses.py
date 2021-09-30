@@ -11,6 +11,7 @@
 # Dislikes: 20
 # Total Accepted:    48.1K
 # Total Submissions: 78.6K
+
 # Testcase Example:  '"lee(t(c)o)de)"'
 #
 # Given a string s of '(' , ')' and lowercase English characters. 
@@ -88,15 +89,17 @@ class Solution:
            exclude that parenthese and keep building string till we reach
            start of the string.
 
+        Time -> O(N)
+        Space -> O(N)
         """
         output = ''
         if not s:
             return output
 
         # stack to store the parentheses and index where it occurred
-        stack = []
+        stack = []  # (parenthese, index)
 
-        # loop over the input string
+        # find invalid parentheses with indexes
         for index, char in enumerate(s):
             # if char is ')' and we find '(' on top of the
             # stack, pop the stack value.

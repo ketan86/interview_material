@@ -42,8 +42,58 @@
 
 # @lc code=start
 
+from multiprocessing import Lock
+
 
 class Solution:
+
+    def search(self, nums, target):
+        """
+        Divide array and every division is sorted array than further be 
+        divided and search.
+
+        nums = [4,5,6,7,0,1,2], target = 0
+                i           j
+                      m
+                4 > 7  --> 0 > 4 and 0 > 7
+                      |
+                       --> go right 
+                [0,1,2]
+                 i   j
+                   m
+        """
+        start = 0
+        end = len(nums) - 1
+        if not nums:
+            return -1
+
+        if target == nums[0]:
+            return 0
+
+        if target == nums[-1]:
+            return len(nums) - 1
+
+        while start <= end:
+            mid = start + (end - start) // 2
+
+            if nums[mid] == target:
+                return mid
+            # check in left sorted
+            elif nums[mid] >= nums[start]:
+                # if target in left sorted
+                if target >= nums[start] and target < nums[mid]:
+                    end = mid - 1
+                else:
+                    start = mid + 1
+            # check in right sorted
+            else:
+                # target in right sorted
+                if target > nums[mid] and target <= nums[end]:
+                    start = mid + 1
+                else:
+                    end = mid - 1
+        return -1
+
     def search(self, nums, target):
         n = len(nums)
         if n < 1:

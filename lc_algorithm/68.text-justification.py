@@ -5,31 +5,31 @@
 #
 # Hard
 
-# Given an array of words and a width maxWidth, format the text such that each 
+# Given an array of words and a width maxWidth, format the text such that each
 # line has exactly maxWidth characters and is fully (left and right) justified.
 
-# You should pack your words in a greedy approach; that is, pack as many words 
-# as you can in each line. Pad extra spaces ' ' when necessary so that each 
+# You should pack your words in a greedy approach; that is, pack as many words
+# as you can in each line. Pad extra spaces ' ' when necessary so that each
 # line has exactly maxWidth characters.
 
-# Extra spaces between words should be distributed as evenly as possible. 
-# If the number of spaces on a line do not divide evenly between words, the 
-# empty slots on the left will be assigned more spaces than the slots on the 
+# Extra spaces between words should be distributed as evenly as possible.
+# If the number of spaces on a line do not divide evenly between words, the
+# empty slots on the left will be assigned more spaces than the slots on the
 # right.
 
-# For the last line of text, it should be left justified and no extra space 
+# For the last line of text, it should be left justified and no extra space
 # is inserted between words.
 
 # note:
 # A word is defined as a character sequence consisting of non-space characters only.
 # Each word's length is guaranteed to be greater than 0 and not exceed maxWidth.
 # The input array words contains at least one word.
- 
+
 
 # Example 1:
 
-# Input: 
-# words = ["This", "is", "an", "example", "of", "text", "justification."], 
+# Input:
+# words = ["This", "is", "an", "example", "of", "text", "justification."],
 # maxWidth = 16
 # Output:
 # [
@@ -46,18 +46,18 @@
 #   "acknowledgment  ",
 #   "shall be        "
 # ]
-# Explanation: 
-#   Note that the last line is "shall be    " instead of "shall     be", 
+# Explanation:
+#   Note that the last line is "shall be    " instead of "shall     be",
 #   because the last line must be left-justified instead of fully-justified.
 
 # Note that the second line is also left-justified because it contains only one word.
 
 # Example 3:
 
-# Input: 
+# Input:
 # words = ["Science","is","what","we","understand","well","enough","to",
 #         "explain","to","a","computer.","Art","is","everything","else",
-#         "we","do"], 
+#         "we","do"],
 # maxWidth = 20
 # Output:
 # [
@@ -68,7 +68,7 @@
 #   "everything  else  we",
 #   "do                  "
 # ]
- 
+
 
 # Constraints:
 
@@ -127,9 +127,9 @@ class Solution:
 
         # if both words are same or last line, left justify
         if j - i == 0 or is_last_line:
-            # append equal amount of spaces between words followed by
-            # remaining spaces.
+            # append equal amount of spaces between words
             string = ' '.join(words[i:j+1])
+            # additional spaces to the end of the string.
             string += ' ' * (max_width - len(string))
         else:
             # center justification logic

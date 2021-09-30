@@ -71,10 +71,9 @@ class Solution:
                 3 3 3 2 1
         """
         total_water = 0
-        left_max_so_far = 0
-        right_max_array = [0] * len(elevation_map)
 
-        self._fill_right_max_array(elevation_map, right_max_array)
+        left_max_so_far = 0
+        right_max_array = self._fill_right_max_array(elevation_map)
 
         for i in range(len(elevation_map)):
             left_max_so_far = max(left_max_so_far, elevation_map[i])
@@ -86,13 +85,15 @@ class Solution:
 
         return total_water
 
-    def _fill_right_max_array(self, arr, right_max_array):
+    def _fill_right_max_array(self, elevation_map):
         # set max to 0 and either current element is max or right element
         # is max.
+        right_max_array = [0] * len(elevation_map)
         max_ = 0
-        for i in range(len(arr)-1, -1, -1):
-            max_ = max(max_, arr[i])
+        for i in range(len(elevation_map)-1, -1, -1):
+            max_ = max(max_, elevation_map[i])
             right_max_array[i] = max_
+        return right_max_array
 
     trap = trap_improved
 

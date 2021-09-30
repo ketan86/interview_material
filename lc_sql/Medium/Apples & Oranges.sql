@@ -10,7 +10,7 @@
 -- +---------------+---------+
 -- (sale_date,fruit) is the primary key for this table.
 -- This table contains the sales of "apples" and "oranges" sold each day.
- 
+
 
 -- Write an SQL query to report the difference between number of apples and oranges sold each day.
 
@@ -18,7 +18,7 @@
 
 -- The query result format is in the following example:
 
- 
+
 
 -- Sales table:
 -- +------------+------------+-------------+
@@ -50,13 +50,27 @@
 -- Day 2020-05-04, 15 apples and 16 oranges were sold (Difference 15 - 16 = -1).
 
 -- Solution
-Select sale_date, sold_num-sold as diff
-from 
-((select *
-from sales
-where fruit = 'apples') a
-join 
-(select sale_date as sale, fruit, sold_num as sold
-from sales
-where fruit = 'oranges') b
-on a.sale_date = b.sale) 
+
+select t1.sale_date, (t1.sold_num - t2.sold_num) as diff
+from sales t1
+    join sales t2
+    on t1.sale_date = t2.sale_date
+where t1.fruit = 'apples' and t2.fruit = 'oranges'
+group by sale_date
+
+-- or
+select sale_date, sold_num-sold as diff
+from
+    (
+    (
+        select *
+    from sales
+    where fruit = 'apples'
+    ) a
+    inner join
+    (
+        select sale_date as sale, fruit, sold_num as sold
+    from sales
+    where fruit = 'oranges'
+    ) b
+    on a.sale_date = b.sale) 

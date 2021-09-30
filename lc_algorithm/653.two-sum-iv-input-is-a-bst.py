@@ -44,7 +44,29 @@
 #         self.val = val
 #         self.left = left
 #         self.right = right
+from collections import deque
+
+
 class Solution:
+
+    def findTarget(self, root, k):
+        """Runtime: 72 ms, faster than 93.12%"""
+        hash_set = set()
+        queue = deque()
+        queue.append(root)
+
+        while queue:
+            node = queue.popleft()
+            diff = k - node.val
+            if diff in hash_set:
+                return True
+            hash_set.add(node.val)
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+        return False
+
     def findTarget(self, root, k):
         # create sorted in order list
         in_order_list = []

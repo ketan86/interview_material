@@ -7,6 +7,7 @@ with no known parents.
 
 [[1,3][2,3][3,4][4,5][6,5]] -> {4} & {1,2,6}
 """
+from collections import deque
 import heapq
 from collections import defaultdict
 
@@ -90,7 +91,6 @@ has_common_ancestor(parent_child_pairs_2, 1, 6) => false
 has_common_ancestor(parent_child_pairs_2, 1, 12) => false
 
 n: number of pairs in the input
-
 """
 
 
@@ -139,3 +139,40 @@ print(has_common_ancestor(pairs, 3, 8))
 print(has_common_ancestor(pairs, 5, 8))
 print(has_common_ancestor(pairs, 6, 8))
 print(has_common_ancestor(pairs, 1, 3))
+
+
+"""
+Find furthest parent node. Use BFS instead of dfs to find the furthest node.
+"""
+
+
+def find_furthest_parent(relations, a):
+    graph = defaultdict(list)
+
+    # form child to parent graph and dfs upward to find all parents
+    for relation in relations:
+        parent, child = relation
+        graph[child].append(parent)
+
+    return bfs(graph, a)
+
+
+def bfs(graph, node):
+    furthest = -1
+    queue = deque()
+    queue.append(node)
+
+    while queue:
+        n = queue.popleft()
+        if n in graph:
+            for c in graph[n]:
+                furthest = c
+                queue.append(c)
+
+    return furthest
+
+
+pairs = [(11, 10), (11, 12), (2, 3), (10, 2), (10, 5), (1, 3),
+         (3, 4), (5, 6), (5, 7), (7, 8), ]
+
+print(find_furthest_parent(pairs, 11))

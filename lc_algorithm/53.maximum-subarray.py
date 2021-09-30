@@ -34,12 +34,12 @@
 # @lc code=start
 # pylint: skip-file
 
-# O(n^2)
-
 
 class Solution:
     def maxSubArray(self, nums):
         """
+        O(n^2)
+
         [-2,1,-3,4,-1,2,1,-5,4]
           i j = -2 + 1 = -1 max(-2, -1) = -1
                j = -1 + -3 = -4 max(-1, -4) = -1
@@ -62,12 +62,12 @@ class Solution:
                 max_sum = max(max_sum, running_sum)
         return max_sum
 
-# O(n)
-
 
 class Solution:
     def maxSubArray(self, nums):
         """
+        O(n)
+
         Runtime: 60 ms, faster than 91.95% of Python3
 
         At each index, either the current element is max sum or prev sum +

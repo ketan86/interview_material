@@ -81,88 +81,21 @@ class Solution:
         # 3. if node is not connected (no child), we still have to visited that
         # node and consider that a graph with one node.
 
-        # loop until all nodes are not visited.
-        while not all(visited):
-            # find the first non visited node
-            non_visited_node = visited.index(False)
-            # IMP: mark it visited.
-            visited[non_visited_node] = True
-            # add it to queue with parent set to -1
-            queue.append((non_visited_node, -1))
-
-            import pdb
-            pdb.set_trace()
-            # dfs
-            while queue:
-                node, parent = queue.popleft()
-                # if node is not a parent (backedge). if undirected
-                # graph, we have to ensure the backedge is not visited
-                # to avoid infinite looping.
-                if node != parent:
+        # go over all the nodes and for each node, traverse and find connected
+        # nodes.
+        for i in range(n):
+            if not visited[i]:
+                queue.append(i)
+                while queue:
+                    node = queue.popleft()
+                    visited[node] = True
                     for child in graph[node]:
                         if not visited[child]:
-                            visited[child] = True
-                            # append child with node being it's parent.
-                            queue.append((child, node))
-
-            # we have completed traversing the whole graph, so increment the
-            # count.
-            conn_nodes += 1
-
-        return conn_nodes
-
-    def countComponentsWithoutParent(self, n, edges):
-        """
-        Following scenarios must be considered.
-
-        1. single non connected node
-        2. all nodes are connected
-        3. more than one graph
-        """
-        # create a undirected graph
-        graph = {i: [] for i in range(n)}
-
-        # build source to destination and destination to source edges
-        for s, d in edges:
-            graph[s].append(d)
-            graph[d].append(s)
-
-        # queue for bfs
-        queue = deque()
-        conn_nodes = 0
-        # mark all nodes unvisited.
-        visited = [False] * n
-
-        # 1. in undirected graph, one can chose to pick any node and traverse
-        # until all nodes in that graph is visited.
-        # 2. if there are graphs with more than one node, those nodes
-        # won't be visited in step 1. so by checking the non visited node, we
-        # can find another graph.
-        # 3. if node is not connected (no child), we still have to visited that
-        # node and consider that a graph with one node.
-
-        # loop until all nodes are not visited.
-        while not all(visited):
-            # find the first non visited node
-            non_visited_node = visited.index(False)
-            # IMP: mark it visited.
-            visited[non_visited_node] = True
-            # add it to queue with parent set to -1
-            queue.append(non_visited_node)
-
-            # dfs
-            while queue:
-                node, parent = queue.popleft()
-                for child in graph[node]:
-                    if not visited[child]:
-                        visited[child] = True
-                        # append child
-                        queue.append(child)
-            # we have completed traversing the whole graph, so increment the
-            # count.
-            conn_nodes += 1
-
-        return conn_nodes
+                            # append child
+                            queue.append(child)
+                # we have completed traversing the whole graph, so increment the
+                # count.
+                conn_nodes += 1
 
 
 print(Solution().countComponents(3, [[0, 1], [1, 2], [2, 0]]))

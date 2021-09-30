@@ -37,27 +37,20 @@ def merge_intervals(arr):
         # add first interval in results.
         if not results:
             results.append(interval)
-        # if not the first one, check if intervals overlap using first inext.
+        # if not the first one, check if intervals overlap using first next.
         # if yes, pop the most recent interval from the results array
         # and merge with current one. push merged interval to results array.
         else:
             if results[-1][1] > interval[0]:
 
                 # update result last inteval with merged results.
-                results[-1] = [
-                    min(results[-1][0], interval[0]),
-                    max(results[-1][1], interval[1])
-                ]
+                results[-1][1] = max(results[-1][1], interval[1])
 
             else:
                 # if current interval is not overlapping, put that in results
                 # array
                 results.append(interval)
     return results
-
-
-def _merge_intervals(i, j):
-    return
 
 
 print(merge_intervals([[1, 4], [2, 5], [7, 9]]))

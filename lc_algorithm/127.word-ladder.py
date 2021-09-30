@@ -48,29 +48,40 @@ import string
 
 class Solution:
     def ladderLength(self, beginWord, endWord, wordList):
-        """Runtime: 492 ms, faster than 34.95%"""
+        """Runtime: 492 ms, faster than 34.95%
+
+        Time : O(M * N^2) where M is total words and N is length of the word
+
+        Space : O(M * N) where M = number of words
+
+                        hit
+                         |
+                        hot
+                        /  \
+                    dot    lot
+                     |      |
+                    dog    log
+                     |
+                    cog
+        """
 
         # create set for quick search
         word_set = set(wordList)
 
         # initialize queue and put begin word
         queue = deque()
-        queue.append(beginWord)
+        queue.append((beginWord, 1))
 
         # if begin word is there in the word set, remove it
         if beginWord in word_set:
             word_set.remove(beginWord)
 
-        # level to count the depth for shortest sequence
-        level = 0
-
         while queue:
             levels = len(queue)
-            level += 1
-            for i in range(levels):
+            for _ in range(levels):
                 # get word from the queue and if it's end word,
                 # search is complete
-                word = queue.popleft()
+                word, level = queue.popleft()
                 if word == endWord:
                     return level
                 # generate all possible strings
@@ -80,7 +91,7 @@ class Solution:
                     # if neighbor is in word set, remove it and
                     # process it by adding it in the queue.
                     word_set.remove(n)
-                    queue.append(n)
+                    queue.append((n, level+1))
         # if no path found yet, return 0
         return 0
 

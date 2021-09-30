@@ -78,16 +78,14 @@ class Solution:
 
         return True
         """
-        n = len(nums) - 1
-        target = nums[n]
-        target_index = n
+        target_index = len(nums) - 1
 
         # target index remains on the index from where we can reach the end index
         # i moves from second last index to 0 and updates target index when
         # there is a path form i to target index.
 
         # start from second last index till 0
-        for i in range(n - 1, -1, -1):
+        for i in range(len(nums) - 2, -1, -1):
             # if current index value and index is greater than the target index,
             # we can reach target index from the current index, so set the
             # target index to i.

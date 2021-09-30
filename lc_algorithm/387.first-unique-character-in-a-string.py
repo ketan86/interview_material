@@ -47,7 +47,7 @@ class Solution:
         return -1
 
 
-# print(Solution().firstUniqChar('leetcode'))
-# print(Solution().firstUniqChar('loveleetcode'))
+print(Solution().firstUniqChar('leetcode'))
+print(Solution().firstUniqChar('loveleetcode'))
 # print(Solution().firstUniqChar('aabb'))
 # @lc code=end

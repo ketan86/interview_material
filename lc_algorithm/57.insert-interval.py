@@ -116,8 +116,10 @@ class Solution:
             # merging with result, merge current interval with
             # new interval.
             else:
-                newInterval[0] = min(newInterval[0], interval[0])
-                newInterval[1] = max(newInterval[1], interval[1])
+                newInterval = [
+                    min(newInterval[0], interval[0]),
+                    max(newInterval[1], interval[1])
+                ]
         # if we are done with looping and did not return so far, a new
         # interval should be appended in the result.
         result.append(newInterval)

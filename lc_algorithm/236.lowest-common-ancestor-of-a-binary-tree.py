@@ -64,6 +64,7 @@ class Solution:
     def lowestCommonAncestor(self, root, p, q):
         """Runtime: 72 ms, faster than 65.75% """
 
+        # Pre-Order Traverse
         def dfs(root, p, q):
             # if root not is none, return None
             if not root:

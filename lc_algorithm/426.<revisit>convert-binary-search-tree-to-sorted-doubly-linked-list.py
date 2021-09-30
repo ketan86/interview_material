@@ -88,6 +88,90 @@ class Node:
         self.right = right
 
 
+class Solution:
+    head = None
+    tail = None
+
+    def treeToDoublyList(self, root):
+        """
+        The problem statement here is to convert the existing
+        binary search tree to sorted doubly linked list instead
+        of forming the new linked list.
+
+        For ex,
+                             4
+                         /       \
+                        2         6
+                      /   \     /
+                    1       3  5
+
+            1 -> 2 -> 3 -> 4 -> 5 -> 6 ->1 (circular)
+
+        Maintain a pointer to left node and on current node, 
+        node.right = prev  <-- tail
+        prev.right = node 
+
+        and not prev(tail) move to current node
+
+                    2
+                1       3
+
+        head -> 1
+        tail -> 1
+
+        when node is 2
+            - 2.left = 1
+            - 1.right = 2
+
+        tail -> 2
+
+
+        so at every root, the root's left is a tail and tail's
+        right is a root. for ex, at root 4, 4's left is a last
+        visited root, and last visited root, 3's right is 4.
+
+        if there is no tail, current node is the head. we only
+        have to set the head once when root is 1. at that time,
+        tail is also root.
+
+        we can store head and tail globally.
+        """
+        # IMP:-> The idea here is to set the head node when tail is none,
+        # else use tail node to attach a new root node and move the
+        # tail to new node.
+        def dfs(node):
+            if not node:
+                return
+
+            # left traversal
+            dfs(node.left)
+
+            # if tail is None, set the head for the first time
+            if not self.tail:
+                self.head = node
+            else:
+                # else, current node's left is tail and tail's
+                # right is current node
+                node.left = self.tail
+                self.tail.right = node
+
+            # move tail to next node
+            self.tail = node
+
+            # right traversal
+            dfs(node.right)
+
+        dfs(root)
+
+        # if we have the head set, create a circular link
+        if self.head:
+            self.head.left = self.tail
+            self.tail.right = self.head
+
+        # return the head
+        return self.head
+
+
 class SolutionGen:
     """
     This solution violates the requirement of converting the
@@ -170,70 +254,6 @@ class Solution(object):
 
         return head
 
-
-class Solution:
-    head = None
-    tail = None
-
-    def treeToDoublyList(self, root):
-        """
-        The problem statement here is to convert the existing
-        binary search tree to sorted doubly linked list instead
-        of forming the new linked list.
-
-        For ex,
-                             4
-                         /       \
-                        2         6
-                      /   \     /
-                    1       3  5
-
-            1 -> 2 -> 3 -> 4 -> 5 -> 6 ->1 (circular)
-
-        so at every root, the root's left is a tail and tail's
-        right is a root. for ex, at root 4, 4's left is a last
-        visited root, and last visited root, 3's right is 4.
-
-        if there is no tail, current node is the head. we only
-        have to set the head once when root is 1. at that time,
-        tail is also root.
-
-        we can store head and tail globally.
-        """
-        # IMP:-> The idea here is to set the head node when tail is none,
-        # else use tail node to attach a new root node and move the
-        # tail to new node.
-        def dfs(node):
-            if not node:
-                return
-
-            # left traversal
-            dfs(node.left)
-
-            # if tail is None, set the head for the first time
-            if not self.tail:
-                self.head = node
-            else:
-                # else, current node's left is tail and tail's
-                # right is current node
-                node.left = self.tail
-                self.tail.right = node
-
-            # move tail to next node
-            self.tail = node
-
-            # right traversal
-            dfs(node.right)
-
-        dfs(root)
-
-        # if we have the head set, create a circular link
-        if self.head:
-            self.head.left = self.tail
-            self.tail.right = self.head
-
-        # return the head
-        return self.head
 
 # t = Node(2)
 # t.left = Node(1)

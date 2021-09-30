@@ -71,9 +71,9 @@ class Solution:
         If more than one char can be remove, we can use the deleted count
         and reduce everytime we remove either left or right char.
         """
-        return self.dfs(s, 0, len(s) - 1)
+        return self.is_palindrome(s, 0, len(s) - 1)
 
-    def dfs(self, s, start, end, deleted=False):
+    def is_palindrome(self, s, start, end, deleted=False):
         # if length of the string is 1 or empty, return True
         if start >= end:
             return True
@@ -94,7 +94,7 @@ class Solution:
             # if start and end index values are same, check if
             # rest of the string is palindrome or nor ?
             # 'abba' -> 'bb' True
-            return self.dfs(s, start + 1, end - 1, deleted)
+            return self.is_palindrome(s, start + 1, end - 1, deleted)
 
         return False
 

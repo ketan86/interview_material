@@ -26,10 +26,22 @@ import pdb
 class TreeNode:
     def __init__(self, val):
         self.val = val
-        self.left, self.right = None, None
+        self.left = None
+        self.right = None
 
 
 def find_tree_boundary(root):
+    """
+    # NOTE: Does not cover all testcases
+
+                1
+                  \ 
+                    2   
+                  /  \
+                 3   4
+
+            1,3,4,2 instead of 1,2,3,4      
+    """
     # main result list to store top to bottom left and bottom left to right
     # elements. for ex, 1,2,4,8,9,10,11,12,13
     result = []
@@ -38,7 +50,7 @@ def find_tree_boundary(root):
     # up access.
     rv_result = deque()
 
-    if root is None:
+    if not root:
         return result
     queue = deque()
     queue.append(root)
@@ -61,10 +73,10 @@ def find_tree_boundary(root):
                                             7           1
                                          /    \     /      \
                                         4      3   10        5
-                                     /    \                /
-                                    9      15             6
-                                 /  \
-                               13    14
+                                     /    \    |   |        /
+                                    9      15  3   10      6
+                                 /  \      |   |   |       |
+                               13    14    15  3   10      6
 
                 at node 3, we found a leaf node but number of nodes at level 3
                 already contains node 9 and node 15 so queue length wont be
@@ -73,6 +85,9 @@ def find_tree_boundary(root):
                     [10, 5, 9, 15, 3]
                     [5, 9, 15, 3, 10]
                     [9, 15, 3, 10, 6]
+
+
+                    [3,10,5,9,15]
                 """
                 # only last level would not add any more nodes to queue so
                 # length of the queue would be equal to current node to end.

@@ -49,8 +49,11 @@ class Solution:
 
 
         346943
+          ^    find smallest from right to left
         346349
+          ^--- sort all elements to the right
         349346
+          ^  ^ swap the first biggest number with left
 
         1 3 2
         1 2 3

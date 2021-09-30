@@ -46,8 +46,51 @@
 # @lc code=start
 # pylint:skip-file
 
+from collections import deque
+
 
 class Solution:
+
+    def letterCombinations(self, digits):
+        """Runtime: 36 ms, faster than 13.62% 
+
+        Backtracking:
+                            "23"
+                            | "abc"
+                    /           |          \  
+                    "a"         "b"         "c"
+                /   |   \    /   |   \       
+                d    e   f  d    e   f
+            /   |  \
+        g    h    i
+        """
+        if len(digits) == 0:
+            return []
+
+        combinations = []
+
+        # Map all the digits to their corresponding letters
+        letters = {"2": "abc", "3": "def", "4": "ghi", "5": "jkl",
+                   "6": "mno", "7": "pqrs", "8": "tuv", "9": "wxyz"}
+
+        def backtrack(index, path):
+            if len(path) == len(digits):
+                combinations.append("".join(path))
+            else:
+                for letter in letters[digits[index]]:
+                    # Add the letter to our current path
+                    path.append(letter)
+
+                    # Move on to the next digit
+                    backtrack(index + 1, path)
+
+                    # Backtrack by removing the letter before moving onto the next
+                    path.pop()
+
+        backtrack(0, [])
+
+        return combinations
+
     def letterCombinations(self, digits):
         input_string = []
 
@@ -98,6 +141,25 @@ class Solution:
         memo[input_string[start]] = result
 
         return result
+
+    def letterCombinations(self, digits):
+        if digits == "":
+            return []
+
+        d = {1: '', 2: 'abc', 3: 'def', 4: 'ghi', 5: 'jkl',
+             6: 'mno', 7: 'pqrs', 8: 'tuv', 9: 'wxyz'}
+
+        q = deque(d[int(digits[0])])
+
+        for i in range(1, len(digits)):
+            s = len(q)
+            while s:
+                out = q.popleft()
+                for j in d[int(digits[i])]:
+                    q.append(out + j)
+                s -= 1
+
+        return q
 
 
 print(Solution().letterCombinations('49'))

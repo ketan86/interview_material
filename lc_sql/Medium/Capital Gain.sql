@@ -13,7 +13,7 @@
 -- The operation column is an ENUM of type ('Sell', 'Buy')
 -- Each row of this table indicates that the stock which has stock_name had an operation on the day operation_day with the price.
 -- It is guaranteed that each 'Sell' operation for a stock has a corresponding 'Buy' operation in a previous day.
- 
+
 
 -- Write an SQL query to report the Capital gain/loss for each stock.
 
@@ -53,16 +53,37 @@
 -- operation = (1010 - 10) + (500 - 1000) + (10000 - 1000) = 1000 - 500 + 9000 = 9500$.
 
 -- Solution
+
+select s_name as stock_name, (sold_price - purchase_price) as capital_gain_loss
+from (
+    (
+        select *, sum(price) as purchase_price
+    from stocks
+    where operation = 'Buy'
+    group by stock_name
+    ) as a
+    left outer join
+    (
+        select stock_name as s_name, sum(price) as sold_price
+    from stocks
+    where operation = 'Sell'
+    group by stock_name
+    ) as b
+    on a.stock_name = b.s_name
+)
+
+-- or
+
 select stock_name, (one-two) as capital_gain_loss
 from(
-(select stock_name, sum(price) as one
-from stocks
-where operation = 'Sell'
-group by stock_name) b
-left join
-(select stock_name as name, sum(price) as two
-from stocks
-where operation = 'Buy'
-group by stock_name) c
-on b.stock_name = c.name)
+    (select stock_name, sum(price) as one
+    from stocks
+    where operation = 'Sell'
+    group by stock_name) b
+    left join
+    (select stock_name as name, sum(price) as two
+    from stocks
+    where operation = 'Buy'
+    group by stock_name) c
+    on b.stock_name = c.name)
 order by capital_gain_loss desc

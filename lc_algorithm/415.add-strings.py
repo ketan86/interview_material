@@ -110,7 +110,3 @@ class Solution:
 
 # print(Solution().addStrings('999', '1231'))
 # @lc code=end
-
-1231
-0999
-0

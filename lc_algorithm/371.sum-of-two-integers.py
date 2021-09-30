@@ -103,9 +103,7 @@ class Solution:
             a = a ^ b
             # assign left shifted carry value to b for next sum.
             b = carry << 1
-            print(a, b)
-            import pdb
-            pdb.set_trace()
+
         return a
 
     def getSum(self, a: int, b: int) -> int:
